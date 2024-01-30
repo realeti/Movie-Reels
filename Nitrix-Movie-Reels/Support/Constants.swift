@@ -9,6 +9,8 @@ import Foundation
 
 struct Constants {
     
+    static let movieListName = "Movies"
+    static let movieNotLoaded = "No movies"
     static let movieCellIdentifier = "movieCell"
     static let movieCellNameSize: CGFloat = 22.0
     static let movieCellTopIndent: CGFloat = 10.0

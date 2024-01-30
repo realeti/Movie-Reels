@@ -18,6 +18,10 @@
 		C6E882882B696E3800CF0E9F /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */; };
 		C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8828C2B69749600CF0E9F /* MovieCell.swift */; };
 		C6E8828F2B6974CA00CF0E9F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8828E2B6974CA00CF0E9F /* Constants.swift */; };
+		C6E882922B6978E300CF0E9F /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882912B6978E300CF0E9F /* NetworkController.swift */; };
+		C6E882962B697A3700CF0E9F /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882952B697A3700CF0E9F /* Movie.swift */; };
+		C6E882982B697B2400CF0E9F /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882972B697B2400CF0E9F /* MovieDetail.swift */; };
+		C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,10 @@
 		C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		C6E8828C2B69749600CF0E9F /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
 		C6E8828E2B6974CA00CF0E9F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C6E882912B6978E300CF0E9F /* NetworkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
+		C6E882952B697A3700CF0E9F /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		C6E882972B697B2400CF0E9F /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
+		C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDTO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +75,8 @@
 			isa = PBXGroup;
 			children = (
 				C6E882772B69585B00CF0E9F /* Info.plist */,
+				C6E882942B697A2A00CF0E9F /* Model */,
+				C6E882902B6978CF00CF0E9F /* Services */,
 				C6E882802B69631200CF0E9F /* Resources */,
 				C6E8827F2B6962F200CF0E9F /* Support */,
 				C6E8827D2B69622700CF0E9F /* Screens */,
@@ -128,6 +138,32 @@
 				C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */,
 			);
 			path = FavoritesViewController;
+			sourceTree = "<group>";
+		};
+		C6E882902B6978CF00CF0E9F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882992B698D5500CF0E9F /* DTO */,
+				C6E882912B6978E300CF0E9F /* NetworkController.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C6E882942B697A2A00CF0E9F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882952B697A3700CF0E9F /* Movie.swift */,
+				C6E882972B697B2400CF0E9F /* MovieDetail.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C6E882992B698D5500CF0E9F /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */,
+			);
+			path = DTO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,11 +238,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6E882922B6978E300CF0E9F /* NetworkController.swift in Sources */,
 				C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */,
+				C6E882962B697A3700CF0E9F /* Movie.swift in Sources */,
+				C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */,
 				C6E882822B69650500CF0E9F /* TabController.swift in Sources */,
 				C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */,
 				C6E8826A2B69585B00CF0E9F /* AppDelegate.swift in Sources */,
 				C6E8828F2B6974CA00CF0E9F /* Constants.swift in Sources */,
+				C6E882982B697B2400CF0E9F /* MovieDetail.swift in Sources */,
 				C6E882882B696E3800CF0E9F /* FavoritesViewController.swift in Sources */,
 				C6E8826C2B69585B00CF0E9F /* SceneDelegate.swift in Sources */,
 			);

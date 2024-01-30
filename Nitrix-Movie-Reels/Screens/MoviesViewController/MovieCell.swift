@@ -29,12 +29,13 @@ class MovieCell: UITableViewCell {
         contentView.addSubview(movieNameLabel)
         
         movieNameLabel.font = .boldSystemFont(ofSize: Constants.movieCellNameSize)
+        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             movieNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.movieCellTopIndent),
             movieNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.movieCellLeadingIndent),
-            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.movieCellTraillingIndent),
-            movieNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Constants.movieCellBottomIndent)
+            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.movieCellTraillingIndent),
+            movieNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.movieCellBottomIndent)
         ])
     }
 }
