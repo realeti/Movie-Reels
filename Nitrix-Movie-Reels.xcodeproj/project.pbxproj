@@ -9,21 +9,25 @@
 /* Begin PBXBuildFile section */
 		C6E8826A2B69585B00CF0E9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882692B69585B00CF0E9F /* AppDelegate.swift */; };
 		C6E8826C2B69585B00CF0E9F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */; };
-		C6E8826E2B69585B00CF0E9F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8826D2B69585B00CF0E9F /* ViewController.swift */; };
-		C6E882712B69585B00CF0E9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6E8826F2B69585B00CF0E9F /* Main.storyboard */; };
+		C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8826D2B69585B00CF0E9F /* MoviesViewController.swift */; };
+		C6E882712B69585B00CF0E9F /* MoviesScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6E8826F2B69585B00CF0E9F /* MoviesScreen.storyboard */; };
 		C6E882732B69585B00CF0E9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6E882722B69585B00CF0E9F /* Assets.xcassets */; };
 		C6E882762B69585B00CF0E9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */; };
+		C6E882822B69650500CF0E9F /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882812B69650500CF0E9F /* TabController.swift */; };
+		C6E882852B696CE900CF0E9F /* TabScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6E882842B696CE900CF0E9F /* TabScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C6E882662B69585B00CF0E9F /* Nitrix-Movie-Reels.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nitrix-Movie-Reels.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6E882692B69585B00CF0E9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		C6E8826D2B69585B00CF0E9F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		C6E882702B69585B00CF0E9F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C6E8826D2B69585B00CF0E9F /* MoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewController.swift; sourceTree = "<group>"; };
+		C6E882702B69585B00CF0E9F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MoviesScreen.storyboard; sourceTree = "<group>"; };
 		C6E882722B69585B00CF0E9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C6E882752B69585B00CF0E9F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C6E882772B69585B00CF0E9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C6E882812B69650500CF0E9F /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
+		C6E882842B696CE900CF0E9F /* TabScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +60,57 @@
 		C6E882682B69585B00CF0E9F /* Nitrix-Movie-Reels */ = {
 			isa = PBXGroup;
 			children = (
-				C6E882692B69585B00CF0E9F /* AppDelegate.swift */,
-				C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */,
-				C6E8826D2B69585B00CF0E9F /* ViewController.swift */,
-				C6E8826F2B69585B00CF0E9F /* Main.storyboard */,
-				C6E882722B69585B00CF0E9F /* Assets.xcassets */,
-				C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */,
+				C6E882802B69631200CF0E9F /* Resources */,
+				C6E8827F2B6962F200CF0E9F /* Support */,
+				C6E8827D2B69622700CF0E9F /* Screens */,
 				C6E882772B69585B00CF0E9F /* Info.plist */,
 			);
 			path = "Nitrix-Movie-Reels";
+			sourceTree = "<group>";
+		};
+		C6E8827D2B69622700CF0E9F /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */,
+				C6E882832B696B3A00CF0E9F /* TabController */,
+				C6E8827E2B6962D700CF0E9F /* MoviesViewController */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		C6E8827E2B6962D700CF0E9F /* MoviesViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C6E8826F2B69585B00CF0E9F /* MoviesScreen.storyboard */,
+				C6E8826D2B69585B00CF0E9F /* MoviesViewController.swift */,
+			);
+			path = MoviesViewController;
+			sourceTree = "<group>";
+		};
+		C6E8827F2B6962F200CF0E9F /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882692B69585B00CF0E9F /* AppDelegate.swift */,
+				C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		C6E882802B69631200CF0E9F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882722B69585B00CF0E9F /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C6E882832B696B3A00CF0E9F /* TabController */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882812B69650500CF0E9F /* TabController.swift */,
+				C6E882842B696CE900CF0E9F /* TabScreen.storyboard */,
+			);
+			path = TabController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +173,8 @@
 			files = (
 				C6E882762B69585B00CF0E9F /* LaunchScreen.storyboard in Resources */,
 				C6E882732B69585B00CF0E9F /* Assets.xcassets in Resources */,
-				C6E882712B69585B00CF0E9F /* Main.storyboard in Resources */,
+				C6E882852B696CE900CF0E9F /* TabScreen.storyboard in Resources */,
+				C6E882712B69585B00CF0E9F /* MoviesScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +185,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6E8826E2B69585B00CF0E9F /* ViewController.swift in Sources */,
+				C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */,
+				C6E882822B69650500CF0E9F /* TabController.swift in Sources */,
 				C6E8826A2B69585B00CF0E9F /* AppDelegate.swift in Sources */,
 				C6E8826C2B69585B00CF0E9F /* SceneDelegate.swift in Sources */,
 			);
@@ -147,12 +195,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		C6E8826F2B69585B00CF0E9F /* Main.storyboard */ = {
+		C6E8826F2B69585B00CF0E9F /* MoviesScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C6E882702B69585B00CF0E9F /* Base */,
 			);
-			name = Main.storyboard;
+			name = MoviesScreen.storyboard;
 			sourceTree = "<group>";
 		};
 		C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */ = {
@@ -218,7 +266,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -275,7 +323,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -297,9 +345,10 @@
 				INFOPLIST_FILE = "Nitrix-Movie-Reels/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = TabScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -307,6 +356,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uk-servers.Nitrix-Movie-Reels";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -325,9 +377,10 @@
 				INFOPLIST_FILE = "Nitrix-Movie-Reels/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = TabScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -335,6 +388,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uk-servers.Nitrix-Movie-Reels";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
