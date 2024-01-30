@@ -19,9 +19,10 @@ class TabController: UITabBarController {
     }
     
     // MARK: - Tab Bar Setup
+    
     private func setupTabs() {
-        let home = self.createTabBarItem(with: "Home", and: UIImage(systemName: "house"), vc: MoviesViewController())
-        let home2 = self.createTabBarItem(with: "Home", and: UIImage(systemName: "clock"), vc: MoviesViewController())
+        let home = self.createTabBarItem(with: "Movies", and: UIImage(systemName: "movieclapper.fill"), vc: MoviesViewController())
+        let home2 = self.createTabBarItem(with: "Favorites", and: UIImage(systemName: "star.fill"), vc: FavoritesViewController())
         
         self.setViewControllers([home, home2], animated: true)
     }

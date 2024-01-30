@@ -15,6 +15,9 @@
 		C6E882762B69585B00CF0E9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */; };
 		C6E882822B69650500CF0E9F /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882812B69650500CF0E9F /* TabController.swift */; };
 		C6E882852B696CE900CF0E9F /* TabScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6E882842B696CE900CF0E9F /* TabScreen.storyboard */; };
+		C6E882882B696E3800CF0E9F /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */; };
+		C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8828C2B69749600CF0E9F /* MovieCell.swift */; };
+		C6E8828F2B6974CA00CF0E9F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8828E2B6974CA00CF0E9F /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		C6E882772B69585B00CF0E9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C6E882812B69650500CF0E9F /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		C6E882842B696CE900CF0E9F /* TabScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabScreen.storyboard; sourceTree = "<group>"; };
+		C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		C6E8828C2B69749600CF0E9F /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
+		C6E8828E2B6974CA00CF0E9F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,10 +66,10 @@
 		C6E882682B69585B00CF0E9F /* Nitrix-Movie-Reels */ = {
 			isa = PBXGroup;
 			children = (
+				C6E882772B69585B00CF0E9F /* Info.plist */,
 				C6E882802B69631200CF0E9F /* Resources */,
 				C6E8827F2B6962F200CF0E9F /* Support */,
 				C6E8827D2B69622700CF0E9F /* Screens */,
-				C6E882772B69585B00CF0E9F /* Info.plist */,
 			);
 			path = "Nitrix-Movie-Reels";
 			sourceTree = "<group>";
@@ -74,6 +80,7 @@
 				C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */,
 				C6E882832B696B3A00CF0E9F /* TabController */,
 				C6E8827E2B6962D700CF0E9F /* MoviesViewController */,
+				C6E882862B696E1500CF0E9F /* FavoritesViewController */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -83,6 +90,7 @@
 			children = (
 				C6E8826F2B69585B00CF0E9F /* MoviesScreen.storyboard */,
 				C6E8826D2B69585B00CF0E9F /* MoviesViewController.swift */,
+				C6E8828C2B69749600CF0E9F /* MovieCell.swift */,
 			);
 			path = MoviesViewController;
 			sourceTree = "<group>";
@@ -92,6 +100,7 @@
 			children = (
 				C6E882692B69585B00CF0E9F /* AppDelegate.swift */,
 				C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */,
+				C6E8828E2B6974CA00CF0E9F /* Constants.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -111,6 +120,14 @@
 				C6E882842B696CE900CF0E9F /* TabScreen.storyboard */,
 			);
 			path = TabController;
+			sourceTree = "<group>";
+		};
+		C6E882862B696E1500CF0E9F /* FavoritesViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */,
+			);
+			path = FavoritesViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,7 +204,10 @@
 			files = (
 				C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */,
 				C6E882822B69650500CF0E9F /* TabController.swift in Sources */,
+				C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */,
 				C6E8826A2B69585B00CF0E9F /* AppDelegate.swift in Sources */,
+				C6E8828F2B6974CA00CF0E9F /* Constants.swift in Sources */,
+				C6E882882B696E3800CF0E9F /* FavoritesViewController.swift in Sources */,
 				C6E8826C2B69585B00CF0E9F /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
