@@ -36,12 +36,12 @@ class NetworkController: MoviesFetching, MoviesDetailFetching {
     ]
     
     let baseUrlString = "https://api.themoviedb.org/"
+    let baseImagePath = "https://image.tmdb.org/t/p/w500"
     let apiKey = "2ccc9fcb3e886fcb5f80015418735095"
     
-    func loadData(path: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        let urlString = baseUrlString.appending(path)
+    func loadData(fullPath: String, completion: @escaping (Result<Data, Error>) -> Void) {
         
-        guard let url = URL(string: urlString) else {
+        guard let url = URL(string: fullPath) else {
             completion(.failure(NetErrors.invalidURL))
             return
         }
@@ -77,6 +77,11 @@ class NetworkController: MoviesFetching, MoviesDetailFetching {
         dataTask.resume()
     }
     
+    func loadData(path: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        let urlString = baseUrlString.appending(path)
+        self.loadData(fullPath: urlString, completion: completion)
+    }
+    
     func fetchMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         let path = "3/trending/movie/week?language=en-US&api_key=\(apiKey)"
         
@@ -88,8 +93,8 @@ class NetworkController: MoviesFetching, MoviesDetailFetching {
                 
                 let movies = moviesDto.map { movie in
                     Movie(title: movie.title,
-                          overview: movie.overview,
-                          poster: movie.poster
+                          poster: movie.poster,
+                          releaseDate: movie.releaseDate
                     )
                 }
                 

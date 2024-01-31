@@ -13,12 +13,12 @@ struct MovieListDTO: Codable {
 
 struct MovieDTO: Codable {
     let title: String
-    let overview: String
     let poster: String
+    let releaseDate: String
     
     enum CodingKeys: String, CodingKey {
         case title
-        case overview
         case poster = "poster_path"
+        case releaseDate = "release_date"
     }
 }

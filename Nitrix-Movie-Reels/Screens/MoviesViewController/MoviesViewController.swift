@@ -9,30 +9,38 @@ import UIKit
 
 class MoviesViewController: UITableViewController {
     
-    let networkController = NetworkController()
-    var movieList: [Movie] = []
+    let viewModel = MoviesTableViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = .systemBackground
+        
+        self.tableView.rowHeight = 200
         self.tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
         
-        loadNetworkData()
+        self.viewModel.delegate = self
+        self.viewModel.loadMovies()
+    }
+}
+
+// MARK: - View model delegate
+
+extension MoviesViewController: MoviesTableViewModelDelegate {
+    func updateMovies() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
-    func loadNetworkData() {
-        networkController.fetchMovies { [weak self] result in
-            do {
-                let movies = try result.get()
-                self?.movieList = movies
-            } catch {
-                self?.movieList = []
-            }
+    func updateError() {
+        guard let error = viewModel.lastErrorMessage else { return }
+        
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel))
             
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
+            self.present(alert, animated: true)
         }
     }
 }
@@ -45,7 +53,7 @@ extension MoviesViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movieList.count == 0 ? 1 : movieList.count
+        return viewModel.moviesViewModels.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -53,14 +61,8 @@ extension MoviesViewController {
             return UITableViewCell()
         }
         
-        if movieList.count == 0 {
-            cell.movieNameLabel.text = Constants.movieNotLoaded
-        } else {
-            let movie = movieList[indexPath.row].title
-            //let overview = movieList[indexPath.row].overview
-            
-            cell.movieNameLabel.text = movie
-        }
+        let cellViewModel = viewModel.moviesViewModels[indexPath.row]
+        cell.viewModel = cellViewModel
         
         return cell
     }
@@ -69,11 +71,26 @@ extension MoviesViewController {
 // MARK: - Table view delegate
 
 extension MoviesViewController {
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return Constants.movieListName
-    }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard indexPath.row < viewModel.moviesViewModels.count,
+              let cell = cell as? MovieCell else 
+        { return }
+        
+        let cellViewModel = viewModel.moviesViewModels[indexPath.row]
+        
+        cellViewModel.delegate = cell
+        cellViewModel.loadImage()
+    }
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard indexPath.row < viewModel.moviesViewModels.count else { return }
+        
+        let cellViewModel = viewModel.moviesViewModels[indexPath.row]
+        cellViewModel.delegate = nil
     }
 }

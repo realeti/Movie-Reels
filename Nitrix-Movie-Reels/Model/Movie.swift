@@ -9,6 +9,6 @@ import Foundation
 
 struct Movie {
     let title: String
-    let overview: String
     let poster: String
+    let releaseDate: String
 }
