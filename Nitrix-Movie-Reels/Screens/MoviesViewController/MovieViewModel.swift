@@ -16,10 +16,11 @@ protocol MovieViewModelDelegate: AnyObject {
 protocol MovieViewModeling {
     var title: String { get }
     var imageData: Data? { get }
-    var isImageLoading: Bool { get set }
+    var isImageLoading: Bool { get }
     var releaseDate: String { get }
     
     func loadImage()
+    func configure(details: DetailsViewModeling)
 }
 
 class MovieViewModel: MovieViewModeling {
@@ -51,5 +52,9 @@ class MovieViewModel: MovieViewModeling {
             self?.isImageLoading = false
             self?.delegate?.updateLoadingState()
         }
+    }
+    
+    func configure(details: DetailsViewModeling) {
+        details.update(movie: movie)
     }
 }

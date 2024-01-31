@@ -11,4 +11,5 @@ struct Movie {
     let title: String
     let poster: String
     let releaseDate: String
+    let overview: String
 }

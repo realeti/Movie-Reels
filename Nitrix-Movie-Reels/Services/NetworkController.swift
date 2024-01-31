@@ -11,11 +11,7 @@ protocol MoviesFetching {
     func fetchMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
 }
 
-protocol MoviesDetailFetching {
-    func fetchDetailMovie(completion: @escaping (Result<MovieDetail, Error>) -> Void)
-}
-
-class NetworkController: MoviesFetching, MoviesDetailFetching {
+class NetworkController: MoviesFetching {
     
     enum NetErrors: Error {
         case statusCode(Int)
@@ -94,7 +90,8 @@ class NetworkController: MoviesFetching, MoviesDetailFetching {
                 let movies = moviesDto.map { movie in
                     Movie(title: movie.title,
                           poster: movie.poster,
-                          releaseDate: movie.releaseDate
+                          releaseDate: movie.releaseDate,
+                          overview: movie.overview
                     )
                 }
                 
@@ -104,11 +101,4 @@ class NetworkController: MoviesFetching, MoviesDetailFetching {
             }
         }
     }
-    
-    func fetchDetailMovie(completion: @escaping (Result<MovieDetail, Error>) -> Void) {
-        //
-    }
 }
-
-// https://api.themoviedb.org/3/trending/movie/week?language=en-US&api_key=ab33d4e999f999ccf72a3004bf245514
-// https://api.themoviedb.org/3/movie/866398?language=en-US&api_key=ab33d4e999f999ccf72a3004bf245514

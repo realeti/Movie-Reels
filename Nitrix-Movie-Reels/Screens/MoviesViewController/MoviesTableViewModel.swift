@@ -17,6 +17,7 @@ protocol MoviesTableViewModeling {
     var lastErrorMessage: String? { get }
     
     func loadMovies()
+    func configure(details: DetailsViewModeling, for index: IndexPath)
 }
 
 class MoviesTableViewModel: MoviesTableViewModeling {
@@ -43,5 +44,10 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 self.delegate?.updateError()
             }
         }
+    }
+    
+    func configure(details: DetailsViewModeling, for index: IndexPath) {
+        let cellViewModel = moviesViewModels[index.row]
+        cellViewModel.configure(details: details)
     }
 }

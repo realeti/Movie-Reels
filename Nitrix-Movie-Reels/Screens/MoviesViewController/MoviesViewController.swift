@@ -16,7 +16,8 @@ class MoviesViewController: UITableViewController {
         
         self.view.backgroundColor = .systemBackground
         
-        self.tableView.rowHeight = 200
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.estimatedRowHeight = 200
         self.tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
         
         self.viewModel.delegate = self
@@ -24,7 +25,7 @@ class MoviesViewController: UITableViewController {
     }
 }
 
-// MARK: - View model delegate
+// MARK: - ViewModel delegate
 
 extension MoviesViewController: MoviesTableViewModelDelegate {
     func updateMovies() {
@@ -45,7 +46,7 @@ extension MoviesViewController: MoviesTableViewModelDelegate {
     }
 }
 
-// MARK: - Table view data source
+// MARK: - TableView data source
 
 extension MoviesViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -68,12 +69,20 @@ extension MoviesViewController {
     }
 }
 
-// MARK: - Table view delegate
+// MARK: - TableView delegate
 
 extension MoviesViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let storyboard = UIStoryboard(name: Constants.detailsStoryboardName, bundle: nil)
+        guard let detailVC = storyboard.instantiateViewController(withIdentifier: Constants.detailsStoryboardName) as? DetailsViewController else {
+            return
+        }
+        
+        viewModel.configure(details: detailVC.viewModel, for: indexPath)
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -92,5 +101,9 @@ extension MoviesViewController {
         
         let cellViewModel = viewModel.moviesViewModels[indexPath.row]
         cellViewModel.delegate = nil
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }

@@ -9,7 +9,17 @@ import Foundation
 
 struct Constants {
     
+    // MARK: - Table view cells
     static let movieCellIdentifier = "movieCell"
+    
+    // MARK: - Storyboard names
+    static let moviesStoryboardName = "MoviesScreen"
+    static let detailsStoryboardName = "DetailsScreen"
+    static let favoritesStorybardName = "FavoritesScreen"
+    
+    // MARK: - Tab bar names
+    static let moviesTabBarName = "Movies"
+    static let favoritesTabBarName = "Favorites"
     
     init () {}
 }

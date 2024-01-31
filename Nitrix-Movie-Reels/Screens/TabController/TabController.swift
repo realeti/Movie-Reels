@@ -12,19 +12,22 @@ class TabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupTabs()
-        
-        //self.tabBar.barTintColor = .red
-        //self.tabBar.tintColor = .green
-        //self.tabBar.unselectedItemTintColor = .purple
     }
     
     // MARK: - Tab Bar Setup
     
     private func setupTabs() {
-        let home = self.createTabBarItem(with: "Movies", and: UIImage(systemName: "movieclapper.fill"), vc: MoviesViewController())
-        let home2 = self.createTabBarItem(with: "Favorites", and: UIImage(systemName: "star.fill"), vc: FavoritesViewController())
         
-        self.setViewControllers([home, home2], animated: true)
+        let moviesStoryboard = UIStoryboard(name: Constants.moviesStoryboardName, bundle: nil)
+        let favoritesStoryboard = UIStoryboard(name: Constants.favoritesStorybardName, bundle: nil)
+        
+        if let moviesVC = moviesStoryboard.instantiateViewController(withIdentifier: Constants.moviesStoryboardName) as? MoviesViewController,
+           let favoritesVC = favoritesStoryboard.instantiateViewController(withIdentifier: Constants.favoritesStorybardName) as? FavoritesViewController {
+            
+            let movies = self.createTabBarItem(with: Constants.moviesTabBarName, and: UIImage(systemName: "movieclapper.fill"), vc: moviesVC)
+            let favorites = self.createTabBarItem(with: Constants.favoritesTabBarName, and: UIImage(systemName: "star.fill"), vc: favoritesVC)
+            self.setViewControllers([movies, favorites], animated: true)
+        }
     }
     
     private func createTabBarItem(with title: String, and image: UIImage?, vc: UIViewController) -> UINavigationController {
