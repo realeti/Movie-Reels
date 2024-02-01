@@ -23,6 +23,24 @@ class MoviesViewController: UITableViewController {
         
         viewModel.delegate = self
         viewModel.loadMovies()
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(sender:)))
+        tableView.addGestureRecognizer(longPress)
+        
+        setupTapGesture()
+    }
+    
+    func setupTapGesture() {
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(sender:)))
+        tableView.addGestureRecognizer(longPress)
+    }
+    
+    @objc private func handleLongPress(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let touchPoint = sender.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                viewModel.storeFavoriteMovie(for: indexPath)
+            }
+        }
     }
 }
 

@@ -17,20 +17,23 @@ protocol MoviesTableViewModeling {
     var lastErrorMessage: String? { get }
     
     func loadMovies()
+    func storeFavoriteMovie(for index: IndexPath)
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
 }
 
 class MoviesTableViewModel: MoviesTableViewModeling {
+    
     var isLoading = false
     var moviesViewModels: [MovieViewModel] = []
     var lastErrorMessage: String?
     
     weak var delegate: MoviesTableViewModelDelegate?
+    let localStorage = CoreDataController.shared
     
     private lazy var fallbackController: FallbackController = {
         FallbackController(
             mainSource: NetworkController(),
-            reserveSource: CoreDataController.shared)
+            reserveSource: localStorage)
     }()
     
     func loadMovies() {
@@ -47,6 +50,25 @@ class MoviesTableViewModel: MoviesTableViewModeling {
             } catch {
                 self.lastErrorMessage = error.localizedDescription
                 self.delegate?.updateError()
+            }
+        }
+    }
+    
+    func storeFavoriteMovie(for index: IndexPath) {
+        let cellMovie = moviesViewModels[index.row].movie
+        localStorage.storeFavoriteMovie(movie: cellMovie)
+        
+        localStorage.loadFavoriteMovies { [weak self] result in
+            guard let self else { return }
+            
+            do {
+                let favoriteMovies = try result.get()
+                
+                for movie in favoriteMovies {
+                    print("Loaded", movie.title)
+                }
+            } catch {
+                self.lastErrorMessage = error.localizedDescription
             }
         }
     }
