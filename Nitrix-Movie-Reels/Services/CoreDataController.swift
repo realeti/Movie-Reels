@@ -12,15 +12,15 @@ protocol MoviesStoring {
     func storeMovies(movies: [Movie])
 }
 
-protocol FavoriteMovieStoring {
-    func storeFavoriteMovie(movie: Movie)
+protocol FavoriteMoviesStoring {
+    func storeFavoriteMovies(movies: [Movie])
 }
 
 protocol FavoriteMoviesLoading {
     func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
 }
 
-typealias MovieStoring = MoviesStoring & FavoriteMovieStoring
+typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring
 typealias MovieLoading = MoviesLoading & FavoriteMoviesLoading
 
 final class CoreDataController: MovieStoring, MovieLoading {
@@ -124,37 +124,75 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
     
-    func storeFavoriteMovie(movie: Movie) {
+    /*func storeFavoriteMovies(movies: [Movie]) {
         let context = persistentContainer.newBackgroundContext()
         let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
         let results = try? context.fetch(request)
         
         context.perform {
-            let favoritesMovieCD: FavoritesMovieCD!
-            request.predicate = NSPredicate(format: "title == %@", movie.title)
-            
-            if results?.count == 0 {
-                favoritesMovieCD = FavoritesMovieCD(context: context)
+            movies.forEach { movie in
+                let favoritesMovieCD: FavoritesMovieCD!
+                request.predicate = NSPredicate(format: "title == %@", movie.title)
+                
+                print("Saved", movie.title)
+                
+                if results?.count == 0 {
+                    favoritesMovieCD = FavoritesMovieCD(context: context)
+                    print("1")
+                }
+                else {
+                    favoritesMovieCD = results?.first
+                    print("2")
+                }
+                
+                favoritesMovieCD.title = movie.title
+                favoritesMovieCD.releaseDate = movie.releaseDate
+                favoritesMovieCD.poster = movie.poster
+                favoritesMovieCD.overview = movie.overview
             }
-            else {
-                favoritesMovieCD = results?.first
+            try? context.save()
+        }
+    }*/
+    
+    func storeFavoriteMovies(movies: [Movie]) {
+        let context = persistentContainer.newBackgroundContext()
+
+        context.perform {
+            movies.forEach { movie in
+                let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
+                request.predicate = NSPredicate(format: "title == %@", movie.title)
+
+                let results = try? context.fetch(request)
+                let favoritesMovieCD: FavoritesMovieCD
+
+                if results?.count == 0 {
+                    favoritesMovieCD = FavoritesMovieCD(context: context)
+                } else {
+                    favoritesMovieCD = results!.first!
+                }
+
+                favoritesMovieCD.title = movie.title
+                favoritesMovieCD.releaseDate = movie.releaseDate
+                favoritesMovieCD.poster = movie.poster
+                favoritesMovieCD.overview = movie.overview
             }
-            
-            favoritesMovieCD.title = movie.title
-            favoritesMovieCD.releaseDate = movie.releaseDate
-            favoritesMovieCD.poster = movie.poster
-            favoritesMovieCD.overview = movie.overview
-            
+
             try? context.save()
         }
     }
     
     func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        let context = persistentContainer.newBackgroundContext()
+        let context = persistentContainer.viewContext
         let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
         
         do {
             let movieObjects = try context.fetch(request)
+            
+            guard !movieObjects.isEmpty else {
+                completion(.success([]))
+                return
+            }
+
             let movies = movieObjects.map { movie in
                 Movie(
                     title: movie.title ?? "",
@@ -163,10 +201,11 @@ final class CoreDataController: MovieStoring, MovieLoading {
                     overview: movie.overview ?? ""
                 )
             }
-            print(movies.count)
+
             completion(.success(movies))
         } catch {
             completion(.failure(error))
         }
     }
+
 }

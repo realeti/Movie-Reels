@@ -17,7 +17,7 @@ protocol MoviesTableViewModeling {
     var lastErrorMessage: String? { get }
     
     func loadMovies()
-    func storeFavoriteMovie(for index: IndexPath)
+    func storeFavoriteMovies(for index: IndexPath)
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
 }
 
@@ -54,9 +54,9 @@ class MoviesTableViewModel: MoviesTableViewModeling {
         }
     }
     
-    func storeFavoriteMovie(for index: IndexPath) {
+    func storeFavoriteMovies(for index: IndexPath) {
         let cellMovie = moviesViewModels[index.row].movie
-        localStorage.storeFavoriteMovie(movie: cellMovie)
+        var newMovies: [Movie] = []
         
         localStorage.loadFavoriteMovies { [weak self] result in
             guard let self else { return }
@@ -64,9 +64,9 @@ class MoviesTableViewModel: MoviesTableViewModeling {
             do {
                 let favoriteMovies = try result.get()
                 
-                for movie in favoriteMovies {
-                    print("Loaded", movie.title)
-                }
+                newMovies.append(contentsOf: favoriteMovies)
+                newMovies.append(cellMovie)
+                localStorage.storeFavoriteMovies(movies: newMovies)
             } catch {
                 self.lastErrorMessage = error.localizedDescription
             }

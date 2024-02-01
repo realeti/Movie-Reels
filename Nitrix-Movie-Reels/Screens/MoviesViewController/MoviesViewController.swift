@@ -38,7 +38,7 @@ class MoviesViewController: UITableViewController {
         if sender.state == .began {
             let touchPoint = sender.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
-                viewModel.storeFavoriteMovie(for: indexPath)
+                viewModel.storeFavoriteMovies(for: indexPath)
             }
         }
     }

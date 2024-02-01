@@ -17,6 +17,7 @@
 		C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C25042B6AE86200A7792A /* DetailsViewModel.swift */; };
 		C646D1B82B6A5E4700361762 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C646D1B72B6A5E4700361762 /* MovieViewModel.swift */; };
 		C646D1BA2B6A627100361762 /* MoviesTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C646D1B92B6A627100361762 /* MoviesTableViewModel.swift */; };
+		C6E8252B2B6C4A4500B053A6 /* FavoriteMovieTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8252A2B6C4A4500B053A6 /* FavoriteMovieTableViewModel.swift */; };
 		C6E8826A2B69585B00CF0E9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882692B69585B00CF0E9F /* AppDelegate.swift */; };
 		C6E8826C2B69585B00CF0E9F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */; };
 		C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8826D2B69585B00CF0E9F /* MoviesViewController.swift */; };
@@ -44,6 +45,7 @@
 		C60C25042B6AE86200A7792A /* DetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewModel.swift; sourceTree = "<group>"; };
 		C646D1B72B6A5E4700361762 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		C646D1B92B6A627100361762 /* MoviesTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesTableViewModel.swift; sourceTree = "<group>"; };
+		C6E8252A2B6C4A4500B053A6 /* FavoriteMovieTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMovieTableViewModel.swift; sourceTree = "<group>"; };
 		C6E882662B69585B00CF0E9F /* Nitrix-Movie-Reels.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nitrix-Movie-Reels.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6E882692B69585B00CF0E9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			children = (
 				C6E882872B696E3800CF0E9F /* FavoritesViewController.swift */,
 				C60C25022B6AE67E00A7792A /* FavoritesScreen.storyboard */,
+				C6E8252A2B6C4A4500B053A6 /* FavoriteMovieTableViewModel.swift */,
 			);
 			path = FavoritesViewController;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */,
 				C6048F682B6C1B7000131132 /* FallbackController.swift in Sources */,
 				C6048F662B6C191900131132 /* CoreDataController.swift in Sources */,
+				C6E8252B2B6C4A4500B053A6 /* FavoriteMovieTableViewModel.swift in Sources */,
 				C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */,
 				C6E882822B69650500CF0E9F /* TabController.swift in Sources */,
 				C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */,
@@ -450,8 +454,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = TabScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -482,8 +486,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = TabScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
