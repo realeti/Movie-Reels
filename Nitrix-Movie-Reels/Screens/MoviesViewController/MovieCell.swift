@@ -14,19 +14,21 @@ class MovieCell: UITableViewCell {
     lazy var movieReleaseDateLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemGray
-        label.font = UIFont.systemFont(ofSize: Metrics.movieReleaseDateSize, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: Metrics.movieReleaseDateSize, weight: .semibold)
         return label
     }()
     
     lazy var movieNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: Metrics.movieCellNameSize, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: Metrics.movieNameSize, weight: .semibold)
         label.numberOfLines = 2
         return label
     }()
     
     lazy var moviePosterView: UIView = {
         let view = UIView()
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
         return view
     }()
     
@@ -146,13 +148,13 @@ extension MovieCell: MovieViewModelDelegate {
 }
 
 private struct Metrics {
-    static let movieReleaseDateSize: CGFloat = 18.0
-    static let movieCellNameSize: CGFloat = 22.0
+    static let movieReleaseDateSize: CGFloat = 17.0
+    static let movieNameSize: CGFloat = 24.0
     
-    static let topIndent: CGFloat = 10.0
-    static let leadingIndent: CGFloat = 10.0
-    static let traillingIndent: CGFloat = 10.0
-    static let bottomIndent: CGFloat = 10.0
+    static let topIndent: CGFloat = 8.0
+    static let leadingIndent: CGFloat = 8.0
+    static let traillingIndent: CGFloat = 8.0
+    static let bottomIndent: CGFloat = 8.0
     
     static let moviePosterHeight: CGFloat = 150.0
     static let moviePosterWidth: CGFloat = 100.0

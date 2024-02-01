@@ -14,14 +14,15 @@ class MoviesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = .systemBackground
+        title = Constants.moviesTabBarName
+        view.backgroundColor = .systemBackground
         
-        self.tableView.rowHeight = UITableView.automaticDimension
-        self.tableView.estimatedRowHeight = 200
-        self.tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
         
-        self.viewModel.delegate = self
-        self.viewModel.loadMovies()
+        viewModel.delegate = self
+        viewModel.loadMovies()
     }
 }
 

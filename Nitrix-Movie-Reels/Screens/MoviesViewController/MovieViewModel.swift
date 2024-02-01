@@ -20,7 +20,7 @@ protocol MovieViewModeling {
     var releaseDate: String { get }
     
     func loadImage()
-    func configure(details: DetailsViewModeling)
+    func configure(details: MovieDetailsPresentable)
 }
 
 class MovieViewModel: MovieViewModeling {
@@ -54,7 +54,7 @@ class MovieViewModel: MovieViewModeling {
         }
     }
     
-    func configure(details: DetailsViewModeling) {
+    func configure(details: MovieDetailsPresentable) {
         details.update(movie: movie)
     }
 }

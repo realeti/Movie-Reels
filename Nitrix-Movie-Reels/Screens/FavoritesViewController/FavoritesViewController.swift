@@ -12,6 +12,7 @@ class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = .systemOrange
+        title = Constants.favoritesTabBarName
+        view.backgroundColor = .systemOrange
     }
 }

@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol MovieDetailsPresentable {
+    func update(movie: Movie)
+}
+
 protocol DetailsViewModelDelegate: AnyObject {
     func updateImage()
     func updateError()
@@ -17,21 +21,20 @@ protocol DetailsViewModeling {
     var title: String { get }
     var imageData: Data? { get }
     var isImageLoading: Bool { get }
-    var relaseDate: String { get }
+    var releaseDate: String { get }
     var overview: String { get }
     var lastErrorMessage: String? { get }
     
     func loadImage()
-    func update(movie: Movie)
 }
 
-class DetailsViewModel: DetailsViewModeling {
+class DetailsViewModel: DetailsViewModeling, MovieDetailsPresentable {
     private var movie: Movie?
     
     var title: String { movie?.title ?? "" }
     var imageData: Data?
     var isImageLoading: Bool = false
-    var relaseDate: String { movie?.releaseDate ?? ""}
+    var releaseDate: String { movie?.releaseDate ?? ""}
     var overview: String { movie?.overview ?? "" }
     var lastErrorMessage: String?
     
@@ -49,10 +52,11 @@ class DetailsViewModel: DetailsViewModeling {
         let imagePath = imageFetchingController.baseImagePath + movie.poster
         imageFetchingController.loadData(fullPath: imagePath) { [weak self] in
             self?.isImageLoading = false
-            
             self?.delegate?.updateLoadingState()
+            
             do {
                 self?.imageData = try $0.get()
+                self?.delegate?.updateImage()
             } catch {
                 self?.lastErrorMessage = error.localizedDescription
                 self?.delegate?.updateError()
