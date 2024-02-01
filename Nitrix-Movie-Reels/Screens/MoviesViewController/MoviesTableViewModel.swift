@@ -27,9 +27,14 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     weak var delegate: MoviesTableViewModelDelegate?
     
+    private lazy var fallbackController: FallbackController = {
+        FallbackController(
+            mainSource: NetworkController(),
+            reserveSource: CoreDataController.shared)
+    }()
+    
     func loadMovies() {
-        NetworkController().fetchMovies { [weak self] result in
-            
+        fallbackController.loadMovies { [weak self] result in
             guard let self else { return }
             self.isLoading = false
             

@@ -21,5 +21,10 @@ struct Constants {
     static let moviesTabBarName = "Movies"
     static let favoritesTabBarName = "Favorites"
     
+    // MARK: Coredata
+    static let coreDataModelName = "MoviesDataModel"
+    static let movieEntityName = "MovieCD"
+    static let favoritesMovieEntityName = "FavoritesMovieCD"
+    
     init () {}
 }

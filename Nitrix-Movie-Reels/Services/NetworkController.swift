@@ -7,20 +7,20 @@
 
 import Foundation
 
-protocol MoviesFetching {
-    func fetchMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
+enum NetErrors: Error {
+    case statusCode(Int)
+    case invalidURL
+    case invalidData
+    case badResponse
+    case wrongDecode
+    case connectionProblem
 }
 
-class NetworkController: MoviesFetching {
-    
-    enum NetErrors: Error {
-        case statusCode(Int)
-        case invalidURL
-        case invalidData
-        case badResponse
-        case wrongDecode
-        case connectionProblem
-    }
+protocol MoviesLoading {
+    func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
+}
+
+class NetworkController: MoviesLoading {
     
     let session = URLSession.shared
     
@@ -78,7 +78,7 @@ class NetworkController: MoviesFetching {
         self.loadData(fullPath: urlString, completion: completion)
     }
     
-    func fetchMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
+    func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         let path = "3/trending/movie/week?language=en-US&api_key=\(apiKey)"
         
         loadData(path: path) { response in

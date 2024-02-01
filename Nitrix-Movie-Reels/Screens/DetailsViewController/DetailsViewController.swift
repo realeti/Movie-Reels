@@ -11,7 +11,7 @@ class DetailsViewController: UIViewController {
     
     lazy var movieDescriptionView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray.withAlphaComponent(0.3)
+        view.backgroundColor = .systemGray3.withAlphaComponent(0.3)
         view.layer.cornerRadius = 15
         view.clipsToBounds = true
         return view

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C6048F642B6C184A00131132 /* MoviesDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C6048F622B6C184A00131132 /* MoviesDataModel.xcdatamodeld */; };
+		C6048F662B6C191900131132 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6048F652B6C191900131132 /* CoreDataController.swift */; };
+		C6048F682B6C1B7000131132 /* FallbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6048F672B6C1B7000131132 /* FallbackController.swift */; };
 		C60C24FC2B6AD7C000A7792A /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */; };
 		C60C24FF2B6AE03F00A7792A /* DetailsScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C60C24FE2B6AE03F00A7792A /* DetailsScreen.storyboard */; };
 		C60C25012B6AE07100A7792A /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C25002B6AE07100A7792A /* DetailsViewController.swift */; };
@@ -31,6 +34,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C6048F632B6C184A00131132 /* MoviesDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MoviesDataModel.xcdatamodel; sourceTree = "<group>"; };
+		C6048F652B6C191900131132 /* CoreDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
+		C6048F672B6C1B7000131132 /* FallbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallbackController.swift; sourceTree = "<group>"; };
 		C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		C60C24FE2B6AE03F00A7792A /* DetailsScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DetailsScreen.storyboard; sourceTree = "<group>"; };
 		C60C25002B6AE07100A7792A /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
@@ -145,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				C6E882722B69585B00CF0E9F /* Assets.xcassets */,
+				C6048F622B6C184A00131132 /* MoviesDataModel.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -172,6 +179,8 @@
 			children = (
 				C6E882992B698D5500CF0E9F /* DTO */,
 				C6E882912B6978E300CF0E9F /* NetworkController.swift */,
+				C6048F652B6C191900131132 /* CoreDataController.swift */,
+				C6048F672B6C1B7000131132 /* FallbackController.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -268,8 +277,11 @@
 			files = (
 				C6E882922B6978E300CF0E9F /* NetworkController.swift in Sources */,
 				C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */,
+				C6048F642B6C184A00131132 /* MoviesDataModel.xcdatamodeld in Sources */,
 				C6E882962B697A3700CF0E9F /* Movie.swift in Sources */,
 				C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */,
+				C6048F682B6C1B7000131132 /* FallbackController.swift in Sources */,
+				C6048F662B6C191900131132 /* CoreDataController.swift in Sources */,
 				C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */,
 				C6E882822B69650500CF0E9F /* TabController.swift in Sources */,
 				C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */,
@@ -511,6 +523,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C6048F622B6C184A00131132 /* MoviesDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C6048F632B6C184A00131132 /* MoviesDataModel.xcdatamodel */,
+			);
+			currentVersion = C6048F632B6C184A00131132 /* MoviesDataModel.xcdatamodel */;
+			path = MoviesDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C6E8825E2B69585B00CF0E9F /* Project object */;
 }
