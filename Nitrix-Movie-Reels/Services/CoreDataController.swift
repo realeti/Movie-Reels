@@ -14,6 +14,7 @@ protocol MoviesStoring {
 
 protocol FavoriteMoviesStoring {
     func storeFavoriteMovies(movies: [Movie])
+    func removeFavoriteMovie(withTitle title: String, completion: @escaping (Error?) -> Void)
 }
 
 protocol FavoriteMoviesLoading {
@@ -124,36 +125,6 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
     
-    /*func storeFavoriteMovies(movies: [Movie]) {
-        let context = persistentContainer.newBackgroundContext()
-        let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
-        let results = try? context.fetch(request)
-        
-        context.perform {
-            movies.forEach { movie in
-                let favoritesMovieCD: FavoritesMovieCD!
-                request.predicate = NSPredicate(format: "title == %@", movie.title)
-                
-                print("Saved", movie.title)
-                
-                if results?.count == 0 {
-                    favoritesMovieCD = FavoritesMovieCD(context: context)
-                    print("1")
-                }
-                else {
-                    favoritesMovieCD = results?.first
-                    print("2")
-                }
-                
-                favoritesMovieCD.title = movie.title
-                favoritesMovieCD.releaseDate = movie.releaseDate
-                favoritesMovieCD.poster = movie.poster
-                favoritesMovieCD.overview = movie.overview
-            }
-            try? context.save()
-        }
-    }*/
-    
     func storeFavoriteMovies(movies: [Movie]) {
         let context = persistentContainer.newBackgroundContext()
 
@@ -207,5 +178,21 @@ final class CoreDataController: MovieStoring, MovieLoading {
             completion(.failure(error))
         }
     }
+    
+    func removeFavoriteMovie(withTitle title: String, completion: @escaping (Error?) -> Void) {
+        let context = persistentContainer.viewContext
+        let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
+        request.predicate = NSPredicate(format: "title == %@", title)
 
+        do {
+            let results = try context.fetch(request)
+            if let movieToDelete = results.first {
+                context.delete(movieToDelete)
+                try context.save()
+                completion(nil)
+            }
+        } catch {
+            completion(error)
+        }
+    }
 }

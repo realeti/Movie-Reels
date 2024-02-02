@@ -56,8 +56,8 @@ extension FavoritesViewController: FavoriteMovieTableViewModelDelegate {
         guard let error = viewModel.lastErrorMessage else { return }
         
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+            let alert = UIAlertController(title: Constants.alertError, message: error, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Constants.alertActionOk, style: .cancel))
             
             self.present(alert, animated: true)
         }
@@ -123,5 +123,20 @@ extension FavoritesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let actionDeleteInstance = UIContextualAction(style: .destructive, title: Constants.removeFavoriteMovie) { [self] _,_,_ in
+            viewModel.removeFavoriteMovie(for: indexPath)
+            
+            if viewModel.moviesViewModels.count > 0 {
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            } else {
+                tableView.reloadData()
+            }
+        }
+        
+        return UISwipeActionsConfiguration(actions: [actionDeleteInstance])
     }
 }

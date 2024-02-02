@@ -69,5 +69,4 @@ class DetailsViewModel: DetailsViewModeling, MovieDetailsPresentable {
         self.imageData = nil
         self.loadImage()
     }
-
 }

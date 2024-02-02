@@ -17,8 +17,8 @@ protocol MoviesTableViewModeling {
     var lastErrorMessage: String? { get }
     
     func loadMovies()
-    func storeFavoriteMovies(for index: IndexPath)
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
+    func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath)
 }
 
 class MoviesTableViewModel: MoviesTableViewModeling {
@@ -54,8 +54,13 @@ class MoviesTableViewModel: MoviesTableViewModeling {
         }
     }
     
-    func storeFavoriteMovies(for index: IndexPath) {
-        let cellMovie = moviesViewModels[index.row].movie
+    func configure(details: MovieDetailsPresentable, for index: IndexPath) {
+        let cellViewModel = moviesViewModels[index.row]
+        cellViewModel.configure(details: details)
+    }
+    
+    func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath) {
+        let cellViewModel = moviesViewModels[index.row]
         var newMovies: [Movie] = []
         
         localStorage.loadFavoriteMovies { [weak self] result in
@@ -65,16 +70,14 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 let favoriteMovies = try result.get()
                 
                 newMovies.append(contentsOf: favoriteMovies)
-                newMovies.append(cellMovie)
+                newMovies.append(cellViewModel.movie)
                 localStorage.storeFavoriteMovies(movies: newMovies)
+                
+                favorites.addMovie(movie: cellViewModel)
+                
             } catch {
                 self.lastErrorMessage = error.localizedDescription
             }
         }
-    }
-    
-    func configure(details: MovieDetailsPresentable, for index: IndexPath) {
-        let cellViewModel = moviesViewModels[index.row]
-        cellViewModel.configure(details: details)
     }
 }

@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol FavoriteMoviesPresentable {
+    func addMovie(movie: MovieViewModel)
+}
+
 protocol FavoriteMovieTableViewModelDelegate: AnyObject {
     func updateMovies()
     func updateError()
@@ -16,11 +20,11 @@ protocol FavoriteMovieTableViewModeling {
     var moviesViewModels: [MovieViewModel] { get }
     var lastErrorMessage: String? { get }
     
-    func loadMovies()
+    func removeFavoriteMovie(for index: IndexPath)
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
 }
 
-class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling {
+class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMoviesPresentable {
     
     var moviesViewModels: [MovieViewModel] = []
     var lastErrorMessage: String?
@@ -45,8 +49,24 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling {
         }
     }
     
+    func removeFavoriteMovie(for index: IndexPath) {        
+        let removedMovie = moviesViewModels[index.row].movie
+        moviesViewModels.remove(at: index.row)
+        
+        localStorage.removeFavoriteMovie(withTitle: removedMovie.title) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
     func configure(details: MovieDetailsPresentable, for index: IndexPath) {
         let cellViewModel = moviesViewModels[index.row]
         cellViewModel.configure(details: details)
+    }
+    
+    func addMovie(movie: MovieViewModel) {
+        self.moviesViewModels.append(movie)
+        self.delegate?.updateMovies()
     }
 }

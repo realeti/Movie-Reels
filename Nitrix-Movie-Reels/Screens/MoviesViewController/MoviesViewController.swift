@@ -38,7 +38,31 @@ class MoviesViewController: UITableViewController {
         if sender.state == .began {
             let touchPoint = sender.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
-                viewModel.storeFavoriteMovies(for: indexPath)
+                let currentMovie = viewModel.moviesViewModels[indexPath.row]
+                
+                let alert = UIAlertController(title: currentMovie.title, message: Constants.addMovieToFavorites, preferredStyle: .alert)
+                
+                let actionDone = UIAlertAction(title: Constants.alertActionYes, style: .default) { _ in
+                    guard let tabBarController = self.tabBarController else {
+                        return
+                    }
+                    
+                    guard let favoriteNavVC = tabBarController.viewControllers?[1] as? UINavigationController else {
+                        return
+                    }
+                    
+                    guard let favoriteVC = favoriteNavVC.viewControllers.first as? FavoritesViewController else {
+                        return
+                    }
+                    
+                    self.viewModel.configure(favorites: favoriteVC.viewModel, for: indexPath)
+                }
+                
+                let actionCancel = UIAlertAction(title: Constants.alertActionCancel, style: .cancel)
+                alert.addAction(actionDone)
+                alert.addAction(actionCancel)
+                
+                self.present(alert, animated: true)
             }
         }
     }
@@ -57,8 +81,8 @@ extension MoviesViewController: MoviesTableViewModelDelegate {
         guard let error = viewModel.lastErrorMessage else { return }
         
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+            let alert = UIAlertController(title: Constants.alertError, message: error, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: Constants.alertActionOk, style: .cancel))
             
             self.present(alert, animated: true)
         }

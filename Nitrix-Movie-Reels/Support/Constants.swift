@@ -9,8 +9,16 @@ import Foundation
 
 struct Constants {
     
-    // MARK: - Table view cells
+    // MARK: - Table view
     static let movieCellIdentifier = "movieCell"
+    
+    // MARK: - Alert messages
+    static let alertActionOk = "OK"
+    static let alertActionYes = "Yes"
+    static let alertActionCancel = "Cancel"
+    static let addMovieToFavorites = "Add a movie to your favorites?"
+    static let removeFavoriteMovie = "Remove"
+    static let alertError = "Error"
     
     // MARK: - Storyboard names
     static let moviesStoryboardName = "MoviesScreen"

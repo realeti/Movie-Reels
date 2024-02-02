@@ -165,8 +165,8 @@ extension DetailsViewController: DetailsViewModelDelegate {
         }
         
         guard let error = viewModel.lastErrorMessage else { return }
-        let alert = UIAlertController(title: "Error", message: error, preferredStyle: .actionSheet)
-        alert.addAction(.init(title: "OK", style: .cancel))
+        let alert = UIAlertController(title: Constants.alertError, message: error, preferredStyle: .actionSheet)
+        alert.addAction(.init(title: Constants.alertActionOk, style: .cancel))
         
         present(alert, animated: true)
     }
