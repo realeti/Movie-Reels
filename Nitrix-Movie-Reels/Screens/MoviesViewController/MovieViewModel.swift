@@ -32,7 +32,6 @@ class MovieViewModel: MovieViewModeling {
     var isImageLoading: Bool = false
     
     lazy var imageFetchingController = NetworkController()
-    lazy var localStorage = CoreDataController.shared
     weak var delegate: MovieViewModelDelegate?
     
     init(movie: Movie) {
