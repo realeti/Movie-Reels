@@ -1,6 +1,6 @@
 //
 //  TabController.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 30.01.2024.
 //
@@ -18,16 +18,13 @@ class TabController: UITabBarController {
     
     private func setupTabs() {
         
-        let moviesStoryboard = UIStoryboard(name: Constants.moviesStoryboardName, bundle: nil)
-        let favoritesStoryboard = UIStoryboard(name: Constants.favoritesStorybardName, bundle: nil)
+        let moviesVC = MoviesViewController()
+        let favoritesVC = FavoritesViewController()
+
+        let movies = self.createNavTabBarItem(with: Constants.moviesTabBarName, and: UIImage(systemName: "movieclapper.fill"), vc: moviesVC)
+        let favorites = self.createNavTabBarItem(with: Constants.favoritesTabBarName, and: UIImage(systemName: "star.fill"), vc: favoritesVC)
         
-        if let moviesVC = moviesStoryboard.instantiateViewController(withIdentifier: Constants.moviesStoryboardName) as? MoviesViewController,
-           let favoritesVC = favoritesStoryboard.instantiateViewController(withIdentifier: Constants.favoritesStorybardName) as? FavoritesViewController {
-            
-            let movies = self.createNavTabBarItem(with: Constants.moviesTabBarName, and: UIImage(systemName: "movieclapper.fill"), vc: moviesVC)
-            let favorites = self.createNavTabBarItem(with: Constants.favoritesTabBarName, and: UIImage(systemName: "star.fill"), vc: favoritesVC)
-            self.setViewControllers([movies, favorites], animated: true)
-        }
+        self.setViewControllers([movies, favorites], animated: true)
     }
     
     private func createNavTabBarItem(with title: String, and image: UIImage?, vc: UIViewController) -> UINavigationController {

@@ -1,6 +1,6 @@
 //
 //  MovieViewModel.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 31.01.2024.
 //
@@ -14,6 +14,7 @@ protocol MovieViewModelDelegate: AnyObject {
 }
 
 protocol MovieViewModeling {
+    var id: Int { get }
     var title: String { get }
     var imageData: Data? { get }
     var isImageLoading: Bool { get }
@@ -25,6 +26,7 @@ protocol MovieViewModeling {
 
 class MovieViewModel: MovieViewModeling {
     let movie: Movie
+    var id: Int { movie.id }
     var title: String { movie.title }
     var releaseDate: String { movie.releaseDate }
     

@@ -1,6 +1,6 @@
 //
 //  FavoriteMovieTableViewModel.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 01.02.2024.
 //
@@ -53,7 +53,7 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
         let removedMovie = moviesViewModels[index.row].movie
         moviesViewModels.remove(at: index.row)
         
-        localStorage.removeFavoriteMovie(withTitle: removedMovie.title) { error in
+        localStorage.removeFavoriteMovie(movieID: removedMovie.id) { error in
             if let error = error {
                 print(error)
             }
@@ -66,6 +66,12 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
     }
     
     func addMovie(movie: MovieViewModel) {
+        let existingMovie = moviesViewModels.firstIndex(where: { $0.title == movie.title })
+        
+        if let existingMovie {
+            self.moviesViewModels.remove(at: existingMovie)
+        }
+        
         self.moviesViewModels.append(movie)
         self.delegate?.updateMovies()
     }

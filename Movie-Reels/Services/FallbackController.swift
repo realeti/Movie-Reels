@@ -1,6 +1,6 @@
 //
 //  FallbackController.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 01.02.2024.
 //

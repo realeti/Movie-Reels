@@ -1,13 +1,25 @@
 //
 //  ViewController.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 30.01.2024.
 //
 
 import UIKit
 
-class MoviesViewController: UITableViewController {
+class MoviesViewController: UIViewController {
+    
+    lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
+        
+        return tableView
+    }()
     
     let viewModel = MoviesTableViewModel()
 
@@ -17,14 +29,17 @@ class MoviesViewController: UITableViewController {
         title = Constants.moviesTabBarName
         view.backgroundColor = .systemBackground
         
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 200
-        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
-        
         viewModel.delegate = self
         viewModel.loadMovies()
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(sender:)))
-        tableView.addGestureRecognizer(longPress)
+        
+        setupUI()
+    }
+    
+    func setupUI() {
+        view.addSubview(tableView)
+        
+        tableView.frame = view.bounds
+        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         setupTapGesture()
     }
@@ -59,6 +74,7 @@ class MoviesViewController: UITableViewController {
                 }
                 
                 let actionCancel = UIAlertAction(title: Constants.alertActionCancel, style: .cancel)
+                
                 alert.addAction(actionDone)
                 alert.addAction(actionCancel)
                 
@@ -91,16 +107,16 @@ extension MoviesViewController: MoviesTableViewModelDelegate {
 
 // MARK: - TableView data source
 
-extension MoviesViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension MoviesViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.moviesViewModels.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.movieCellIdentifier) as? MovieCell else {
             return UITableViewCell()
         }
@@ -114,21 +130,17 @@ extension MoviesViewController {
 
 // MARK: - TableView delegate
 
-extension MoviesViewController {
+extension MoviesViewController: UITableViewDelegate {
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let storyboard = UIStoryboard(name: Constants.detailsStoryboardName, bundle: nil)
-        guard let detailVC = storyboard.instantiateViewController(withIdentifier: Constants.detailsStoryboardName) as? DetailsViewController else {
-            return
-        }
-        
+        let detailVC = DetailsViewController()
         viewModel.configure(details: detailVC.viewModel, for: indexPath)
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard indexPath.row < viewModel.moviesViewModels.count,
               let cell = cell as? MovieCell else 
         { return }
@@ -139,14 +151,14 @@ extension MoviesViewController {
         cellViewModel.loadImage()
     }
     
-    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard indexPath.row < viewModel.moviesViewModels.count else { return }
         
         let cellViewModel = viewModel.moviesViewModels[indexPath.row]
         cellViewModel.delegate = nil
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
 }

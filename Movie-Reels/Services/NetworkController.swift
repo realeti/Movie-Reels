@@ -1,6 +1,6 @@
 //
 //  NetworkController.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 30.01.2024.
 //
@@ -34,6 +34,11 @@ class NetworkController: MoviesLoading {
     let baseUrlString = "https://api.themoviedb.org/"
     let baseImagePath = "https://image.tmdb.org/t/p/w500"
     let apiKey = "2ccc9fcb3e886fcb5f80015418735095"
+    
+    func loadData(path: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        let urlString = baseUrlString.appending(path)
+        self.loadData(fullPath: urlString, completion: completion)
+    }
     
     func loadData(fullPath: String, completion: @escaping (Result<Data, Error>) -> Void) {
         
@@ -73,11 +78,6 @@ class NetworkController: MoviesLoading {
         dataTask.resume()
     }
     
-    func loadData(path: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        let urlString = baseUrlString.appending(path)
-        self.loadData(fullPath: urlString, completion: completion)
-    }
-    
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         let path = "3/trending/movie/week?language=en-US&api_key=\(apiKey)"
         
@@ -88,7 +88,8 @@ class NetworkController: MoviesLoading {
                 let moviesDto = responseData.results
                 
                 let movies = moviesDto.map { movie in
-                    Movie(title: movie.title,
+                    Movie(id: movie.id,
+                          title: movie.title,
                           poster: movie.poster,
                           releaseDate: movie.releaseDate,
                           overview: movie.overview

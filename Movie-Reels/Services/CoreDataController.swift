@@ -1,6 +1,6 @@
 //
 //  CoreDataController.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 01.02.2024.
 //
@@ -13,8 +13,8 @@ protocol MoviesStoring {
 }
 
 protocol FavoriteMoviesStoring {
-    func storeFavoriteMovies(movies: [Movie])
-    func removeFavoriteMovie(withTitle title: String, completion: @escaping (Error?) -> Void)
+    func addFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void)
+    func removeFavoriteMovie(movieID id: Int, completion: @escaping (Error?) -> Void)
 }
 
 protocol FavoriteMoviesLoading {
@@ -91,6 +91,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
                     movieCD = results?.first
                 }
                 
+                movieCD.id = Int64(movie.id)
                 movieCD.title = movie.title
                 movieCD.releaseDate = movie.releaseDate
                 movieCD.poster = movie.poster
@@ -108,6 +109,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
             let movieObjects = try context.fetch(request)
             let movies = movieObjects.map { movie in
                 Movie(
+                    id: Int(movie.id),
                     title: movie.title ?? "",
                     poster: movie.poster ?? "",
                     releaseDate: movie.releaseDate ?? "",
@@ -125,35 +127,8 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
     
-    func storeFavoriteMovies(movies: [Movie]) {
-        let context = persistentContainer.newBackgroundContext()
-
-        context.perform {
-            movies.forEach { movie in
-                let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
-                request.predicate = NSPredicate(format: "title == %@", movie.title)
-
-                let results = try? context.fetch(request)
-                let favoritesMovieCD: FavoritesMovieCD
-
-                if results?.count == 0 {
-                    favoritesMovieCD = FavoritesMovieCD(context: context)
-                } else {
-                    favoritesMovieCD = results!.first!
-                }
-
-                favoritesMovieCD.title = movie.title
-                favoritesMovieCD.releaseDate = movie.releaseDate
-                favoritesMovieCD.poster = movie.poster
-                favoritesMovieCD.overview = movie.overview
-            }
-
-            try? context.save()
-        }
-    }
-    
     func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        let context = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
         let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
         
         do {
@@ -166,6 +141,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
 
             let movies = movieObjects.map { movie in
                 Movie(
+                    id: Int(movie.id),
                     title: movie.title ?? "",
                     poster: movie.poster ?? "",
                     releaseDate: movie.releaseDate ?? "",
@@ -179,10 +155,39 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
     
-    func removeFavoriteMovie(withTitle title: String, completion: @escaping (Error?) -> Void) {
+    func addFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void) {
+        let context = persistentContainer.viewContext
+        
+        let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
+        request.predicate = NSPredicate(format: "title == %@", movie.title)
+
+        do {
+            let existingMovies = try context.fetch(request)
+            let newFavoriteMovie: FavoritesMovieCD!
+            
+            if existingMovies.count == 0 {
+                newFavoriteMovie = FavoritesMovieCD(context: context)
+            } else {
+                newFavoriteMovie = existingMovies.first
+            }
+            
+            newFavoriteMovie.id = Int64(movie.id)
+            newFavoriteMovie.title = movie.title
+            newFavoriteMovie.releaseDate = movie.releaseDate
+            newFavoriteMovie.poster = movie.poster
+            newFavoriteMovie.overview = movie.overview
+
+            try context.save()
+            completion(nil)
+        } catch {
+            completion(error)
+        }
+    }
+    
+    func removeFavoriteMovie(movieID id: Int, completion: @escaping (Error?) -> Void) {
         let context = persistentContainer.viewContext
         let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
-        request.predicate = NSPredicate(format: "title == %@", title)
+        request.predicate = NSPredicate(format: "id == %@", NSNumber(value: id))
 
         do {
             let results = try context.fetch(request)

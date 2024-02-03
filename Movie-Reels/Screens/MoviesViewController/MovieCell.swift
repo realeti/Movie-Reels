@@ -1,6 +1,6 @@
 //
 //  MovieCell.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 30.01.2024.
 //

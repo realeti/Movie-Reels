@@ -1,6 +1,6 @@
 //
 //  FavoritesViewController.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 30.01.2024.
 //
@@ -94,11 +94,7 @@ extension FavoritesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let storyboard = UIStoryboard(name: Constants.detailsStoryboardName, bundle: nil)
-        guard let detailVC = storyboard.instantiateViewController(withIdentifier: Constants.detailsStoryboardName) as? DetailsViewController else {
-            return
-        }
-        
+        let detailVC = DetailsViewController()
         viewModel.configure(details: detailVC.viewModel, for: indexPath)
         navigationController?.pushViewController(detailVC, animated: true)
     }

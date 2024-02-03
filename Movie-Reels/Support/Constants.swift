@@ -1,6 +1,6 @@
 //
 //  Constants.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 30.01.2024.
 //
@@ -19,11 +19,6 @@ struct Constants {
     static let addMovieToFavorites = "Add a movie to your favorites?"
     static let removeFavoriteMovie = "Remove"
     static let alertError = "Error"
-    
-    // MARK: - Storyboard names
-    static let moviesStoryboardName = "MoviesScreen"
-    static let detailsStoryboardName = "DetailsScreen"
-    static let favoritesStorybardName = "FavoritesScreen"
     
     // MARK: - Tab bar names
     static let moviesTabBarName = "Movies"

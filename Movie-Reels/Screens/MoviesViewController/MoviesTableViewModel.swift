@@ -1,6 +1,6 @@
 //
 //  MoviesTableViewModel.swift
-//  Nitrix-Movie-Reels
+//  Movie-Reels
 //
 //  Created by Apple M1 on 31.01.2024.
 //
@@ -61,22 +61,12 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath) {
         let cellViewModel = moviesViewModels[index.row]
-        var newMovies: [Movie] = []
         
-        localStorage.loadFavoriteMovies { [weak self] result in
-            guard let self else { return }
-            
-            do {
-                let favoriteMovies = try result.get()
-                
-                newMovies.append(contentsOf: favoriteMovies)
-                newMovies.append(cellViewModel.movie)
-                localStorage.storeFavoriteMovies(movies: newMovies)
-                
+        localStorage.addFavoriteMovie(movie: cellViewModel.movie) { error in
+            if let error = error {
+                print(error)
+            } else {
                 favorites.addMovie(movie: cellViewModel)
-                
-            } catch {
-                self.lastErrorMessage = error.localizedDescription
             }
         }
     }
