@@ -13,5 +13,11 @@
         <attribute name="poster" optional="YES" attributeType="String"/>
         <attribute name="releaseDate" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="moviePoster" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MoviePosterCD" inverseName="movie" inverseEntity="MoviePosterCD"/>
+    </entity>
+    <entity name="MoviePosterCD" representedClassName="MoviePosterCD" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="posterData" optional="YES" attributeType="Binary"/>
+        <relationship name="movie" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MovieCD" inverseName="moviePoster" inverseEntity="MovieCD"/>
     </entity>
 </model>

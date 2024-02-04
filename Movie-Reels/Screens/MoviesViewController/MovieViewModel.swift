@@ -16,7 +16,7 @@ protocol MovieViewModelDelegate: AnyObject {
 protocol MovieViewModeling {
     var id: Int { get }
     var title: String { get }
-    var imageData: Data? { get }
+    var posterData: Data? { get }
     var isImageLoading: Bool { get }
     var releaseDate: String { get }
     
@@ -30,10 +30,11 @@ class MovieViewModel: MovieViewModeling {
     var title: String { movie.title }
     var releaseDate: String { movie.releaseDate }
     
-    var imageData: Data?
+    var posterData: Data?
     var isImageLoading: Bool = false
     
     lazy var imageFetchingController = NetworkController()
+    lazy var localStorage = CoreDataController.shared
     weak var delegate: MovieViewModelDelegate?
     
     init(movie: Movie) {
@@ -41,18 +42,35 @@ class MovieViewModel: MovieViewModeling {
     }
     
     func loadImage() {
-        guard !movie.poster.isEmpty, isImageLoading == false, imageData == nil else { return }
+        guard !movie.poster.isEmpty, isImageLoading == false, posterData == nil else { return }
         
         isImageLoading = true
         delegate?.updateLoadingState()
         
         let imagePath = imageFetchingController.baseImagePath + movie.poster
         imageFetchingController.loadData(fullPath: imagePath) { [weak self] in
-            self?.imageData = try? $0.get()
-            self?.delegate?.updateImage()
-
-            self?.isImageLoading = false
-            self?.delegate?.updateLoadingState()
+            guard let self else { return }
+            
+            let posterData: Data?
+            
+            do {
+                posterData = try $0.get()
+                
+                if let posterData {
+                    self.localStorage.storeMoviePoster(movieID: self.id, posterData: posterData)
+                }
+            } catch {
+                posterData = self.movie.posterData
+            }
+            
+            if let data = posterData {
+                print("LoadImage", data)
+            }
+            
+            self.posterData = posterData
+            self.delegate?.updateImage()
+            self.isImageLoading = false
+            self.delegate?.updateLoadingState()
         }
     }
     

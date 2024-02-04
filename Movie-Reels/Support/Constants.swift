@@ -21,13 +21,15 @@ struct Constants {
     static let alertError = "Error"
     
     // MARK: - Tab bar names
-    static let moviesTabBarName = "Movies"
+    static let moviesTabBarName = "Home"
+    static let catalogTabBarName = "Catalog"
     static let favoritesTabBarName = "Favorites"
     
     // MARK: Coredata
     static let coreDataModelName = "MoviesDataModel"
     static let movieEntityName = "MovieCD"
     static let favoritesMovieEntityName = "FavoritesMovieCD"
+    static let moviePosterEntityName = "MoviePosterCD"
     
     init () {}
 }

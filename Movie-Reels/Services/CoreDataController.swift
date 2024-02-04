@@ -21,8 +21,16 @@ protocol FavoriteMoviesLoading {
     func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
 }
 
-typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring
-typealias MovieLoading = MoviesLoading & FavoriteMoviesLoading
+protocol MoviePosterStoring {
+    func storeMoviePoster(movieID: Int, posterData: Data)
+}
+
+protocol MoviePosterLoading {
+    func loadMoviePoster(for movieID: Int, completion: @escaping (Result<Data, Error>) -> Void)
+}
+
+typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring & MoviePosterStoring
+typealias MovieLoading = MoviesLoading & FavoriteMoviesLoading //& MoviePosterLoading
 
 final class CoreDataController: MovieStoring, MovieLoading {
     static let shared = CoreDataController()
@@ -76,26 +84,26 @@ final class CoreDataController: MovieStoring, MovieLoading {
     
     func storeMovies(movies: [Movie]) {
         let context = persistentContainer.newBackgroundContext()
-        let request = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
-        let results = try? context.fetch(request)
         
         context.perform {
+            let request = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
+            
             movies.forEach { movie in
-                let movieCD: MovieCD!
-                request.predicate = NSPredicate(format: "title == %@", movie.title)
+                var movieCD: MovieCD?
                 
-                if results?.count == 0 {
+                request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movie.id))
+                
+                if let existingMovieCD = try? context.fetch(request).first {
+                    movieCD = existingMovieCD
+                } else {
                     movieCD = MovieCD(context: context)
                 }
-                else {
-                    movieCD = results?.first
-                }
                 
-                movieCD.id = Int64(movie.id)
-                movieCD.title = movie.title
-                movieCD.releaseDate = movie.releaseDate
-                movieCD.poster = movie.poster
-                movieCD.overview = movie.overview
+                movieCD?.id = Int64(movie.id)
+                movieCD?.title = movie.title
+                movieCD?.releaseDate = movie.releaseDate
+                movieCD?.poster = movie.poster
+                movieCD?.overview = movie.overview
             }
             try? context.save()
         }
@@ -103,79 +111,86 @@ final class CoreDataController: MovieStoring, MovieLoading {
     
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         let context = persistentContainer.newBackgroundContext()
-        let request = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
         
-        do {
-            let movieObjects = try context.fetch(request)
-            let movies = movieObjects.map { movie in
-                Movie(
-                    id: Int(movie.id),
-                    title: movie.title ?? "",
-                    poster: movie.poster ?? "",
-                    releaseDate: movie.releaseDate ?? "",
-                    overview: movie.overview ?? ""
-                )
-            }
+        context.perform {
+            let request = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
             
-            if movies.isEmpty {
-                completion(.failure(NetErrors.connectionProblem))
-                return
+            do {
+                let movieObjects = try context.fetch(request)
+                let movies = movieObjects.map { movie in
+                    Movie(
+                        id: Int(movie.id),
+                        title: movie.title ?? "",
+                        poster: movie.poster ?? "",
+                        posterData: movie.moviePoster?.posterData ?? Data(),
+                        releaseDate: movie.releaseDate ?? "",
+                        overview: movie.overview ?? ""
+                    )
+                }
+                
+                if movies.isEmpty {
+                    completion(.failure(NetErrors.connectionProblem))
+                    return
+                }
+                
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
             }
-            completion(.success(movies))
-        } catch {
-            completion(.failure(error))
         }
     }
     
     func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         let context = persistentContainer.newBackgroundContext()
-        let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
         
-        do {
-            let movieObjects = try context.fetch(request)
+        context.perform {
+            let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
             
-            guard !movieObjects.isEmpty else {
-                completion(.success([]))
-                return
+            do {
+                let movieObjects = try context.fetch(request)
+                
+                guard !movieObjects.isEmpty else {
+                    completion(.success([]))
+                    return
+                }
+                
+                let movies = movieObjects.map { movie in
+                    Movie(
+                        id: Int(movie.id),
+                        title: movie.title ?? "",
+                        poster: movie.poster ?? "",
+                        posterData: Data(),
+                        releaseDate: movie.releaseDate ?? "",
+                        overview: movie.overview ?? ""
+                    )
+                }
+                
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
             }
-
-            let movies = movieObjects.map { movie in
-                Movie(
-                    id: Int(movie.id),
-                    title: movie.title ?? "",
-                    poster: movie.poster ?? "",
-                    releaseDate: movie.releaseDate ?? "",
-                    overview: movie.overview ?? ""
-                )
-            }
-
-            completion(.success(movies))
-        } catch {
-            completion(.failure(error))
         }
     }
     
     func addFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void) {
         let context = persistentContainer.viewContext
-        
         let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
-        request.predicate = NSPredicate(format: "title == %@", movie.title)
+        request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movie.id))
 
         do {
-            let existingMovies = try context.fetch(request)
-            let newFavoriteMovie: FavoritesMovieCD!
+            var newFavoriteMovie: FavoritesMovieCD?
             
-            if existingMovies.count == 0 {
-                newFavoriteMovie = FavoritesMovieCD(context: context)
+            if let existingFavoriteMovieCD = try context.fetch(request).first {
+                newFavoriteMovie = existingFavoriteMovieCD
             } else {
-                newFavoriteMovie = existingMovies.first
+                newFavoriteMovie = FavoritesMovieCD(context: context)
             }
             
-            newFavoriteMovie.id = Int64(movie.id)
-            newFavoriteMovie.title = movie.title
-            newFavoriteMovie.releaseDate = movie.releaseDate
-            newFavoriteMovie.poster = movie.poster
-            newFavoriteMovie.overview = movie.overview
+            newFavoriteMovie?.id = Int64(movie.id)
+            newFavoriteMovie?.title = movie.title
+            newFavoriteMovie?.releaseDate = movie.releaseDate
+            newFavoriteMovie?.poster = movie.poster
+            newFavoriteMovie?.overview = movie.overview
 
             try context.save()
             completion(nil)
@@ -190,9 +205,8 @@ final class CoreDataController: MovieStoring, MovieLoading {
         request.predicate = NSPredicate(format: "id == %@", NSNumber(value: id))
 
         do {
-            let results = try context.fetch(request)
-            if let movieToDelete = results.first {
-                context.delete(movieToDelete)
+            if let movieForDelete = try context.fetch(request).first {
+                context.delete(movieForDelete)
                 try context.save()
                 completion(nil)
             }
@@ -200,4 +214,69 @@ final class CoreDataController: MovieStoring, MovieLoading {
             completion(error)
         }
     }
+    
+    func storeMoviePoster(movieID: Int, posterData: Data) {
+        let context = persistentContainer.newBackgroundContext()
+        
+        context.performAndWait {
+            let request = NSFetchRequest<MoviePosterCD>(entityName: Constants.moviePosterEntityName)
+            request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
+            
+            do {
+                var moviePoster: MoviePosterCD?
+                
+                if let existingMoviePosterCD = try? context.fetch(request).first {
+                    moviePoster = existingMoviePosterCD
+                } else {
+                    moviePoster = MoviePosterCD(context: context)
+                }
+                
+                moviePoster?.id = Int64(movieID)
+                moviePoster?.posterData = posterData
+                
+                let movieRequest = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
+                movieRequest.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
+                
+                do {
+                    let existingMovies = try context.fetch(movieRequest)
+                    
+                    if let existingMovie = existingMovies.first {
+                        existingMovie.moviePoster = moviePoster
+                    }
+                } catch {
+                    print(error)
+                }
+                
+                try context.save()
+                
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    /*func loadMoviePoster(for movieID: Int, completion: @escaping (Result<Data, Error>) -> Void) {
+        let context = persistentContainer.newBackgroundContext()
+        
+        context.perform {
+            let request = NSFetchRequest<MoviePosterCD>(entityName: Constants.moviePosterEntityName)
+            request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
+            
+            do {
+                let moviePosters = try context.fetch(request)
+                
+                var posterData = Data()
+                
+                if let existingPoster = moviePosters.first {
+                    posterData = existingPoster.posterData ?? Data()
+                }
+                
+                print(posterData)
+                
+                completion(.success(posterData))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }*/
 }

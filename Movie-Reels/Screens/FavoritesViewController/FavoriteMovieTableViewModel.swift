@@ -30,7 +30,7 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
     var lastErrorMessage: String?
     
     weak var delegate: FavoriteMovieTableViewModelDelegate?
-    let localStorage = CoreDataController.shared
+    lazy var localStorage = CoreDataController.shared
     
     func loadMovies() {
         localStorage.loadFavoriteMovies { [weak self] result in
@@ -60,11 +60,6 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
         }
     }
     
-    func configure(details: MovieDetailsPresentable, for index: IndexPath) {
-        let cellViewModel = moviesViewModels[index.row]
-        cellViewModel.configure(details: details)
-    }
-    
     func addMovie(movie: MovieViewModel) {
         let existingMovie = moviesViewModels.firstIndex(where: { $0.title == movie.title })
         
@@ -74,5 +69,16 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
         
         self.moviesViewModels.append(movie)
         self.delegate?.updateMovies()
+        
+        localStorage.addFavoriteMovie(movie: movie.movie) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
+    func configure(details: MovieDetailsPresentable, for index: IndexPath) {
+        let cellViewModel = moviesViewModels[index.row]
+        cellViewModel.configure(details: details)
     }
 }

@@ -28,6 +28,7 @@
 		C6E882922B6978E300CF0E9F /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882912B6978E300CF0E9F /* NetworkController.swift */; };
 		C6E882962B697A3700CF0E9F /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882952B697A3700CF0E9F /* Movie.swift */; };
 		C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */; };
+		C6F468C42B6E94D2003BD11A /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F468C32B6E94D2003BD11A /* CatalogViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		C6E882912B6978E300CF0E9F /* NetworkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
 		C6E882952B697A3700CF0E9F /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDTO.swift; sourceTree = "<group>"; };
+		C6F468C32B6E94D2003BD11A /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */,
+				C6F468C22B6E94B5003BD11A /* CatalogViewController */,
 				C6E882832B696B3A00CF0E9F /* TabController */,
 				C6E8827E2B6962D700CF0E9F /* MoviesViewController */,
 				C60C24FD2B6AE00A00A7792A /* DetailsViewController */,
@@ -192,6 +195,14 @@
 			path = DTO;
 			sourceTree = "<group>";
 		};
+		C6F468C22B6E94B5003BD11A /* CatalogViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C6F468C32B6E94D2003BD11A /* CatalogViewController.swift */,
+			);
+			path = CatalogViewController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -262,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6F468C42B6E94D2003BD11A /* CatalogViewController.swift in Sources */,
 				C6E882922B6978E300CF0E9F /* NetworkController.swift in Sources */,
 				C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */,
 				C6048F642B6C184A00131132 /* MoviesDataModel.xcdatamodeld in Sources */,

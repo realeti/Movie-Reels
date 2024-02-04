@@ -28,12 +28,12 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     var lastErrorMessage: String?
     
     weak var delegate: MoviesTableViewModelDelegate?
-    let localStorage = CoreDataController.shared
     
     private lazy var fallbackController: FallbackController = {
         FallbackController(
             mainSource: NetworkController(),
-            reserveSource: localStorage)
+            //mainSource: CoreDataController.shared,
+            reserveSource: CoreDataController.shared)
     }()
     
     func loadMovies() {
@@ -61,13 +61,6 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath) {
         let cellViewModel = moviesViewModels[index.row]
-        
-        localStorage.addFavoriteMovie(movie: cellViewModel.movie) { error in
-            if let error = error {
-                print(error)
-            } else {
-                favorites.addMovie(movie: cellViewModel)
-            }
-        }
+        favorites.addMovie(movie: cellViewModel)
     }
 }
