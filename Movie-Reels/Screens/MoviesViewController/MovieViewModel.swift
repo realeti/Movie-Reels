@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 protocol MovieViewModelDelegate: AnyObject {
     func updateMovieDate()
@@ -21,6 +22,7 @@ protocol MovieViewModeling {
     var releaseDate: String { get }
     
     func loadImage()
+    func storeMoviePoster<T: NSManagedObject & MovieEntity>(for entityType: T.Type, entityName: String)
     func configure(details: MovieDetailsPresentable)
 }
 
@@ -47,7 +49,7 @@ class MovieViewModel: MovieViewModeling {
         isImageLoading = true
         delegate?.updateLoadingState()
         
-        let imagePath = imageFetchingController.baseImagePath + "dsdsa" + movie.poster
+        let imagePath = imageFetchingController.baseImagePath + movie.poster
         imageFetchingController.loadData(fullPath: imagePath) { [weak self] result in
             guard let self else { return }
             
@@ -55,18 +57,8 @@ class MovieViewModel: MovieViewModeling {
             
             do {
                 posterData = try result.get()
-                
-                if let posterData {
-                    self.localStorage.storeMoviePoster(movieID: self.id, posterData: posterData)
-                }
             } catch {
-                print(error.localizedDescription)
-                print("load image from local")
                 posterData = self.movie.posterData
-
-                if let posterData {
-                    self.localStorage.storeFavoriteMoviePoster(movieID: self.id, posterData: posterData)
-                }
             }
             
             self.posterData = posterData
@@ -76,7 +68,18 @@ class MovieViewModel: MovieViewModeling {
         }
     }
     
+    func storeMoviePoster<T: NSManagedObject & MovieEntity>(for entityType: T.Type, entityName: String) {
+        if let posterData {
+            self.localStorage.storeMoviePoster(movieID: self.id, posterData: posterData, entityType: entityType, entityName: entityName)
+        }
+    }
+    
     func configure(details: MovieDetailsPresentable) {
         details.update(movie: movie)
+    }
+    
+    func configure(favorites: FavoriteMoviesPresentable) {
+        favorites.addMovie(movie: movie)
+        storeMoviePoster(for: FavoritesMovieCD.self, entityName: Constants.favoritesMovieEntityName)
     }
 }

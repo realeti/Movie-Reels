@@ -22,15 +22,19 @@ protocol FavoriteMoviesLoading {
 }
 
 protocol MoviePosterStoring {
-    func storeMoviePoster(movieID: Int, posterData: Data)
+    func storeMoviePoster<T: NSManagedObject & MovieEntity>(movieID: Int, posterData: Data, entityType: T.Type, entityName: String)
 }
 
 protocol MoviePosterLoading {
     func loadMoviePoster(for movieID: Int, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
+protocol MovieEntity {
+    var moviePoster: MoviePosterCD? { get set }
+}
+
 typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring & MoviePosterStoring
-typealias MovieLoading = MoviesLoading & FavoriteMoviesLoading //& MoviePosterLoading
+typealias MovieLoading = MoviesLoading & FavoriteMoviesLoading
 
 final class CoreDataController: MovieStoring, MovieLoading {
     static let shared = CoreDataController()
@@ -214,45 +218,8 @@ final class CoreDataController: MovieStoring, MovieLoading {
             completion(error)
         }
     }
-    
-    func storeMoviePoster(movieID: Int, posterData: Data) {
-        let context = persistentContainer.newBackgroundContext()
-        
-        context.performAndWait {
-            let request = NSFetchRequest<MoviePosterCD>(entityName: Constants.moviePosterEntityName)
-            request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
-            
-            do {
-                var moviePoster: MoviePosterCD?
-                
-                if let existingMoviePosterCD = try? context.fetch(request).first {
-                    moviePoster = existingMoviePosterCD
-                } else {
-                    moviePoster = MoviePosterCD(context: context)
-                }
-                
-                moviePoster?.id = Int64(movieID)
-                moviePoster?.posterData = posterData
-                
-                let movieRequest = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
-                movieRequest.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
-                
-                do {
-                    if let existingMovie = try context.fetch(movieRequest).first {
-                        existingMovie.moviePoster = moviePoster
-                    }
-                } catch {
-                    print(error)
-                }
-                
-                try context.save()
-            } catch {
-                print(error)
-            }
-        }
-    }
-    
-    func storeFavoriteMoviePoster(movieID: Int, posterData: Data) {
+
+    func storeMoviePoster<T: NSManagedObject & MovieEntity>(movieID: Int, posterData: Data, entityType: T.Type, entityName: String) {
         let context = persistentContainer.newBackgroundContext()
         
         context.performAndWait {
@@ -271,11 +238,11 @@ final class CoreDataController: MovieStoring, MovieLoading {
                 moviePoster?.id = Int64(movieID)
                 moviePoster?.posterData = posterData
                 
-                let movieRequest = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
+                let movieRequest = NSFetchRequest<T>(entityName: entityName)
                 movieRequest.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
                 
                 do {
-                    if let existingMovie = try context.fetch(movieRequest).first {
+                    if var existingMovie = try context.fetch(movieRequest).first {
                         existingMovie.moviePoster = moviePoster
                     }
                 } catch {
@@ -289,3 +256,6 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
 }
+
+extension MovieCD: MovieEntity {}
+extension FavoritesMovieCD: MovieEntity {}

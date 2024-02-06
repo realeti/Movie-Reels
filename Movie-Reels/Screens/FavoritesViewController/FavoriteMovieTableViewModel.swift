@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FavoriteMoviesPresentable {
-    func addMovie(movie: MovieViewModel)
+    func addMovie(movie: Movie)
 }
 
 protocol FavoriteMovieTableViewModelDelegate: AnyObject {
@@ -60,17 +60,18 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
         }
     }
     
-    func addMovie(movie: MovieViewModel) {
-        let existingMovie = moviesViewModels.firstIndex(where: { $0.title == movie.title })
+    func addMovie(movie: Movie) {
+        let newFavoriteMovie = MovieViewModel(movie: movie)
+        let existingMovie = moviesViewModels.firstIndex(where: { $0.title == newFavoriteMovie.title })
         
         if let existingMovie {
             self.moviesViewModels.remove(at: existingMovie)
         }
         
-        self.moviesViewModels.append(movie)
+        self.moviesViewModels.append(newFavoriteMovie)
         self.delegate?.updateMovies()
         
-        localStorage.addFavoriteMovie(movie: movie.movie) { error in
+        localStorage.addFavoriteMovie(movie: newFavoriteMovie.movie) { error in
             if let error = error {
                 print(error)
             }

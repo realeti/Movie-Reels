@@ -149,6 +149,7 @@ extension MoviesViewController: UITableViewDelegate {
         
         cellViewModel.delegate = cell
         cellViewModel.loadImage()
+        cellViewModel.storeMoviePoster(for: MovieCD.self, entityName: Constants.movieEntityName)
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

@@ -31,8 +31,7 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     private lazy var fallbackController: FallbackController = {
         FallbackController(
-            //mainSource: NetworkController(),
-            mainSource: CoreDataController.shared,
+            mainSource: NetworkController(),
             reserveSource: CoreDataController.shared)
     }()
     
@@ -61,6 +60,6 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath) {
         let cellViewModel = moviesViewModels[index.row]
-        favorites.addMovie(movie: cellViewModel)
+        cellViewModel.configure(favorites: favorites)
     }
 }
