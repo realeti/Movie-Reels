@@ -31,8 +31,8 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     private lazy var fallbackController: FallbackController = {
         FallbackController(
-            mainSource: NetworkController(),
-            //mainSource: CoreDataController.shared,
+            //mainSource: NetworkController(),
+            mainSource: CoreDataController.shared,
             reserveSource: CoreDataController.shared)
     }()
     

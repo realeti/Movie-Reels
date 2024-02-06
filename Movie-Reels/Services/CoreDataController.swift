@@ -159,7 +159,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
                         id: Int(movie.id),
                         title: movie.title ?? "",
                         poster: movie.poster ?? "",
-                        posterData: Data(),
+                        posterData: movie.moviePoster?.posterData ?? Data(),
                         releaseDate: movie.releaseDate ?? "",
                         overview: movie.overview ?? ""
                     )
@@ -238,9 +238,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
                 movieRequest.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
                 
                 do {
-                    let existingMovies = try context.fetch(movieRequest)
-                    
-                    if let existingMovie = existingMovies.first {
+                    if let existingMovie = try context.fetch(movieRequest).first {
                         existingMovie.moviePoster = moviePoster
                     }
                 } catch {
@@ -248,35 +246,46 @@ final class CoreDataController: MovieStoring, MovieLoading {
                 }
                 
                 try context.save()
-                
             } catch {
                 print(error)
             }
         }
     }
     
-    /*func loadMoviePoster(for movieID: Int, completion: @escaping (Result<Data, Error>) -> Void) {
+    func storeFavoriteMoviePoster(movieID: Int, posterData: Data) {
         let context = persistentContainer.newBackgroundContext()
         
-        context.perform {
+        context.performAndWait {
             let request = NSFetchRequest<MoviePosterCD>(entityName: Constants.moviePosterEntityName)
             request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
             
             do {
-                let moviePosters = try context.fetch(request)
+                var moviePoster: MoviePosterCD?
                 
-                var posterData = Data()
-                
-                if let existingPoster = moviePosters.first {
-                    posterData = existingPoster.posterData ?? Data()
+                if let existingMoviePoster = try context.fetch(request).first {
+                    moviePoster = existingMoviePoster
+                } else {
+                    moviePoster = MoviePosterCD(context: context)
                 }
                 
-                print(posterData)
+                moviePoster?.id = Int64(movieID)
+                moviePoster?.posterData = posterData
                 
-                completion(.success(posterData))
+                let movieRequest = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
+                movieRequest.predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
+                
+                do {
+                    if let existingMovie = try context.fetch(movieRequest).first {
+                        existingMovie.moviePoster = moviePoster
+                    }
+                } catch {
+                    print(error)
+                }
+                
+                try context.save()
             } catch {
-                completion(.failure(error))
+                print(error)
             }
         }
-    }*/
+    }
 }

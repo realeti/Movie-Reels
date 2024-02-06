@@ -47,24 +47,26 @@ class MovieViewModel: MovieViewModeling {
         isImageLoading = true
         delegate?.updateLoadingState()
         
-        let imagePath = imageFetchingController.baseImagePath + movie.poster
-        imageFetchingController.loadData(fullPath: imagePath) { [weak self] in
+        let imagePath = imageFetchingController.baseImagePath + "dsdsa" + movie.poster
+        imageFetchingController.loadData(fullPath: imagePath) { [weak self] result in
             guard let self else { return }
             
             let posterData: Data?
             
             do {
-                posterData = try $0.get()
+                posterData = try result.get()
                 
                 if let posterData {
                     self.localStorage.storeMoviePoster(movieID: self.id, posterData: posterData)
                 }
             } catch {
+                print(error.localizedDescription)
+                print("load image from local")
                 posterData = self.movie.posterData
-            }
-            
-            if let data = posterData {
-                print("LoadImage", data)
+
+                if let posterData {
+                    self.localStorage.storeFavoriteMoviePoster(movieID: self.id, posterData: posterData)
+                }
             }
             
             self.posterData = posterData
