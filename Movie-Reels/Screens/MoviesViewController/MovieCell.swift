@@ -93,7 +93,7 @@ class MovieCell: UITableViewCell {
             moviePosterView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent),
             moviePosterView.heightAnchor.constraint(equalToConstant: Metrics.moviePosterHeight),
             moviePosterView.widthAnchor.constraint(equalToConstant: Metrics.moviePosterWidth),
-            moviePosterView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Metrics.bottomIndent),
+            moviePosterView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Metrics.bottomIndent).withPriority(.defaultLow),
             
             movieNameLabel.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor, constant: -Metrics.topIndent),
             movieNameLabel.leadingAnchor.constraint(equalTo: moviePosterView.trailingAnchor, constant: Metrics.leadingIndent),
@@ -161,4 +161,11 @@ private struct Metrics {
     static let moviePosterWidth: CGFloat = 100.0
     
     init() {}
+}
+
+extension NSLayoutConstraint {
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
+    }
 }
