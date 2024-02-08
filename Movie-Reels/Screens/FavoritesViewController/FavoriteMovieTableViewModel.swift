@@ -33,7 +33,7 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
     lazy var localStorage = CoreDataController.shared
     
     func loadMovies() {
-        localStorage.loadFavoriteMovies { [weak self] result in
+        localStorage.loadMovies(entityType: FavoritesMovieCD.self, entityName: Constants.favoritesMovieEntityName) { [weak self] result in
             guard let self else { return }
             
             do {

@@ -17,6 +17,10 @@ protocol FavoriteMoviesStoring {
     func removeFavoriteMovie(movieID id: Int, completion: @escaping (Error?) -> Void)
 }
 
+protocol MoviesLoadingStorage {
+    func loadMovies<T: NSManagedObject & MovieEntity>(entityType: T.Type, entityName: String, completion: @escaping (Result<[Movie], Error>) -> Void)
+}
+
 protocol FavoriteMoviesLoading {
     func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
 }
@@ -30,11 +34,16 @@ protocol MoviePosterLoading {
 }
 
 protocol MovieEntity {
+    var id: Int64 { get set }
+    var overview: String? { get set }
+    var poster: String? { get set }
+    var releaseDate: String? { get set }
+    var title: String? { get set }
     var moviePoster: MoviePosterCD? { get set }
 }
 
 typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring & MoviePosterStoring
-typealias MovieLoading = MoviesLoading & FavoriteMoviesLoading
+typealias MovieLoading = MoviesLoadingStorage //& FavoriteMoviesLoading
 
 final class CoreDataController: MovieStoring, MovieLoading {
     static let shared = CoreDataController()
@@ -113,42 +122,11 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
     
-    func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
+    func loadMovies<T: NSManagedObject & MovieEntity>(entityType: T.Type, entityName: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
         let context = persistentContainer.newBackgroundContext()
         
         context.perform {
-            let request = NSFetchRequest<MovieCD>(entityName: Constants.movieEntityName)
-            
-            do {
-                let movieObjects = try context.fetch(request)
-                let movies = movieObjects.map { movie in
-                    Movie(
-                        id: Int(movie.id),
-                        title: movie.title ?? "",
-                        poster: movie.poster ?? "",
-                        posterData: movie.moviePoster?.posterData ?? Data(),
-                        releaseDate: movie.releaseDate ?? "",
-                        overview: movie.overview ?? ""
-                    )
-                }
-                
-                if movies.isEmpty {
-                    completion(.failure(NetErrors.connectionProblem))
-                    return
-                }
-                
-                completion(.success(movies))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        let context = persistentContainer.newBackgroundContext()
-        
-        context.perform {
-            let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
+            let request = NSFetchRequest<T>(entityName: entityName)
             
             do {
                 let movieObjects = try context.fetch(request)

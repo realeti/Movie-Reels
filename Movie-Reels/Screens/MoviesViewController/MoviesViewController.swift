@@ -158,8 +158,4 @@ extension MoviesViewController: UITableViewDelegate {
         let cellViewModel = viewModel.moviesViewModels[indexPath.row]
         cellViewModel.delegate = nil
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
 }

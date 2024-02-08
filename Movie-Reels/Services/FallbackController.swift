@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import CoreData
 
 final class FallbackController: MoviesLoading {
     let mainSource: MoviesLoading
-    let reserveSource: MoviesLoading & MoviesStoring
+    let reserveSource: MoviesLoadingStorage & MoviesStoring
     
-    init(mainSource: MoviesLoading, reserveSource: MoviesLoading & MoviesStoring) {
+    init(mainSource: MoviesLoading, reserveSource: MoviesLoadingStorage & MoviesStoring) {
         self.mainSource = mainSource
         self.reserveSource = reserveSource
     }
@@ -29,9 +30,9 @@ final class FallbackController: MoviesLoading {
                 self.reserveSource.storeMovies(movies: movies)
                 completion(.success(movies))
             } catch {
-                self.reserveSource.loadMovies { reserveResult in
+                self.reserveSource.loadMovies(entityType: MovieCD.self, entityName: Constants.movieEntityName) { result in
                     do {
-                        let reserveMovies = try reserveResult.get()
+                        let reserveMovies = try result.get()
                         completion(.success(reserveMovies))
                     } catch {
                         completion(.failure(error))
