@@ -21,10 +21,6 @@ protocol MoviesLoadingStorage {
     func loadMovies<T: NSManagedObject & MovieEntity>(entityType: T.Type, entityName: String, completion: @escaping (Result<[Movie], Error>) -> Void)
 }
 
-protocol FavoriteMoviesLoading {
-    func loadFavoriteMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
-}
-
 protocol MoviePosterStoring {
     func storeMoviePoster<T: NSManagedObject & MovieEntity>(movieID: Int, posterData: Data, entityType: T.Type, entityName: String)
 }
@@ -43,7 +39,7 @@ protocol MovieEntity {
 }
 
 typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring & MoviePosterStoring
-typealias MovieLoading = MoviesLoadingStorage //& FavoriteMoviesLoading
+typealias MovieLoading = MoviesLoadingStorage
 
 final class CoreDataController: MovieStoring, MovieLoading {
     static let shared = CoreDataController()
@@ -143,7 +139,8 @@ final class CoreDataController: MovieStoring, MovieLoading {
                         poster: movie.poster ?? "",
                         posterData: movie.moviePoster?.posterData ?? Data(),
                         releaseDate: movie.releaseDate ?? "",
-                        overview: movie.overview ?? ""
+                        overview: movie.overview ?? "",
+                        genreIds: []
                     )
                 }
                 

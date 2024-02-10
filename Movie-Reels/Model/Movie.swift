@@ -14,4 +14,5 @@ struct Movie {
     let posterData: Data
     let releaseDate: String
     let overview: String
+    let genreIds: [Int]
 }

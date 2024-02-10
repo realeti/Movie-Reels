@@ -41,4 +41,21 @@ final class FallbackController: MoviesLoading {
             }
         }
     }
+    
+    func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) {
+        mainSource.loadMovieGenres { result in
+            do {
+                let genres = try result.get()
+                
+                if genres.isEmpty {
+                    completion(.failure(NetErrors.invalidData))
+                    return
+                }
+                
+                completion(.success(genres))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
 }

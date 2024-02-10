@@ -18,6 +18,7 @@ enum NetErrors: Error {
 
 protocol MoviesLoading {
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
+    func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void)
 }
 
 class NetworkController: MoviesLoading {
@@ -93,11 +94,34 @@ class NetworkController: MoviesLoading {
                           poster: movie.poster,
                           posterData: Data(),
                           releaseDate: movie.releaseDate,
-                          overview: movie.overview
+                          overview: movie.overview,
+                          genreIds: movie.genresIds
                     )
                 }
                 
                 completion(.success(movies))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) {
+        let path = "3/genre/movie/list?api_key=\(apiKey)"
+        
+        loadData(path: path) { response in
+            do {
+                let data = try response.get()
+                let responseData = try self.decoder.decode(MovieGenresListDTO.self, from: data)
+                let genresDto = responseData.genres
+                
+                let genres = genresDto.map { genre in
+                    Genre(id: genre.id,
+                          name: genre.name
+                    )
+                }
+                
+                completion(.success(genres))
             } catch {
                 completion(.failure(error))
             }

@@ -30,7 +30,7 @@ class MoviesViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         viewModel.delegate = self
-        viewModel.loadMovies()
+        viewModel.loadMoviesData()
         
         setupUI()
     }
@@ -88,6 +88,12 @@ class MoviesViewController: UIViewController {
 
 extension MoviesViewController: MoviesTableViewModelDelegate {
     func updateMovies() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func updateGenres() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

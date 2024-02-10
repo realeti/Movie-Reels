@@ -33,6 +33,7 @@ class MovieViewModel: MovieViewModeling {
     var releaseDate: String { movie.releaseDate }
     
     var posterData: Data?
+    var genres: [String] = []
     var isImageLoading: Bool = false
     
     lazy var imageFetchingController = NetworkController()

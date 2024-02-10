@@ -9,6 +9,7 @@ import Foundation
 
 protocol MoviesTableViewModelDelegate: AnyObject {
     func updateMovies()
+    func updateGenres()
     func updateError()
 }
 
@@ -16,7 +17,9 @@ protocol MoviesTableViewModeling {
     var moviesViewModels: [MovieViewModel] { get }
     var lastErrorMessage: String? { get }
     
-    func loadMovies()
+    //func loadMovies()
+    //func loadMovieGenres()
+    func loadMoviesData()
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
     func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath)
 }
@@ -35,21 +38,51 @@ class MoviesTableViewModel: MoviesTableViewModeling {
             reserveSource: CoreDataController.shared)
     }()
     
-    func loadMovies() {
+    func loadMoviesData() {
+        let group = DispatchGroup()
+        
+        guard !isLoading else { return }
+        self.isLoading = true
+        
+        group.enter()
         fallbackController.loadMovies { [weak self] result in
             guard let self else { return }
-            self.isLoading = false
             
             do {
                 let movies = try result.get()
                 let viewModels = movies.map { MovieViewModel(movie: $0) }
                 
                 self.moviesViewModels.append(contentsOf: viewModels)
-                self.delegate?.updateMovies()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
                 self.delegate?.updateError()
             }
+            group.leave()
+        }
+        
+        group.enter()
+        fallbackController.loadMovieGenres { [weak self] result in
+            guard let self else { return }
+            
+            do {
+                let genres = try result.get()
+                
+                self.moviesViewModels.forEach { movieViewModel in
+                    let genres = genres.filter({ movieViewModel.movie.genreIds.contains($0.id) }).map{ $0.name }
+                    movieViewModel.genres = genres
+                }
+            } catch {
+                self.lastErrorMessage = error.localizedDescription
+                self.delegate?.updateError()
+            }
+            group.leave()
+        }
+        
+        group.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+            
+            self.isLoading = false
+            self.delegate?.updateMovies()
         }
     }
     

@@ -18,10 +18,25 @@ class MovieCell: UITableViewCell {
         return label
     }()
     
+    lazy var movieInfoStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 3.0
+        return stackView
+    }()
+    
     lazy var movieNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: Metrics.movieNameSize, weight: .semibold)
         label.numberOfLines = 2
+        return label
+    }()
+    
+    lazy var movieGenresLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .systemGray
+        label.font = UIFont.systemFont(ofSize: Metrics.movieGenresSize, weight: .semibold)
+        label.numberOfLines = 1
         return label
     }()
     
@@ -47,6 +62,7 @@ class MovieCell: UITableViewCell {
         didSet {
             guard let viewModel else { return }
             movieNameLabel.text = viewModel.title
+            updateGenres()
             updateMovieDate()
             updateImage()
         }
@@ -72,20 +88,22 @@ class MovieCell: UITableViewCell {
     
     private func setupUI() {
         contentView.addSubview(movieReleaseDateLabel)
-        contentView.addSubview(movieNameLabel)
+        contentView.addSubview(movieInfoStackView)
+        movieInfoStackView.addArrangedSubview(movieNameLabel)
+        movieInfoStackView.addArrangedSubview(movieGenresLabel)
         contentView.addSubview(moviePosterView)
         
         moviePosterView.addSubview(moviePoster)
         moviePosterView.addSubview(activityIndicator)
         
         movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        movieInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         moviePosterView.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieReleaseDateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Metrics.topIndent),
+            movieReleaseDateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Metrics.topIndent / 2),
             movieReleaseDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent),
             movieReleaseDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent),
             
@@ -95,9 +113,9 @@ class MovieCell: UITableViewCell {
             moviePosterView.widthAnchor.constraint(equalToConstant: Metrics.moviePosterWidth),
             moviePosterView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Metrics.bottomIndent).withPriority(.defaultLow),
             
-            movieNameLabel.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor, constant: -Metrics.topIndent),
-            movieNameLabel.leadingAnchor.constraint(equalTo: moviePosterView.trailingAnchor, constant: Metrics.leadingIndent),
-            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent),
+            movieInfoStackView.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor, constant: -Metrics.topIndent),
+            movieInfoStackView.leadingAnchor.constraint(equalTo: moviePoster.trailingAnchor, constant: Metrics.leadingIndent),
+            movieInfoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent),
             
             moviePoster.topAnchor.constraint(equalTo: moviePosterView.topAnchor),
             moviePoster.leadingAnchor.constraint(equalTo: moviePosterView.leadingAnchor),
@@ -111,6 +129,11 @@ class MovieCell: UITableViewCell {
 }
 
 extension MovieCell: MovieViewModelDelegate {
+    func updateGenres() {
+        guard let viewModel else { return }
+        movieGenresLabel.text = viewModel.genres.joined(separator: ", ")
+    }
+    
     func updateMovieDate() {
         guard let viewModel else { return }
         
@@ -149,16 +172,17 @@ extension MovieCell: MovieViewModelDelegate {
 }
 
 private struct Metrics {
-    static let movieReleaseDateSize: CGFloat = 17.0
-    static let movieNameSize: CGFloat = 24.0
+    static let movieReleaseDateSize: CGFloat = 16.0
+    static let movieNameSize: CGFloat = 20.0
+    static let movieGenresSize: CGFloat = 14.0
     
     static let topIndent: CGFloat = 8.0
     static let leadingIndent: CGFloat = 8.0
     static let traillingIndent: CGFloat = 8.0
     static let bottomIndent: CGFloat = 8.0
     
-    static let moviePosterHeight: CGFloat = 150.0
-    static let moviePosterWidth: CGFloat = 100.0
+    static let moviePosterHeight: CGFloat = 120.0 // 150.0
+    static let moviePosterWidth: CGFloat = 80.0 // 100.0
     
     init() {}
 }
