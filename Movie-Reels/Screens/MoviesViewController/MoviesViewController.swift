@@ -93,12 +93,6 @@ extension MoviesViewController: MoviesTableViewModelDelegate {
         }
     }
     
-    func updateGenres() {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
     func updateError() {
         guard let error = viewModel.lastErrorMessage else { return }
         

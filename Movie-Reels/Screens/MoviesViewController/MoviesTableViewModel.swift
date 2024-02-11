@@ -9,7 +9,6 @@ import Foundation
 
 protocol MoviesTableViewModelDelegate: AnyObject {
     func updateMovies()
-    func updateGenres()
     func updateError()
 }
 
@@ -17,9 +16,9 @@ protocol MoviesTableViewModeling {
     var moviesViewModels: [MovieViewModel] { get }
     var lastErrorMessage: String? { get }
     
-    //func loadMovies()
-    //func loadMovieGenres()
     func loadMoviesData()
+    func loadMovies(completion: @escaping () -> Void)
+    func loadMovieGenres()
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
     func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath)
 }
@@ -39,12 +38,20 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     }()
     
     func loadMoviesData() {
-        let group = DispatchGroup()
-        
         guard !isLoading else { return }
         self.isLoading = true
         
-        group.enter()
+        loadMovies { [weak self] in
+            guard let self else { return }
+            self.loadMovieGenres()
+            
+            if let _ = self.lastErrorMessage {
+                self.delegate?.updateError()
+            }
+        }
+    }
+    
+    func loadMovies(completion: @escaping () -> Void) {
         fallbackController.loadMovies { [weak self] result in
             guard let self else { return }
             
@@ -53,16 +60,17 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 let viewModels = movies.map { MovieViewModel(movie: $0) }
                 
                 self.moviesViewModels.append(contentsOf: viewModels)
+                completion()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
-                self.delegate?.updateError()
             }
-            group.leave()
         }
-        
-        group.enter()
+    }
+    
+    func loadMovieGenres() {
         fallbackController.loadMovieGenres { [weak self] result in
             guard let self else { return }
+            self.isLoading = false
             
             do {
                 let genres = try result.get()
@@ -71,18 +79,10 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                     let genres = genres.filter({ movieViewModel.movie.genreIds.contains($0.id) }).map{ $0.name }
                     movieViewModel.genres = genres
                 }
+                self.delegate?.updateMovies()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
-                self.delegate?.updateError()
             }
-            group.leave()
-        }
-        
-        group.notify(queue: .main) { [weak self] in
-            guard let self else { return }
-            
-            self.isLoading = false
-            self.delegate?.updateMovies()
         }
     }
     
