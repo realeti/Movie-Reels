@@ -44,10 +44,6 @@ class MoviesTableViewModel: MoviesTableViewModeling {
         loadMovies { [weak self] in
             guard let self else { return }
             self.loadMovieGenres()
-            
-            if let _ = self.lastErrorMessage {
-                self.delegate?.updateError()
-            }
         }
     }
     
@@ -63,6 +59,7 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 completion()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
+                self.delegate?.updateError()
             }
         }
     }
@@ -76,12 +73,13 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 let genres = try result.get()
                 
                 self.moviesViewModels.forEach { movieViewModel in
-                    let genres = genres.filter({ movieViewModel.movie.genreIds.contains($0.id) }).map{ $0.name }
-                    movieViewModel.genres = genres
+                    let nameGenres = genres.filter({ movieViewModel.movie.genreIds.contains($0.id) }).map{ $0.name }
+                    movieViewModel.genres = nameGenres
                 }
                 self.delegate?.updateMovies()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
+                self.delegate?.updateError()
             }
         }
     }

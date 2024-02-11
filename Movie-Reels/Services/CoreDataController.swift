@@ -35,6 +35,7 @@ protocol MovieEntity {
     var poster: String? { get set }
     var releaseDate: String? { get set }
     var title: String? { get set }
+    var genreIds: Data? { get set }
     var moviePoster: MoviePosterCD? { get set }
 }
 
@@ -113,6 +114,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
                 movieCD?.releaseDate = movie.releaseDate
                 movieCD?.poster = movie.poster
                 movieCD?.overview = movie.overview
+                movieCD?.genreIds = try? JSONEncoder().encode(movie.genreIds)
             }
             try? context.save()
         }
@@ -133,14 +135,17 @@ final class CoreDataController: MovieStoring, MovieLoading {
                 }
                 
                 let movies = movieObjects.map { movie in
-                    Movie(
+                    let genreIds = movie.genreIds ?? Data()
+                    let movieGenreIds = try? JSONDecoder().decode([Int].self, from: genreIds)
+                    
+                    return Movie(
                         id: Int(movie.id),
                         title: movie.title ?? "",
                         poster: movie.poster ?? "",
                         posterData: movie.moviePoster?.posterData ?? Data(),
                         releaseDate: movie.releaseDate ?? "",
                         overview: movie.overview ?? "",
-                        genreIds: []
+                        genreIds: movieGenreIds ?? []
                     )
                 }
                 
