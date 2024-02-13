@@ -23,6 +23,7 @@ protocol MovieViewModeling {
     
     func loadImage()
     func storeMoviePoster<T: NSManagedObject & MovieEntity>(for entityType: T.Type, entityName: String)
+    func updateGenres(for genreIds: [Int], genres: [Genre])
     func configure(details: MovieDetailsPresentable)
 }
 
@@ -75,12 +76,17 @@ class MovieViewModel: MovieViewModeling {
         }
     }
     
+    func updateGenres(for genreIds: [Int], genres: [Genre]) {
+        let nameGenres = genres.filter({ self.movie.genreIds.contains($0.id) }).map{ $0.name }
+        self.genres = nameGenres.sorted(by: <)
+    }
+    
     func configure(details: MovieDetailsPresentable) {
         details.update(movie: movie)
     }
     
     func configure(favorites: FavoriteMoviesPresentable) {
-        favorites.addMovie(movie: movie)
+        favorites.addFavoriteMovie(movie: movie)
         storeMoviePoster(for: FavoritesMovieCD.self, entityName: Constants.favoritesMovieEntityName)
     }
 }

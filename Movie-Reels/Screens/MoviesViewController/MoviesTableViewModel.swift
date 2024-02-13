@@ -14,6 +14,7 @@ protocol MoviesTableViewModelDelegate: AnyObject {
 
 protocol MoviesTableViewModeling {
     var moviesViewModels: [MovieViewModel] { get }
+    var movieGenres: [Genre] { get }
     var lastErrorMessage: String? { get }
     
     func loadMoviesData()
@@ -27,6 +28,7 @@ class MoviesTableViewModel: MoviesTableViewModeling {
     
     var isLoading = false
     var moviesViewModels: [MovieViewModel] = []
+    var movieGenres: [Genre] = []
     var lastErrorMessage: String?
     
     weak var delegate: MoviesTableViewModelDelegate?
@@ -73,9 +75,10 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 let genres = try result.get()
                 
                 self.moviesViewModels.forEach { movieViewModel in
-                    let nameGenres = genres.filter({ movieViewModel.movie.genreIds.contains($0.id) }).map{ $0.name }
-                    movieViewModel.genres = nameGenres
+                    movieViewModel.updateGenres(for: movieViewModel.movie.genreIds, genres: genres)
                 }
+                
+                movieGenres = genres
                 self.delegate?.updateMovies()
             } catch {
                 self.lastErrorMessage = error.localizedDescription

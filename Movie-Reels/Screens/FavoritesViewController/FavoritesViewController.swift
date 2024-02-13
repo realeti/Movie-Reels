@@ -28,7 +28,7 @@ class FavoritesViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         viewModel.delegate = self
-        viewModel.loadMovies()
+        viewModel.loadMoviesData()
         
         setupUI()
     }
