@@ -224,6 +224,7 @@ final class CoreDataController: MovieStoring, MovieLoading {
             newFavoriteMovie?.releaseDate = movie.releaseDate
             newFavoriteMovie?.poster = movie.poster
             newFavoriteMovie?.overview = movie.overview
+            newFavoriteMovie?.genreIds = try? JSONEncoder().encode(movie.genreIds)
 
             try context.save()
             completion(nil)

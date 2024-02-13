@@ -40,6 +40,7 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
                 let movies = try result.get()
                 let viewModels = movies.map { MovieViewModel(movie: $0) }
                 
+                self.moviesViewModels = []
                 self.moviesViewModels.append(contentsOf: viewModels)
                 self.delegate?.updateMovies()
             } catch {
