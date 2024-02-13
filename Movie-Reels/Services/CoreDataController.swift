@@ -10,6 +10,7 @@ import CoreData
 
 protocol MoviesStoring {
     func storeMovies(movies: [Movie])
+    func storeGenres(genres: [Genre])
 }
 
 protocol FavoriteMoviesStoring {
@@ -19,14 +20,11 @@ protocol FavoriteMoviesStoring {
 
 protocol MoviesLoadingStorage {
     func loadMovies<T: NSManagedObject & MovieEntity>(entityType: T.Type, entityName: String, completion: @escaping (Result<[Movie], Error>) -> Void)
+    func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void)
 }
 
 protocol MoviePosterStoring {
     func storeMoviePoster<T: NSManagedObject & MovieEntity>(movieID: Int, posterData: Data, entityType: T.Type, entityName: String)
-}
-
-protocol MoviePosterLoading {
-    func loadMoviePoster(for movieID: Int, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
 protocol MovieEntity {
@@ -120,6 +118,30 @@ final class CoreDataController: MovieStoring, MovieLoading {
         }
     }
     
+    func storeGenres(genres: [Genre]) {
+        let context = persistentContainer.newBackgroundContext()
+        
+        context.perform {
+            let request = NSFetchRequest<MovieGenreCD>(entityName: Constants.movieGenreEntityName)
+            
+            genres.forEach { genre in
+                var movieGenreCD: MovieGenreCD?
+                
+                request.predicate = NSPredicate(format: "id == %@", NSNumber(value: genre.id))
+                
+                if let existingMovieGenreCD = try? context.fetch(request).first {
+                    movieGenreCD = existingMovieGenreCD
+                } else {
+                    movieGenreCD = MovieGenreCD(context: context)
+                }
+                
+                movieGenreCD?.id = Int64(genre.id)
+                movieGenreCD?.name = genre.name
+            }
+            try? context.save()
+        }
+    }
+    
     func loadMovies<T: NSManagedObject & MovieEntity>(entityType: T.Type, entityName: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
         let context = persistentContainer.newBackgroundContext()
         
@@ -150,6 +172,33 @@ final class CoreDataController: MovieStoring, MovieLoading {
                 }
                 
                 completion(.success(movies))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) {
+        let context = persistentContainer.newBackgroundContext()
+        
+        context.perform {
+            let request = NSFetchRequest<MovieGenreCD>(entityName: Constants.movieGenreEntityName)
+            
+            do {
+                let genreObjects = try context.fetch(request)
+                
+                guard !genreObjects.isEmpty else {
+                    completion(.success([]))
+                    return
+                }
+                
+                let genres = genreObjects.map { genre in
+                    Genre(
+                        id: Int(genre.id),
+                        name: genre.name ?? ""
+                    )
+                }
+                completion(.success(genres))
             } catch {
                 completion(.failure(error))
             }

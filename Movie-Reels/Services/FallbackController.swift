@@ -52,9 +52,17 @@ final class FallbackController: MoviesLoading {
                     return
                 }
                 
+                self.reserveSource.storeGenres(genres: genres)
                 completion(.success(genres))
             } catch {
-                completion(.failure(error))
+                self.reserveSource.loadMovieGenres { result in
+                    do {
+                        let genres = try result.get()
+                        completion(.success(genres))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                }
             }
         }
     }

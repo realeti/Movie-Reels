@@ -18,7 +18,7 @@
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="moviePoster" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MoviePosterCD" inverseName="movie" inverseEntity="MoviePosterCD"/>
     </entity>
-    <entity name="MovieGenresCD" representedClassName="MovieGenresCD" syncable="YES" codeGenerationType="class">
+    <entity name="MovieGenreCD" representedClassName="MovieGenreCD" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>

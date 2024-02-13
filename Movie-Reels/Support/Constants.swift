@@ -28,6 +28,7 @@ struct Constants {
     // MARK: Coredata
     static let coreDataModelName = "MoviesDataModel"
     static let movieEntityName = "MovieCD"
+    static let movieGenreEntityName = "MovieGenreCD"
     static let favoritesMovieEntityName = "FavoritesMovieCD"
     static let moviePosterEntityName = "MoviePosterCD"
     
