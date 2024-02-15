@@ -9,6 +9,19 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
+    lazy var movieScrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        view.showsVerticalScrollIndicator = false
+        view.contentInsetAdjustmentBehavior = .never
+        return view
+    }()
+    
+    lazy var contentMovieView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     lazy var movieDescriptionView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray3.withAlphaComponent(0.3)
@@ -17,17 +30,10 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
-    lazy var moviePosterView: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 15
-        view.backgroundColor = .systemRed
-        return view
-    }()
-    
     lazy var moviePoster: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill
+        image.clipsToBounds = true
         return image
     }()
     
@@ -63,10 +69,22 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        title = viewModel.title
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
         
         viewModel.delegate = self
         setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     func setupUI() {
@@ -77,40 +95,51 @@ class DetailsViewController: UIViewController {
         movieDescriptionLabel.text = viewModel.overview
         updateMovieDate()
         
-        view.addSubview(movieDescriptionView)
-        view.addSubview(moviePosterView)
-        moviePosterView.addSubview(moviePoster)
-        moviePosterView.addSubview(activityIndicator)
+        view.addSubview(movieScrollView)
+        movieScrollView.addSubview(contentMovieView)
+        
+        contentMovieView.addSubview(moviePoster)
+        contentMovieView.addSubview(activityIndicator)
+        contentMovieView.addSubview(movieDescriptionView)
+        
         movieDescriptionView.addSubview(movieNameLabel)
         movieDescriptionView.addSubview(movieReleaseDateLabel)
         movieDescriptionView.addSubview(movieDescriptionLabel)
         
-        movieDescriptionView.translatesAutoresizingMaskIntoConstraints = false
-        moviePosterView.translatesAutoresizingMaskIntoConstraints = false
+        movieScrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentMovieView.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
+        movieDescriptionView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
         movieDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieDescriptionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Metrics.bottomIndent),
-            movieDescriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.leadingIndent),
-            movieDescriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Metrics.traillingIndent),
-            movieDescriptionView.heightAnchor.constraint(equalTo: moviePosterView.heightAnchor, multiplier: 0.35),
+            movieScrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            movieScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            movieScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            movieScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            moviePosterView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Metrics.topIndent),
-            moviePosterView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            moviePosterView.bottomAnchor.constraint(equalTo: movieDescriptionView.topAnchor, constant: -Metrics.bottomIndent),
-            moviePosterView.widthAnchor.constraint(equalTo: movieDescriptionView.widthAnchor),
+            contentMovieView.topAnchor.constraint(equalTo: movieScrollView.topAnchor),
+            contentMovieView.leadingAnchor.constraint(equalTo: movieScrollView.leadingAnchor),
+            contentMovieView.trailingAnchor.constraint(equalTo: movieScrollView.trailingAnchor),
+            contentMovieView.bottomAnchor.constraint(equalTo: movieScrollView.bottomAnchor),
+            contentMovieView.widthAnchor.constraint(equalTo: movieScrollView.widthAnchor),
+            contentMovieView.heightAnchor.constraint(equalTo: movieScrollView.heightAnchor).withPriority(.defaultLow),
             
-            moviePoster.topAnchor.constraint(equalTo: moviePosterView.topAnchor),
-            moviePoster.leadingAnchor.constraint(equalTo: moviePosterView.leadingAnchor),
-            moviePoster.trailingAnchor.constraint(equalTo: moviePosterView.trailingAnchor),
-            moviePoster.bottomAnchor.constraint(equalTo: moviePosterView.bottomAnchor),
+            moviePoster.topAnchor.constraint(equalTo: contentMovieView.topAnchor),
+            moviePoster.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor),
+            moviePoster.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor),
+            moviePoster.heightAnchor.constraint(equalTo: moviePoster.widthAnchor, multiplier: 1.4),
             
-            activityIndicator.centerXAnchor.constraint(equalTo: moviePosterView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: contentMovieView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: contentMovieView.centerYAnchor),
+            
+            movieDescriptionView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent),
+            movieDescriptionView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent),
+            movieDescriptionView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent),
+            movieDescriptionView.bottomAnchor.constraint(equalTo: contentMovieView.bottomAnchor, constant: -Metrics.bottomIndent),
             
             movieNameLabel.centerXAnchor.constraint(equalTo: movieDescriptionView.centerXAnchor),
             movieNameLabel.topAnchor.constraint(equalTo: movieDescriptionView.topAnchor, constant: Metrics.topIndent),

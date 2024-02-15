@@ -181,8 +181,8 @@ private struct Metrics {
     static let traillingIndent: CGFloat = 8.0
     static let bottomIndent: CGFloat = 8.0
     
-    static let moviePosterHeight: CGFloat = 120.0 // 150.0
-    static let moviePosterWidth: CGFloat = 80.0 // 100.0
+    static let moviePosterHeight: CGFloat = 120.0
+    static let moviePosterWidth: CGFloat = 80.0
     
     init() {}
 }

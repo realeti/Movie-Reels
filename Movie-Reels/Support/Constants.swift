@@ -23,7 +23,7 @@ struct Constants {
     // MARK: - Tab bar names
     static let moviesTabBarName = "Home"
     static let catalogTabBarName = "Catalog"
-    static let favoritesTabBarName = "Favorites"
+    static let favoritesTabBarName = "Favorite"
     
     // MARK: Coredata
     static let coreDataModelName = "MoviesDataModel"

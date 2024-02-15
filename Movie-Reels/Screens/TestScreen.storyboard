@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Test Screen View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="TestScreen" id="Y6W-OH-hqX" customClass="TestScreenViewController" customModule="Movie_Reels" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="LPh-pc-l0O">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cjs-aE-T3V">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1040"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sUm-bo-1XM">
+                                                <rect key="frame" x="21.666666666666657" y="695" width="350" height="345"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="350" id="1SG-E8-B1O"/>
+                                                </constraints>
+                                                <mutableString key="text">many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text </mutableString>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                                <string key="userLabel">many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text many text</string>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Scroll View" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLG-vs-h8t">
+                                                <rect key="frame" x="117.66666666666669" y="505" width="158" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="sUm-bo-1XM" secondAttribute="bottom" id="7wL-K8-EXa"/>
+                                            <constraint firstItem="cLG-vs-h8t" firstAttribute="centerX" secondItem="Cjs-aE-T3V" secondAttribute="centerX" id="Kdy-N4-5bF"/>
+                                            <constraint firstItem="sUm-bo-1XM" firstAttribute="centerX" secondItem="Cjs-aE-T3V" secondAttribute="centerX" id="S4X-hl-HEk"/>
+                                            <constraint firstItem="sUm-bo-1XM" firstAttribute="top" secondItem="cLG-vs-h8t" secondAttribute="bottom" constant="160" id="apR-x9-Xae"/>
+                                            <constraint firstItem="cLG-vs-h8t" firstAttribute="centerY" secondItem="Cjs-aE-T3V" secondAttribute="centerY" id="dXW-GL-xxT"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemPinkColor"/>
+                                <constraints>
+                                    <constraint firstItem="Cjs-aE-T3V" firstAttribute="width" secondItem="LPh-pc-l0O" secondAttribute="width" id="77P-xH-Bl7"/>
+                                    <constraint firstItem="Cjs-aE-T3V" firstAttribute="top" secondItem="LPh-pc-l0O" secondAttribute="top" id="Chm-l8-CYi"/>
+                                    <constraint firstItem="Cjs-aE-T3V" firstAttribute="leading" secondItem="LPh-pc-l0O" secondAttribute="leading" id="E3t-Jy-SFb"/>
+                                    <constraint firstItem="Cjs-aE-T3V" firstAttribute="height" secondItem="LPh-pc-l0O" secondAttribute="height" priority="250" id="LMs-8w-b9o"/>
+                                    <constraint firstItem="Cjs-aE-T3V" firstAttribute="trailing" secondItem="LPh-pc-l0O" secondAttribute="trailing" id="oHh-rn-G1s"/>
+                                    <constraint firstItem="Cjs-aE-T3V" firstAttribute="bottom" secondItem="LPh-pc-l0O" secondAttribute="bottom" priority="250" id="wnN-Au-GoC"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="LPh-pc-l0O" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="BSW-sQ-nGm"/>
+                            <constraint firstAttribute="bottom" secondItem="LPh-pc-l0O" secondAttribute="bottom" id="SBR-Zv-ixM"/>
+                            <constraint firstItem="LPh-pc-l0O" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="idh-Np-T8L"/>
+                            <constraint firstItem="LPh-pc-l0O" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="ol4-gp-ojD"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="130.53435114503816" y="-34.507042253521128"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
