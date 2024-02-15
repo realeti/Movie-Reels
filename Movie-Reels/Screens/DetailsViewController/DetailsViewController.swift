@@ -56,11 +56,13 @@ class DetailsViewController: UIViewController {
         return label
     }()
     
-    lazy var movieDescriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: Metrics.movieDescriptionSize, weight: .semibold)
-        label.numberOfLines = 0
-        return label
+    lazy var movieDescroptionTextView: UITextView = {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.backgroundColor = .clear
+        textView.font = UIFont.systemFont(ofSize: Metrics.movieDescriptionSize, weight: .semibold)
+        return textView
     }()
     
     lazy var viewModel = DetailsViewModel()
@@ -92,7 +94,7 @@ class DetailsViewController: UIViewController {
         updateImage()
         
         movieNameLabel.text = viewModel.title
-        movieDescriptionLabel.text = viewModel.overview
+        movieDescroptionTextView.text = viewModel.overview
         updateMovieDate()
         
         view.addSubview(movieScrollView)
@@ -104,7 +106,7 @@ class DetailsViewController: UIViewController {
         
         movieDescriptionView.addSubview(movieNameLabel)
         movieDescriptionView.addSubview(movieReleaseDateLabel)
-        movieDescriptionView.addSubview(movieDescriptionLabel)
+        movieDescriptionView.addSubview(movieDescroptionTextView)
         
         movieScrollView.translatesAutoresizingMaskIntoConstraints = false
         contentMovieView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,7 +115,7 @@ class DetailsViewController: UIViewController {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        movieDescroptionTextView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             movieScrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -147,10 +149,10 @@ class DetailsViewController: UIViewController {
             movieReleaseDateLabel.centerXAnchor.constraint(equalTo: movieDescriptionView.centerXAnchor),
             movieReleaseDateLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor),
             
-            movieDescriptionLabel.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent * 2),
-            movieDescriptionLabel.leadingAnchor.constraint(equalTo: movieDescriptionView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieDescriptionLabel.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
-            movieDescriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: movieDescriptionView.bottomAnchor, constant: -Metrics.bottomIndent)
+            movieDescroptionTextView.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent * 2),
+            movieDescroptionTextView.leadingAnchor.constraint(equalTo: movieDescriptionView.leadingAnchor, constant: Metrics.leadingIndent),
+            movieDescroptionTextView.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
+            movieDescroptionTextView.bottomAnchor.constraint(lessThanOrEqualTo: movieDescriptionView.bottomAnchor, constant: -Metrics.bottomIndent)
         ])
     }
     

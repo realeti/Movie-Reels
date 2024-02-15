@@ -20,8 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = TabController()
-        //let viewController = UIStoryboard(name: "TestScreen", bundle: nil).instantiateViewController(identifier: "TestScreen")
-        //window?.rootViewController = viewController
         window?.makeKeyAndVisible()
     }
 
