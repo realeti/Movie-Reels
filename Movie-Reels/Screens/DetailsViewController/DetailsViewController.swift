@@ -9,6 +9,17 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
+    lazy var backButton: UIButton = {
+        let button = UIButton(type: .custom)
+        let buttonImage = UIImage(named: "left-chevron")?.withTintColor(UIColor(red: 1.0, green: 1.0, blue: 250.0/255.0, alpha: 1.0))
+        button.setImage(buttonImage, for: .normal)
+        button.backgroundColor = UIColor(red: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
+        button.layer.cornerRadius = 10
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     lazy var movieScrollView: UIScrollView = {
         let view = UIScrollView()
         view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
@@ -24,7 +35,7 @@ class DetailsViewController: UIViewController {
     
     lazy var movieDescriptionView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray3.withAlphaComponent(0.3)
+        view.backgroundColor = UIColor(red: 30.0/255.0, green: 30.0/255.0, blue: 30.0/255.0, alpha: 1.0)
         view.layer.cornerRadius = 15
         view.clipsToBounds = true
         return view
@@ -44,6 +55,7 @@ class DetailsViewController: UIViewController {
     
     lazy var movieNameLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.font = UIFont.systemFont(ofSize: Metrics.movieNameSize, weight: .semibold)
         label.numberOfLines = 2
         return label
@@ -51,16 +63,17 @@ class DetailsViewController: UIViewController {
     
     lazy var movieReleaseDateLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
+        label.textColor = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1.0)
         label.font = UIFont.systemFont(ofSize: Metrics.movieReleaseDateSize, weight: .semibold)
         return label
     }()
     
-    lazy var movieDescroptionTextView: UITextView = {
+    lazy var movieDescriptionTextView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
         textView.backgroundColor = .clear
+        textView.textColor = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1.0)
         textView.font = UIFont.systemFont(ofSize: Metrics.movieDescriptionSize, weight: .semibold)
         return textView
     }()
@@ -70,12 +83,8 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        
         viewModel.delegate = self
+        configureNavigationController()
         setupUI()
     }
     
@@ -89,14 +98,27 @@ class DetailsViewController: UIViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
+    func configureNavigationController() {
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+    }
+    
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func setupUI() {
         updateLoadingState()
         updateImage()
         
         movieNameLabel.text = viewModel.title
-        movieDescroptionTextView.text = viewModel.overview
+        movieDescriptionTextView.text = viewModel.overview
         updateMovieDate()
         
+        view.addSubview(backButton)
         view.addSubview(movieScrollView)
         movieScrollView.addSubview(contentMovieView)
         
@@ -106,8 +128,11 @@ class DetailsViewController: UIViewController {
         
         movieDescriptionView.addSubview(movieNameLabel)
         movieDescriptionView.addSubview(movieReleaseDateLabel)
-        movieDescriptionView.addSubview(movieDescroptionTextView)
+        movieDescriptionView.addSubview(movieDescriptionTextView)
         
+        movieScrollView.backgroundColor = UIColor(red: 18.0/255.0, green: 18.0/255.0, blue: 18.0/255.0, alpha: 18.0/255.0)
+        
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         movieScrollView.translatesAutoresizingMaskIntoConstraints = false
         contentMovieView.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
@@ -115,9 +140,12 @@ class DetailsViewController: UIViewController {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieDescroptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        movieDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            backButton.widthAnchor.constraint(equalToConstant: 44),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+            
             movieScrollView.topAnchor.constraint(equalTo: view.topAnchor),
             movieScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             movieScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -138,21 +166,21 @@ class DetailsViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: contentMovieView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: contentMovieView.centerYAnchor),
             
-            movieDescriptionView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieDescriptionView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent),
-            movieDescriptionView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent),
+            movieDescriptionView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent * 4),
+            movieDescriptionView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor),
+            movieDescriptionView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor),
             movieDescriptionView.bottomAnchor.constraint(equalTo: contentMovieView.bottomAnchor, constant: -Metrics.bottomIndent),
             
             movieNameLabel.centerXAnchor.constraint(equalTo: movieDescriptionView.centerXAnchor),
-            movieNameLabel.topAnchor.constraint(equalTo: movieDescriptionView.topAnchor, constant: Metrics.topIndent),
+            movieNameLabel.topAnchor.constraint(equalTo: movieDescriptionView.topAnchor, constant: Metrics.topIndent * 2),
             
             movieReleaseDateLabel.centerXAnchor.constraint(equalTo: movieDescriptionView.centerXAnchor),
-            movieReleaseDateLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor),
+            movieReleaseDateLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: Metrics.topIndent),
             
-            movieDescroptionTextView.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent * 2),
-            movieDescroptionTextView.leadingAnchor.constraint(equalTo: movieDescriptionView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieDescroptionTextView.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
-            movieDescroptionTextView.bottomAnchor.constraint(lessThanOrEqualTo: movieDescriptionView.bottomAnchor, constant: -Metrics.bottomIndent)
+            movieDescriptionTextView.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent * 4),
+            movieDescriptionTextView.leadingAnchor.constraint(equalTo: movieDescriptionView.leadingAnchor, constant: Metrics.leadingIndent),
+            movieDescriptionTextView.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
+            movieDescriptionTextView.bottomAnchor.constraint(lessThanOrEqualTo: movieDescriptionView.bottomAnchor, constant: -Metrics.bottomIndent)
         ])
     }
     
@@ -219,8 +247,8 @@ extension DetailsViewController: DetailsViewModelDelegate {
 }
 
 private struct Metrics {
-    static let movieNameSize: CGFloat = 24.0
-    static let movieReleaseDateSize: CGFloat = 13.0
+    static let movieNameSize: CGFloat = 22.0
+    static let movieReleaseDateSize: CGFloat = 16.0
     static let movieDescriptionSize: CGFloat = 14.0
     
     static let topIndent: CGFloat = 8.0
