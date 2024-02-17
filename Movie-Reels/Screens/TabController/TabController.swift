@@ -13,6 +13,7 @@ class TabController: UITabBarController {
         super.viewDidLoad()
         
         tabBar.barTintColor = UIColor(resource: .lightNight)
+        tabBar.backgroundColor = UIColor(resource: .lightNight)
         tabBar.tintColor = UIColor(resource: .orange)
         tabBar.unselectedItemTintColor = UIColor(resource: .babyPowder)
         self.setupTabs()

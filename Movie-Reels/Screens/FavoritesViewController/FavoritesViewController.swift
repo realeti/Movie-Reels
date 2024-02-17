@@ -101,6 +101,7 @@ extension FavoritesViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let detailVC = DetailsViewController()
+        detailVC.hidesBottomBarWhenPushed = true
         viewModel.configure(details: detailVC.viewModel, for: indexPath)
         navigationController?.pushViewController(detailVC, animated: true)
     }
