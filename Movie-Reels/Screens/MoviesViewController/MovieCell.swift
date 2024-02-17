@@ -13,8 +13,8 @@ class MovieCell: UITableViewCell {
     
     lazy var movieReleaseDateLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
-        label.font = UIFont.systemFont(ofSize: Metrics.movieReleaseDateSize, weight: .semibold)
+        label.textColor = UIColor(resource: .cadetGray)
+        label.font = UIFont(name: Constants.movieMainTextFont, size: Metrics.movieReleaseDateSize)
         return label
     }()
     
@@ -27,15 +27,16 @@ class MovieCell: UITableViewCell {
     
     lazy var movieNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: Metrics.movieNameSize, weight: .semibold)
+        label.font = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSize)
+        label.textColor = UIColor(resource: .babyPowder)
         label.numberOfLines = 2
         return label
     }()
     
     lazy var movieGenresLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
-        label.font = UIFont.systemFont(ofSize: Metrics.movieGenresSize, weight: .semibold)
+        label.textColor = UIColor(resource: .cadetGray)
+        label.font = UIFont(name: Constants.movieMainTextFont, size: Metrics.movieGenresSize)
         label.numberOfLines = 1
         return label
     }()
@@ -70,7 +71,6 @@ class MovieCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         setupUI()
     }
     
@@ -87,6 +87,8 @@ class MovieCell: UITableViewCell {
     }
     
     private func setupUI() {
+        contentView.backgroundColor = UIColor(resource: .lightNight)
+        
         contentView.addSubview(movieReleaseDateLabel)
         contentView.addSubview(movieInfoStackView)
         movieInfoStackView.addArrangedSubview(movieNameLabel)
@@ -171,6 +173,13 @@ extension MovieCell: MovieViewModelDelegate {
     }
 }
 
+extension NSLayoutConstraint {
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
+    }
+}
+
 private struct Metrics {
     static let movieReleaseDateSize: CGFloat = 16.0
     static let movieNameSize: CGFloat = 20.0
@@ -185,11 +194,4 @@ private struct Metrics {
     static let moviePosterWidth: CGFloat = 80.0
     
     init() {}
-}
-
-extension NSLayoutConstraint {
-    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
-        self.priority = priority
-        return self
-    }
 }

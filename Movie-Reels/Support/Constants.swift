@@ -32,5 +32,12 @@ struct Constants {
     static let favoritesMovieEntityName = "FavoritesMovieCD"
     static let moviePosterEntityName = "MoviePosterCD"
     
+    // MARK: Buttons names
+    static let backButtonName = "left-chevron-60"
+    
+    // MARK: Fonts names
+    static let movieTitleFont = "Rubik-Medium"
+    static let movieMainTextFont = "NunitoSans-SemiBold"
+    
     init () {}
 }

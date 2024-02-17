@@ -10,6 +10,8 @@
 		C6048F642B6C184A00131132 /* MoviesDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C6048F622B6C184A00131132 /* MoviesDataModel.xcdatamodeld */; };
 		C6048F662B6C191900131132 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6048F652B6C191900131132 /* CoreDataController.swift */; };
 		C6048F682B6C1B7000131132 /* FallbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6048F672B6C1B7000131132 /* FallbackController.swift */; };
+		C60878B52B80AEC600FFF568 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C60878B42B80AE8C00FFF568 /* NunitoSans-SemiBold.ttf */; };
+		C60878B62B80AEC800FFF568 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C60878B32B80AE5700FFF568 /* Rubik-Medium.ttf */; };
 		C60C24FC2B6AD7C000A7792A /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */; };
 		C60C25012B6AE07100A7792A /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C25002B6AE07100A7792A /* DetailsViewController.swift */; };
 		C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C25042B6AE86200A7792A /* DetailsViewModel.swift */; };
@@ -37,6 +39,8 @@
 		C6048F632B6C184A00131132 /* MoviesDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MoviesDataModel.xcdatamodel; sourceTree = "<group>"; };
 		C6048F652B6C191900131132 /* CoreDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
 		C6048F672B6C1B7000131132 /* FallbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallbackController.swift; sourceTree = "<group>"; };
+		C60878B32B80AE5700FFF568 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Medium.ttf"; sourceTree = "<group>"; };
+		C60878B42B80AE8C00FFF568 /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		C60C25002B6AE07100A7792A /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		C60C25042B6AE86200A7792A /* DetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewModel.swift; sourceTree = "<group>"; };
@@ -73,6 +77,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C60878B12B80ADEC00FFF568 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				C60878B42B80AE8C00FFF568 /* NunitoSans-SemiBold.ttf */,
+				C60878B32B80AE5700FFF568 /* Rubik-Medium.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		C60C24FD2B6AE00A00A7792A /* DetailsViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				C6E882722B69585B00CF0E9F /* Assets.xcassets */,
+				C60878B12B80ADEC00FFF568 /* Fonts */,
 				C6048F622B6C184A00131132 /* MoviesDataModel.xcdatamodeld */,
 			);
 			path = Resources;
@@ -267,8 +281,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C60878B52B80AEC600FFF568 /* NunitoSans-SemiBold.ttf in Resources */,
 				C6E882762B69585B00CF0E9F /* LaunchScreen.storyboard in Resources */,
 				C6E882732B69585B00CF0E9F /* Assets.xcassets in Resources */,
+				C60878B62B80AEC800FFF568 /* Rubik-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

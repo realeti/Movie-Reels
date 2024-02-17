@@ -11,13 +11,12 @@ class MoviesViewController: UIViewController {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
+        tableView.backgroundColor = UIColor(resource: .night)
         tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
-        
         return tableView
     }()
     
@@ -27,7 +26,11 @@ class MoviesViewController: UIViewController {
         super.viewDidLoad()
         
         title = Constants.moviesTabBarName
-        view.backgroundColor = .systemBackground
+        
+        let titleColor = UIColor(resource: .babyPowder)
+        let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
+        navigationController?.navigationBar.titleTextAttributes = attributedText
+        navigationController?.navigationBar.barTintColor = UIColor(resource: .night)
         
         viewModel.delegate = self
         viewModel.loadMoviesData()

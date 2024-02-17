@@ -10,13 +10,14 @@ import UIKit
 class FavoritesViewController: UIViewController {
 
     lazy var tableView: UITableView = {
-        let view = UITableView(frame: .zero, style: .grouped)
-        view.rowHeight = UITableView.automaticDimension
-        view.estimatedRowHeight = 200
-        view.dataSource = self
-        view.delegate = self
-        view.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
-        return view
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
+        tableView.backgroundColor = UIColor(resource: .night)
+        return tableView
     }()
     
     let viewModel = FavoriteMovieTableViewModel()
@@ -37,6 +38,11 @@ class FavoritesViewController: UIViewController {
         view.addSubview(tableView)
         
         title = Constants.favoritesTabBarName
+        
+        let titleColor = UIColor(resource: .babyPowder)
+        let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
+        navigationController?.navigationBar.titleTextAttributes = attributedText
+        navigationController?.navigationBar.barTintColor = UIColor(resource: .night)
         
         tableView.frame = view.bounds
         tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
