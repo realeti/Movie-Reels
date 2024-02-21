@@ -11,12 +11,13 @@ class FavoritesViewController: UIViewController {
 
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 200
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        tableView.separatorStyle = .none
         tableView.backgroundColor = UIColor(resource: .night)
+        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
         return tableView
     }()
     
@@ -25,24 +26,23 @@ class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = Constants.favoritesTabBarName
-        view.backgroundColor = .systemBackground
-        
         viewModel.delegate = self
-        viewModel.loadMoviesData()
         
+        configureNavController()
+        viewModel.loadMoviesData()
         setupUI()
     }
     
-    private func setupUI() {
-        view.addSubview(tableView)
-        
+    private func configureNavController() {
         title = Constants.favoritesTabBarName
-        
         let titleColor = UIColor(resource: .babyPowder)
         let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
         navigationController?.navigationBar.titleTextAttributes = attributedText
         navigationController?.navigationBar.barTintColor = UIColor(resource: .night)
+    }
+    
+    private func setupUI() {
+        view.addSubview(tableView)
         
         tableView.frame = view.bounds
         tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

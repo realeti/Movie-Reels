@@ -33,6 +33,9 @@
 		C6E882962B697A3700CF0E9F /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E882952B697A3700CF0E9F /* Movie.swift */; };
 		C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */; };
 		C6F468C42B6E94D2003BD11A /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F468C32B6E94D2003BD11A /* CatalogViewController.swift */; };
+		C6FAC7612B867B070029FA22 /* Hauora-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6FAC75E2B867AE60029FA22 /* Hauora-Medium.ttf */; };
+		C6FAC7632B868AF50029FA22 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6FAC7622B868AF50029FA22 /* ViewExtensions.swift */; };
+		C6FAC7652B8691B70029FA22 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6FAC7642B8691B70029FA22 /* ColorExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +67,9 @@
 		C6E882952B697A3700CF0E9F /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		C6E8829A2B698D6300CF0E9F /* MovieDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDTO.swift; sourceTree = "<group>"; };
 		C6F468C32B6E94D2003BD11A /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewController.swift; sourceTree = "<group>"; };
+		C6FAC75E2B867AE60029FA22 /* Hauora-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hauora-Medium.ttf"; sourceTree = "<group>"; };
+		C6FAC7622B868AF50029FA22 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		C6FAC7642B8691B70029FA22 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +88,7 @@
 			children = (
 				C60878B42B80AE8C00FFF568 /* NunitoSans-SemiBold.ttf */,
 				C60878B32B80AE5700FFF568 /* Rubik-Medium.ttf */,
+				C6FAC75E2B867AE60029FA22 /* Hauora-Medium.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -155,6 +162,8 @@
 				C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */,
 				C6E8828E2B6974CA00CF0E9F /* Constants.swift */,
 				C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */,
+				C6FAC7622B868AF50029FA22 /* ViewExtensions.swift */,
+				C6FAC7642B8691B70029FA22 /* ColorExtensions.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -285,6 +294,7 @@
 				C6E882762B69585B00CF0E9F /* LaunchScreen.storyboard in Resources */,
 				C6E882732B69585B00CF0E9F /* Assets.xcassets in Resources */,
 				C60878B62B80AEC800FFF568 /* Rubik-Medium.ttf in Resources */,
+				C6FAC7612B867B070029FA22 /* Hauora-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +310,7 @@
 				C6E8826E2B69585B00CF0E9F /* MoviesViewController.swift in Sources */,
 				C616D1A62B7817CC0091D13B /* Genre.swift in Sources */,
 				C6048F642B6C184A00131132 /* MoviesDataModel.xcdatamodeld in Sources */,
+				C6FAC7632B868AF50029FA22 /* ViewExtensions.swift in Sources */,
 				C6E882962B697A3700CF0E9F /* Movie.swift in Sources */,
 				C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */,
 				C6048F682B6C1B7000131132 /* FallbackController.swift in Sources */,
@@ -317,6 +328,7 @@
 				C6E882882B696E3800CF0E9F /* FavoritesViewController.swift in Sources */,
 				C6E8826C2B69585B00CF0E9F /* SceneDelegate.swift in Sources */,
 				C60C25012B6AE07100A7792A /* DetailsViewController.swift in Sources */,
+				C6FAC7652B8691B70029FA22 /* ColorExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

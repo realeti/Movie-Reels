@@ -14,9 +14,9 @@ class TabController: UITabBarController {
         
         tabBar.barTintColor = UIColor(resource: .lightNight)
         tabBar.backgroundColor = UIColor(resource: .lightNight)
-        tabBar.tintColor = UIColor(resource: .orange)
+        tabBar.tintColor = UIColor(resource: .darkOrange)
         tabBar.unselectedItemTintColor = UIColor(resource: .babyPowder)
-        self.setupTabs()
+        setupTabs()
     }
     
     // MARK: - Tab Bar Setup
@@ -27,7 +27,7 @@ class TabController: UITabBarController {
         let favoritesVC = FavoritesViewController()
         //let catalogVC = CatalogViewController()
 
-        let movies = self.createNavTabBarItem(with: Constants.moviesTabBarName, and: UIImage(systemName: "house"), vc: moviesVC)
+        let movies = self.createNavTabBarItem(with: Constants.moviesTabBarName, and: UIImage(systemName: "square.grid.2x2"), vc: moviesVC)
         //let catalog = self.createNavTabBarItem(with: Constants.catalogTabBarName, and: UIImage(named: "heart"), vc: catalogVC)
         let favorites = self.createNavTabBarItem(with: Constants.favoritesTabBarName, and: UIImage(systemName: "heart"), vc: favoritesVC)
         

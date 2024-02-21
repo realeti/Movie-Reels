@@ -15,6 +15,7 @@ class MoviesViewController: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
+        tableView.separatorStyle = .none
         tableView.backgroundColor = UIColor(resource: .night)
         tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
         return tableView
@@ -25,17 +26,20 @@ class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel.delegate = self
+        
+        configureNavController()
+        viewModel.loadMoviesData()
+        setupUI()
+    }
+    
+    func configureNavController() {
         title = Constants.moviesTabBarName
         
         let titleColor = UIColor(resource: .babyPowder)
         let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
         navigationController?.navigationBar.titleTextAttributes = attributedText
         navigationController?.navigationBar.barTintColor = UIColor(resource: .night)
-        
-        viewModel.delegate = self
-        viewModel.loadMoviesData()
-        
-        setupUI()
     }
     
     func setupUI() {

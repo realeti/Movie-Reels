@@ -33,11 +33,14 @@ struct Constants {
     static let moviePosterEntityName = "MoviePosterCD"
     
     // MARK: Buttons names
-    static let backButtonName = "left-chevron-60"
+    static let backButtonName = "left-chevron"
+    static let playButtonTitle = "Play"
+    static let playButtonImage = "play.fill"
     
     // MARK: Fonts names
     static let movieTitleFont = "Rubik-Medium"
     static let movieMainTextFont = "NunitoSans-SemiBold"
+    static let playButtonFont = "Hauora-Medium"
     
     init () {}
 }

@@ -11,6 +11,14 @@ class MovieCell: UITableViewCell {
 
     static let reuseIdentifier = Constants.movieCellIdentifier
     
+    lazy var movieCellView: UIView = {
+        let view = UIView()
+        view.frame.size = CGSize(width: .zero, height: 180)
+        view.backgroundColor = UIColor(resource: .lightNight)
+        view.layer.cornerRadius = 14
+        return view
+    }()
+    
     lazy var movieReleaseDateLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(resource: .cadetGray)
@@ -37,13 +45,13 @@ class MovieCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor(resource: .cadetGray)
         label.font = UIFont(name: Constants.movieMainTextFont, size: Metrics.movieGenresSize)
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         return label
     }()
     
     lazy var moviePosterView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 5
+        view.layer.cornerRadius = 6
         view.clipsToBounds = true
         return view
     }()
@@ -87,17 +95,19 @@ class MovieCell: UITableViewCell {
     }
     
     private func setupUI() {
-        contentView.backgroundColor = UIColor(resource: .lightNight)
+        contentView.backgroundColor = UIColor(resource: .night)
         
-        contentView.addSubview(movieReleaseDateLabel)
-        contentView.addSubview(movieInfoStackView)
+        contentView.addSubview(movieCellView)
+        movieCellView.addSubview(movieReleaseDateLabel)
+        movieCellView.addSubview(movieInfoStackView)
         movieInfoStackView.addArrangedSubview(movieNameLabel)
         movieInfoStackView.addArrangedSubview(movieGenresLabel)
-        contentView.addSubview(moviePosterView)
+        movieCellView.addSubview(moviePosterView)
         
         moviePosterView.addSubview(moviePoster)
         moviePosterView.addSubview(activityIndicator)
         
+        movieCellView.translatesAutoresizingMaskIntoConstraints = false
         movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
         movieInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         moviePosterView.translatesAutoresizingMaskIntoConstraints = false
@@ -105,19 +115,24 @@ class MovieCell: UITableViewCell {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieReleaseDateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Metrics.topIndent / 2),
-            movieReleaseDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieReleaseDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent),
+            movieCellView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            movieCellView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent * 2),
+            movieCellView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent * 2),
+            movieCellView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
+            
+            movieReleaseDateLabel.topAnchor.constraint(equalTo: movieCellView.topAnchor, constant: Metrics.topIndent / 2),
+            movieReleaseDateLabel.leadingAnchor.constraint(equalTo: movieCellView.leadingAnchor, constant: Metrics.leadingIndent),
+            movieReleaseDateLabel.trailingAnchor.constraint(equalTo: movieCellView.trailingAnchor, constant: -Metrics.traillingIndent),
             
             moviePosterView.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent),
-            moviePosterView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent),
+            moviePosterView.leadingAnchor.constraint(equalTo: movieCellView.leadingAnchor, constant: Metrics.leadingIndent),
             moviePosterView.heightAnchor.constraint(equalToConstant: Metrics.moviePosterHeight),
             moviePosterView.widthAnchor.constraint(equalToConstant: Metrics.moviePosterWidth),
-            moviePosterView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Metrics.bottomIndent).withPriority(.defaultLow),
+            moviePosterView.bottomAnchor.constraint(equalTo: movieCellView.bottomAnchor, constant: -Metrics.bottomIndent).withPriority(.defaultLow),
             
             movieInfoStackView.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor, constant: -Metrics.topIndent),
             movieInfoStackView.leadingAnchor.constraint(equalTo: moviePoster.trailingAnchor, constant: Metrics.leadingIndent),
-            movieInfoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent),
+            movieInfoStackView.trailingAnchor.constraint(equalTo: movieCellView.trailingAnchor, constant: -Metrics.traillingIndent),
             
             moviePoster.topAnchor.constraint(equalTo: moviePosterView.topAnchor),
             moviePoster.leadingAnchor.constraint(equalTo: moviePosterView.leadingAnchor),
@@ -133,7 +148,7 @@ class MovieCell: UITableViewCell {
 extension MovieCell: MovieViewModelDelegate {
     func updateGenres() {
         guard let viewModel else { return }
-        movieGenresLabel.text = viewModel.genres.joined(separator: ", ")
+        movieGenresLabel.text = viewModel.genres.joined(separator: " • ")
     }
     
     func updateMovieDate() {
@@ -183,15 +198,15 @@ extension NSLayoutConstraint {
 private struct Metrics {
     static let movieReleaseDateSize: CGFloat = 16.0
     static let movieNameSize: CGFloat = 20.0
-    static let movieGenresSize: CGFloat = 14.0
+    static let movieGenresSize: CGFloat = 15.0
     
     static let topIndent: CGFloat = 8.0
     static let leadingIndent: CGFloat = 8.0
     static let traillingIndent: CGFloat = 8.0
     static let bottomIndent: CGFloat = 8.0
     
-    static let moviePosterHeight: CGFloat = 120.0
-    static let moviePosterWidth: CGFloat = 80.0
+    static let moviePosterHeight: CGFloat = 135.0
+    static let moviePosterWidth: CGFloat = 90.0
     
     init() {}
 }
