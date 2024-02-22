@@ -12,7 +12,7 @@ class DetailsViewController: UIViewController {
     lazy var backButton: UIButton = {
         let button = UIButton(type: .custom)
         let backButtonImage = UIImage(named: Constants.backButtonName)
-        let coloredBackButton = backButtonImage?.withTintColor(UIColor(resource: .babyPowder))
+        let coloredBackButton = backButtonImage?.withTintColor(.white)
         button.setImage(coloredBackButton, for: .normal)
         button.backgroundColor = UIColor(resource: .jet)
         button.layer.cornerRadius = 10
@@ -28,7 +28,7 @@ class DetailsViewController: UIViewController {
     
     lazy var movieScrollView: UIScrollView = {
         let view = UIScrollView()
-        view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        view.frame.size = CGSize(width: self.view.frame.width, height: self.view.frame.height)
         view.contentInsetAdjustmentBehavior = .never
         view.backgroundColor = UIColor(resource: .night)
         return view
@@ -66,28 +66,21 @@ class DetailsViewController: UIViewController {
     lazy var playButton: UIButton = {
         var configuration = UIButton.Configuration.plain()
         var container = AttributeContainer()
+        let image = UIImage(systemName: Constants.playButtonImage)
         
         container.font = UIFont(name: Constants.playButtonFont, size: Metrics.playButtonTitleSize)
-        container.foregroundColor = UIColor(resource: .babyPowder)
-        
-        let image = UIImage(systemName: Constants.playButtonImage)
-        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: Metrics.playButtonImageSize)
-        let resizedImage = image?.withConfiguration(symbolConfiguration).withRenderingMode(.alwaysOriginal)
-        
-        configuration.attributedTitle = AttributedString(Constants.playButtonTitle, attributes: container)
-        configuration.image = resizedImage?.withTintColor(UIColor(resource: .babyPowder))
+        configuration.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: Metrics.playButtonImageSize)
+        configuration.image = image
         configuration.imagePadding = 15
+        configuration.attributedTitle = AttributedString(Constants.playButtonTitle, attributes: container)
         
-        let button = UIButton(configuration: configuration)
-        let buttonWidth = 150.0
-        let buttonHeight = 50.0
-        button.frame.size.width = buttonWidth
-        button.frame.size.height = buttonHeight
-        button.layer.cornerRadius = buttonHeight / 2
+        let button = GradientButton(configuration: configuration)
+        button.frame.size = CGSize(width: Metrics.playButtonWidth, height: Metrics.playButtonHeight)
+        button.layer.cornerRadius = 12
         button.layer.masksToBounds = true
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor(red: 162.0, green: 52.0, blue: 23.0).cgColor
-        button.addGradient(colorStyle: .darkOrange)
+        button.addGradient(type: .darkOrange)
         
         let action = UIAction { _ in
             print("Press Play button")
@@ -99,9 +92,19 @@ class DetailsViewController: UIViewController {
     
     lazy var bookMarkButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.frame.size.width = 50.0
-        button.frame.size.height = 50.0
-        button.backgroundColor = .systemRed
+        button.frame.size = CGSize(width: Metrics.bookMarkButtonWidth, height: Metrics.bookMarkButtonHeight)
+        button.backgroundColor = UIColor(resource: .lightNight)
+        button.layer.cornerRadius = 12
+        button.layer.masksToBounds = true
+        
+        let image = UIImage(resource: .bookmark50Px).withTintColor(UIColor(resource: .cadetGray))
+        button.setImage(image, for: .normal)
+        
+        let action = UIAction { _ in
+            print("Press Bookmark button")
+        }
+        button.addAction(action, for: .touchUpInside)
+        
         return button
     }()
     
@@ -178,15 +181,13 @@ class DetailsViewController: UIViewController {
         movieScrollView.addSubview(contentMovieView)
         
         contentMovieView.addSubview(moviePoster)
-        //contentMovieView.addSubview(posterButtonsStackView)
-        //posterButtonsStackView.addArrangedSubview(playButton)
-        //posterButtonsStackView.addArrangedSubview(bookMarkButton)
-        
         contentMovieView.addSubview(activityIndicator)
-        contentMovieView.addSubview(playButton)
-        contentMovieView.addSubview(bookMarkButton)
-        contentMovieView.addSubview(movieDescriptionView)
         
+        contentMovieView.addSubview(posterButtonsStackView)
+        posterButtonsStackView.addArrangedSubview(playButton)
+        posterButtonsStackView.addArrangedSubview(bookMarkButton)
+        
+        contentMovieView.addSubview(movieDescriptionView)
         movieDescriptionView.addSubview(movieNameLabel)
         movieDescriptionView.addSubview(movieReleaseDateLabel)
         movieDescriptionView.addSubview(movieDescriptionTextView)
@@ -195,9 +196,7 @@ class DetailsViewController: UIViewController {
         movieScrollView.translatesAutoresizingMaskIntoConstraints = false
         contentMovieView.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
-        //posterButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
-        playButton.translatesAutoresizingMaskIntoConstraints = false
-        bookMarkButton.translatesAutoresizingMaskIntoConstraints = false
+        posterButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
         movieDescriptionView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -207,8 +206,8 @@ class DetailsViewController: UIViewController {
         NSLayoutConstraint.activate([
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Metrics.topIndent),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.leadingIndent * 2),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44),
+            backButton.widthAnchor.constraint(equalToConstant: Metrics.backButtonWidth),
+            backButton.heightAnchor.constraint(equalToConstant: Metrics.backButtonHeight),
             
             movieScrollView.topAnchor.constraint(equalTo: view.topAnchor),
             movieScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -230,19 +229,15 @@ class DetailsViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: contentMovieView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: contentMovieView.centerYAnchor),
             
-            /*posterButtonsStackView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent * 6),
-            posterButtonsStackView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent + 50 + Metrics.leadingIndent),
-            posterButtonsStackView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent - 50 - Metrics.leadingIndent),*/
+            posterButtonsStackView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent * 6),
+            posterButtonsStackView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent * 2 + bookMarkButton.frame.width),
+            posterButtonsStackView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent * 2 - bookMarkButton.frame.width),
             
-            playButton.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent + 55),
-            playButton.centerXAnchor.constraint(equalTo: moviePoster.centerXAnchor, constant: -Metrics.leadingIndent - 50),
-            playButton.widthAnchor.constraint(equalToConstant: 150),
-            playButton.heightAnchor.constraint(equalToConstant: 50.0),
+            playButton.widthAnchor.constraint(equalToConstant: Metrics.playButtonWidth).withPriority(.defaultLow),
+            playButton.heightAnchor.constraint(equalToConstant: Metrics.playButtonHeight),
             
-            bookMarkButton.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent + 55),
-            bookMarkButton.centerXAnchor.constraint(equalTo: moviePoster.centerXAnchor, constant: Metrics.traillingIndent + 50),
-            bookMarkButton.widthAnchor.constraint(equalToConstant: 50.0),
-            bookMarkButton.heightAnchor.constraint(equalToConstant: 50.0),
+            bookMarkButton.widthAnchor.constraint(equalToConstant: Metrics.bookMarkButtonWidth),
+            bookMarkButton.heightAnchor.constraint(equalToConstant: Metrics.bookMarkButtonHeight),
             
             movieDescriptionView.topAnchor.constraint(equalTo: playButton.bottomAnchor, constant: Metrics.topIndent * 4),
             movieDescriptionView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor),
@@ -326,12 +321,20 @@ extension DetailsViewController: DetailsViewModelDelegate {
 }
 
 private struct Metrics {
+    static let backButtonWidth: CGFloat = 44.0
+    static let backButtonHeight: CGFloat = 44.0
+    
     static let movieNameSize: CGFloat = 24.0
     static let movieReleaseDateSize: CGFloat = 16.0
     static let movieDescriptionSize: CGFloat = 15.0
     
+    static let playButtonWidth: CGFloat = 150.0
+    static let playButtonHeight: CGFloat = 50.0
     static let playButtonTitleSize: CGFloat = 22.0
     static let playButtonImageSize: CGFloat = 16.0
+    
+    static let bookMarkButtonWidth: CGFloat = 50.0
+    static let bookMarkButtonHeight: CGFloat = 50.0
     
     static let topIndent: CGFloat = 8.0
     static let leadingIndent: CGFloat = 8.0
