@@ -102,6 +102,23 @@
 			path = DetailsViewController;
 			sourceTree = "<group>";
 		};
+		C69A8C442B8B8E6B00464D68 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C6FAC7642B8691B70029FA22 /* ColorExtensions.swift */,
+				C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C69A8C452B8B8E8800464D68 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C6D979862B87E6270077BF76 /* GradientButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		C6E8825D2B69585B00CF0E9F = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				C6E882742B69585B00CF0E9F /* LaunchScreen.storyboard */,
+				C69A8C452B8B8E8800464D68 /* Views */,
 				C6F468C22B6E94B5003BD11A /* CatalogViewController */,
 				C6E882832B696B3A00CF0E9F /* TabController */,
 				C6E8827E2B6962D700CF0E9F /* MoviesViewController */,
@@ -158,11 +176,10 @@
 		C6E8827F2B6962F200CF0E9F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				C69A8C442B8B8E6B00464D68 /* Extensions */,
 				C6E882692B69585B00CF0E9F /* AppDelegate.swift */,
 				C6E8826B2B69585B00CF0E9F /* SceneDelegate.swift */,
 				C6E8828E2B6974CA00CF0E9F /* Constants.swift */,
-				C60C24FB2B6AD7C000A7792A /* DateExtensions.swift */,
-				C6FAC7642B8691B70029FA22 /* ColorExtensions.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -210,7 +227,6 @@
 			children = (
 				C6E882952B697A3700CF0E9F /* Movie.swift */,
 				C616D1A52B7817CC0091D13B /* Genre.swift */,
-				C6D979862B87E6270077BF76 /* GradientButton.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
