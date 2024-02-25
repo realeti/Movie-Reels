@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum GradientTypes {
+enum GradientColorStyle {
     case darkOrange
     
     var color: [UIColor] {
@@ -31,7 +31,7 @@ class GradientButton: UIButton {
         gradientLayer?.frame = bounds
     }
     
-    func addGradient(type: GradientTypes) {
+    func addGradient(colorStyle: GradientColorStyle) {
         gradientLayer?.removeFromSuperlayer()
         
         gradientLayer = CAGradientLayer()
@@ -41,9 +41,9 @@ class GradientButton: UIButton {
         gradientLayer?.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer?.endPoint = CGPoint(x: 1.0, y: 0.0)
         
-        switch type {
+        switch colorStyle {
         case .darkOrange:
-            gradientLayer?.colors = type.color.map { $0.cgColor }
+            gradientLayer?.colors = colorStyle.color.map { $0.cgColor }
             gradientLayer?.locations = [0.0, 0.65, 1.0]
         }
         

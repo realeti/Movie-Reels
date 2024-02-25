@@ -49,9 +49,10 @@ class DetailsViewController: UIViewController {
     }()
     
     lazy var moviePoster: UIImageView = {
-        let image = UIImageView()
-        image.contentMode = .scaleAspectFill
-        return image
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
     lazy var posterButtonsStackView: UIStackView = {
@@ -80,7 +81,7 @@ class DetailsViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor(red: 162.0, green: 52.0, blue: 23.0).cgColor
-        button.addGradient(type: .darkOrange)
+        button.addGradient(colorStyle: .darkOrange)
         
         let action = UIAction { _ in
             print("Press Play button")
@@ -196,9 +197,9 @@ class DetailsViewController: UIViewController {
         movieScrollView.translatesAutoresizingMaskIntoConstraints = false
         contentMovieView.translatesAutoresizingMaskIntoConstraints = false
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         posterButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
         movieDescriptionView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
         movieDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -221,25 +222,24 @@ class DetailsViewController: UIViewController {
             contentMovieView.widthAnchor.constraint(equalTo: movieScrollView.widthAnchor),
             contentMovieView.heightAnchor.constraint(equalTo: movieScrollView.heightAnchor).withPriority(.defaultLow),
             
-            moviePoster.topAnchor.constraint(equalTo: contentMovieView.topAnchor, constant: 60),
-            moviePoster.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor),
-            moviePoster.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor),
-            moviePoster.heightAnchor.constraint(equalTo: moviePoster.widthAnchor, multiplier: 1.2),
+            moviePoster.topAnchor.constraint(equalTo: contentMovieView.topAnchor),
+            moviePoster.widthAnchor.constraint(equalTo: contentMovieView.widthAnchor),
+            moviePoster.heightAnchor.constraint(equalTo: moviePoster.widthAnchor, multiplier: 1.4),
             
-            activityIndicator.centerXAnchor.constraint(equalTo: contentMovieView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: contentMovieView.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: moviePoster.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: moviePoster.centerYAnchor),
             
-            posterButtonsStackView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent * 6),
-            posterButtonsStackView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent * 2 + bookMarkButton.frame.width),
-            posterButtonsStackView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent * 2 - bookMarkButton.frame.width),
-            
+            posterButtonsStackView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.leadingIndent),
+            posterButtonsStackView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent * 2),
+            posterButtonsStackView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent * 2),
+
             playButton.widthAnchor.constraint(equalToConstant: Metrics.playButtonWidth).withPriority(.defaultLow),
             playButton.heightAnchor.constraint(equalToConstant: Metrics.playButtonHeight),
             
             bookMarkButton.widthAnchor.constraint(equalToConstant: Metrics.bookMarkButtonWidth),
             bookMarkButton.heightAnchor.constraint(equalToConstant: Metrics.bookMarkButtonHeight),
             
-            movieDescriptionView.topAnchor.constraint(equalTo: playButton.bottomAnchor, constant: Metrics.topIndent * 4),
+            movieDescriptionView.topAnchor.constraint(equalTo: playButton.bottomAnchor, constant: Metrics.topIndent * 5),
             movieDescriptionView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor),
             movieDescriptionView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor),
             movieDescriptionView.bottomAnchor.constraint(equalTo: contentMovieView.bottomAnchor, constant: -Metrics.bottomIndent),
@@ -256,6 +256,17 @@ class DetailsViewController: UIViewController {
             movieDescriptionTextView.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
             movieDescriptionTextView.bottomAnchor.constraint(lessThanOrEqualTo: movieDescriptionView.bottomAnchor, constant: -Metrics.bottomIndent)
         ])
+        
+        moviePoster.layoutIfNeeded()
+        
+        let gradientLayer = CAGradientLayer()
+        let gradientHeight = moviePoster.bounds.height / 10
+        gradientLayer.frame = CGRect(x: 0, y: moviePoster.bounds.height - gradientHeight, width: moviePoster.bounds.width, height: gradientHeight)
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor(resource: .night).cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+
+        moviePoster.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func updateMovieDate() {

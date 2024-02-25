@@ -58,7 +58,7 @@ class MovieCell: UITableViewCell {
     
     lazy var moviePoster: UIImageView = {
         let image = UIImageView()
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .scaleAspectFill
         return image
     }()
     
