@@ -17,6 +17,9 @@
 		C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60C25042B6AE86200A7792A /* DetailsViewModel.swift */; };
 		C616D1A42B78171F0091D13B /* MovieGenresDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C616D1A32B78171F0091D13B /* MovieGenresDTO.swift */; };
 		C616D1A62B7817CC0091D13B /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = C616D1A52B7817CC0091D13B /* Genre.swift */; };
+		C61810312B8E6D2E00A95A24 /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61810302B8E6D2E00A95A24 /* GradientImageView.swift */; };
+		C61810332B8E8C9400A95A24 /* GradientColorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61810322B8E8C9400A95A24 /* GradientColorStyle.swift */; };
+		C61810352B8E99E300A95A24 /* GradientDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61810342B8E99E300A95A24 /* GradientDirection.swift */; };
 		C646D1B82B6A5E4700361762 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C646D1B72B6A5E4700361762 /* MovieViewModel.swift */; };
 		C646D1BA2B6A627100361762 /* MoviesTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C646D1B92B6A627100361762 /* MoviesTableViewModel.swift */; };
 		C6D979872B87E6270077BF76 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D979862B87E6270077BF76 /* GradientButton.swift */; };
@@ -49,6 +52,9 @@
 		C60C25042B6AE86200A7792A /* DetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewModel.swift; sourceTree = "<group>"; };
 		C616D1A32B78171F0091D13B /* MovieGenresDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieGenresDTO.swift; sourceTree = "<group>"; };
 		C616D1A52B7817CC0091D13B /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
+		C61810302B8E6D2E00A95A24 /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
+		C61810322B8E8C9400A95A24 /* GradientColorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientColorStyle.swift; sourceTree = "<group>"; };
+		C61810342B8E99E300A95A24 /* GradientDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientDirection.swift; sourceTree = "<group>"; };
 		C646D1B72B6A5E4700361762 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		C646D1B92B6A627100361762 /* MoviesTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesTableViewModel.swift; sourceTree = "<group>"; };
 		C6D979862B87E6270077BF76 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
@@ -102,6 +108,17 @@
 			path = DetailsViewController;
 			sourceTree = "<group>";
 		};
+		C61810362B8E99F500A95A24 /* Gradient */ = {
+			isa = PBXGroup;
+			children = (
+				C6D979862B87E6270077BF76 /* GradientButton.swift */,
+				C61810302B8E6D2E00A95A24 /* GradientImageView.swift */,
+				C61810322B8E8C9400A95A24 /* GradientColorStyle.swift */,
+				C61810342B8E99E300A95A24 /* GradientDirection.swift */,
+			);
+			path = Gradient;
+			sourceTree = "<group>";
+		};
 		C69A8C442B8B8E6B00464D68 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,7 +131,7 @@
 		C69A8C452B8B8E8800464D68 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				C6D979862B87E6270077BF76 /* GradientButton.swift */,
+				C61810362B8E99F500A95A24 /* Gradient */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -327,8 +344,10 @@
 				C616D1A62B7817CC0091D13B /* Genre.swift in Sources */,
 				C6048F642B6C184A00131132 /* MoviesDataModel.xcdatamodeld in Sources */,
 				C6E882962B697A3700CF0E9F /* Movie.swift in Sources */,
+				C61810312B8E6D2E00A95A24 /* GradientImageView.swift in Sources */,
 				C60C25052B6AE86200A7792A /* DetailsViewModel.swift in Sources */,
 				C6048F682B6C1B7000131132 /* FallbackController.swift in Sources */,
+				C61810352B8E99E300A95A24 /* GradientDirection.swift in Sources */,
 				C6048F662B6C191900131132 /* CoreDataController.swift in Sources */,
 				C6E8252B2B6C4A4500B053A6 /* FavoriteMovieTableViewModel.swift in Sources */,
 				C6E8829B2B698D6300CF0E9F /* MovieDTO.swift in Sources */,
@@ -337,6 +356,7 @@
 				C6E8828D2B69749600CF0E9F /* MovieCell.swift in Sources */,
 				C6D979872B87E6270077BF76 /* GradientButton.swift in Sources */,
 				C6E8826A2B69585B00CF0E9F /* AppDelegate.swift in Sources */,
+				C61810332B8E8C9400A95A24 /* GradientColorStyle.swift in Sources */,
 				C60C24FC2B6AD7C000A7792A /* DateExtensions.swift in Sources */,
 				C646D1B82B6A5E4700361762 /* MovieViewModel.swift in Sources */,
 				C646D1BA2B6A627100361762 /* MoviesTableViewModel.swift in Sources */,

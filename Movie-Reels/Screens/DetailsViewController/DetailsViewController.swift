@@ -49,9 +49,10 @@ class DetailsViewController: UIViewController {
     }()
     
     lazy var moviePoster: UIImageView = {
-        let imageView = UIImageView()
+        let imageView = GradientImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.addGradient(colorStyle: .nightTransition, direction: .bottom)
         return imageView
     }()
     
@@ -81,17 +82,17 @@ class DetailsViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor(red: 162.0, green: 52.0, blue: 23.0).cgColor
-        button.addGradient(colorStyle: .darkOrange)
+        button.addGradient(colorStyle: .darkOrange, direction: .left)
         
         let action = UIAction { _ in
             print("Press Play button")
         }
-        button.addAction(action, for: .touchUpInside)
         
+        button.addAction(action, for: .touchUpInside)
         return button
     }()
     
-    lazy var bookMarkButton: UIButton = {
+    lazy var bookmarkButton: UIButton = {
         let button = UIButton(type: .custom)
         button.frame.size = CGSize(width: Metrics.bookMarkButtonWidth, height: Metrics.bookMarkButtonHeight)
         button.backgroundColor = UIColor(resource: .lightNight)
@@ -104,13 +105,14 @@ class DetailsViewController: UIViewController {
         let action = UIAction { _ in
             print("Press Bookmark button")
         }
-        button.addAction(action, for: .touchUpInside)
         
+        button.addAction(action, for: .touchUpInside)
         return button
     }()
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
+        indicator.tintColor = UIColor(resource: .darkOrange)
         return indicator
     }()
     
@@ -170,11 +172,11 @@ class DetailsViewController: UIViewController {
     }
     
     func setupUI() {
-        updateLoadingState()
-        updateImage()
-        
         movieNameLabel.text = viewModel.title
         movieDescriptionTextView.text = viewModel.overview
+        
+        updateLoadingState()
+        updateImage()
         updateMovieDate()
         
         view.addSubview(movieScrollView)
@@ -186,105 +188,167 @@ class DetailsViewController: UIViewController {
         
         contentMovieView.addSubview(posterButtonsStackView)
         posterButtonsStackView.addArrangedSubview(playButton)
-        posterButtonsStackView.addArrangedSubview(bookMarkButton)
+        posterButtonsStackView.addArrangedSubview(bookmarkButton)
         
         contentMovieView.addSubview(movieDescriptionView)
         movieDescriptionView.addSubview(movieNameLabel)
         movieDescriptionView.addSubview(movieReleaseDateLabel)
         movieDescriptionView.addSubview(movieDescriptionTextView)
         
-        backButton.translatesAutoresizingMaskIntoConstraints = false
+        setupMovieScrollConstraints()
+        setupBackButtonConstraints()
+        setupContentMovieConstraints()
+        setupMoviePosterConstraints()
+        setupActivityIndicatorConstraints()
+        setupPosterButtonsStackConstraints()
+        setupPlayButtonConstraints()
+        setupBookmarkButtonConstraints()
+        setupMovieDescriptionViewConstraints()
+        setupMovieNameConstraints()
+        setupMovieReleaseDateConstraints()
+        setupMovieDescriptionTextConstraints()
+    }
+    
+    // MARK: - Setup Constraints
+    
+    func setupMovieScrollConstraints() {
         movieScrollView.translatesAutoresizingMaskIntoConstraints = false
-        contentMovieView.translatesAutoresizingMaskIntoConstraints = false
-        moviePoster.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        posterButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
-        movieDescriptionView.translatesAutoresizingMaskIntoConstraints = false
-        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            movieScrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            movieScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            movieScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            movieScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    func setupBackButtonConstraints() {
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Metrics.topIndent),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.leadingIndent * 2),
             backButton.widthAnchor.constraint(equalToConstant: Metrics.backButtonWidth),
-            backButton.heightAnchor.constraint(equalToConstant: Metrics.backButtonHeight),
-            
-            movieScrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            movieScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            movieScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            movieScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+            backButton.heightAnchor.constraint(equalToConstant: Metrics.backButtonHeight)
+        ])
+    }
+    
+    func setupContentMovieConstraints() {
+        contentMovieView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             contentMovieView.topAnchor.constraint(equalTo: movieScrollView.topAnchor),
             contentMovieView.leadingAnchor.constraint(equalTo: movieScrollView.leadingAnchor),
             contentMovieView.trailingAnchor.constraint(equalTo: movieScrollView.trailingAnchor),
             contentMovieView.bottomAnchor.constraint(equalTo: movieScrollView.bottomAnchor),
             contentMovieView.widthAnchor.constraint(equalTo: movieScrollView.widthAnchor),
-            contentMovieView.heightAnchor.constraint(equalTo: movieScrollView.heightAnchor).withPriority(.defaultLow),
-            
+            contentMovieView.heightAnchor.constraint(equalTo: movieScrollView.heightAnchor).withPriority(.defaultLow)
+        ])
+    }
+    
+    func setupMoviePosterConstraints() {
+        moviePoster.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             moviePoster.topAnchor.constraint(equalTo: contentMovieView.topAnchor),
             moviePoster.widthAnchor.constraint(equalTo: contentMovieView.widthAnchor),
-            moviePoster.heightAnchor.constraint(equalTo: moviePoster.widthAnchor, multiplier: 1.4),
-            
+            moviePoster.heightAnchor.constraint(equalTo: moviePoster.widthAnchor, multiplier: 1.4)
+        ])
+    }
+    
+    func setupActivityIndicatorConstraints() {
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: moviePoster.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: moviePoster.centerYAnchor),
-            
-            posterButtonsStackView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.leadingIndent),
+            activityIndicator.centerYAnchor.constraint(equalTo: moviePoster.centerYAnchor)
+        ])
+    }
+    
+    func setupPosterButtonsStackConstraints() {
+        posterButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            posterButtonsStackView.topAnchor.constraint(equalTo: moviePoster.bottomAnchor, constant: Metrics.topIndent),
             posterButtonsStackView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor, constant: Metrics.leadingIndent * 2),
-            posterButtonsStackView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent * 2),
-
+            posterButtonsStackView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor, constant: -Metrics.traillingIndent * 2)
+        ])
+    }
+    
+    func setupPlayButtonConstraints() {
+        NSLayoutConstraint.activate([
             playButton.widthAnchor.constraint(equalToConstant: Metrics.playButtonWidth).withPriority(.defaultLow),
-            playButton.heightAnchor.constraint(equalToConstant: Metrics.playButtonHeight),
-            
-            bookMarkButton.widthAnchor.constraint(equalToConstant: Metrics.bookMarkButtonWidth),
-            bookMarkButton.heightAnchor.constraint(equalToConstant: Metrics.bookMarkButtonHeight),
-            
+            playButton.heightAnchor.constraint(equalToConstant: Metrics.playButtonHeight)
+        ])
+    }
+    
+    func setupBookmarkButtonConstraints() {
+        NSLayoutConstraint.activate([
+            bookmarkButton.widthAnchor.constraint(equalToConstant: Metrics.bookMarkButtonWidth),
+            bookmarkButton.heightAnchor.constraint(equalToConstant: Metrics.bookMarkButtonHeight)
+        ])
+    }
+    
+    func setupMovieDescriptionViewConstraints() {
+        movieDescriptionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             movieDescriptionView.topAnchor.constraint(equalTo: playButton.bottomAnchor, constant: Metrics.topIndent * 5),
             movieDescriptionView.leadingAnchor.constraint(equalTo: contentMovieView.leadingAnchor),
             movieDescriptionView.trailingAnchor.constraint(equalTo: contentMovieView.trailingAnchor),
-            movieDescriptionView.bottomAnchor.constraint(equalTo: contentMovieView.bottomAnchor, constant: -Metrics.bottomIndent),
-            
+            movieDescriptionView.bottomAnchor.constraint(equalTo: contentMovieView.bottomAnchor, constant: -Metrics.bottomIndent)
+        ])
+    }
+    
+    func setupMovieNameConstraints() {
+        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             movieNameLabel.topAnchor.constraint(equalTo: movieDescriptionView.topAnchor, constant: Metrics.topIndent * 2),
             movieNameLabel.leadingAnchor.constraint(equalTo: movieDescriptionView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieNameLabel.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
-            
+            movieNameLabel.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent)
+        ])
+    }
+    
+    func setupMovieReleaseDateConstraints() {
+        movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             movieReleaseDateLabel.centerXAnchor.constraint(equalTo: movieDescriptionView.centerXAnchor),
-            movieReleaseDateLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: Metrics.topIndent),
-            
+            movieReleaseDateLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor, constant: Metrics.topIndent)
+        ])
+    }
+    
+    func setupMovieDescriptionTextConstraints() {
+        movieDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             movieDescriptionTextView.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent * 4),
             movieDescriptionTextView.leadingAnchor.constraint(equalTo: movieDescriptionView.leadingAnchor, constant: Metrics.leadingIndent),
             movieDescriptionTextView.trailingAnchor.constraint(equalTo: movieDescriptionView.trailingAnchor, constant: -Metrics.traillingIndent),
             movieDescriptionTextView.bottomAnchor.constraint(lessThanOrEqualTo: movieDescriptionView.bottomAnchor, constant: -Metrics.bottomIndent)
         ])
-        
-        moviePoster.layoutIfNeeded()
-        
-        let gradientLayer = CAGradientLayer()
-        let gradientHeight = moviePoster.bounds.height / 10
-        gradientLayer.frame = CGRect(x: 0, y: moviePoster.bounds.height - gradientHeight, width: moviePoster.bounds.width, height: gradientHeight)
-        gradientLayer.colors = [UIColor.clear.cgColor, UIColor(resource: .night).cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-
-        moviePoster.layer.insertSublayer(gradientLayer, at: 0)
-    }
-    
-    func updateMovieDate() {
-        guard let relaseDate = DateFormatter.formattedString (
-            from: viewModel.releaseDate,
-            inputFormat: "yyyy-MM-dd",
-            outputFormat: "MMMM yyyy"
-        ) else {
-            return
-        }
-        
-        movieReleaseDateLabel.text = relaseDate
     }
 }
 
 // MARK: - Details ViewModel delegate
 
 extension DetailsViewController: DetailsViewModelDelegate {
+    func updateLoadingState() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async {
+                self.updateLoadingState()
+            }
+            return
+        }
+        
+        if viewModel.isImageLoading {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
+    }
+    
     func updateImage() {
         guard Thread.isMainThread else {
             DispatchQueue.main.async {
@@ -300,6 +364,18 @@ extension DetailsViewController: DetailsViewModelDelegate {
         }
     }
     
+    func updateMovieDate() {
+        guard let relaseDate = DateFormatter.formattedString (
+            from: viewModel.releaseDate,
+            inputFormat: "yyyy-MM-dd",
+            outputFormat: "MMMM yyyy"
+        ) else {
+            return
+        }
+        
+        movieReleaseDateLabel.text = relaseDate
+    }
+    
     func updateError() {
         guard Thread.isMainThread else {
             DispatchQueue.main.async {
@@ -313,21 +389,6 @@ extension DetailsViewController: DetailsViewModelDelegate {
         alert.addAction(.init(title: Constants.alertActionOk, style: .cancel))
         
         present(alert, animated: true)
-    }
-    
-    func updateLoadingState() {
-        guard Thread.isMainThread else {
-            DispatchQueue.main.async {
-                self.updateLoadingState()
-            }
-            return
-        }
-        
-        if viewModel.isImageLoading {
-            activityIndicator.startAnimating()
-        } else {
-            activityIndicator.stopAnimating()
-        }
     }
 }
 
