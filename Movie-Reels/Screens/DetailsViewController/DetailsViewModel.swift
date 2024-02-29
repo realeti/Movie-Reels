@@ -11,6 +11,10 @@ protocol MovieDetailsPresentable {
     func update(movie: Movie)
 }
 
+protocol MovieTrailerPresentable {
+    func loadTrailer(key: String)
+}
+
 protocol DetailsViewModelDelegate: AnyObject {
     func updateImage()
     func updateError()
@@ -26,6 +30,7 @@ protocol DetailsViewModeling {
     var lastErrorMessage: String? { get }
     
     func loadImage()
+    func loadTrailers()
 }
 
 class DetailsViewModel: DetailsViewModeling, MovieDetailsPresentable {
@@ -36,9 +41,10 @@ class DetailsViewModel: DetailsViewModeling, MovieDetailsPresentable {
     var isImageLoading: Bool = false
     var releaseDate: String { movie?.releaseDate ?? ""}
     var overview: String { movie?.overview ?? "" }
+    var movieTrailersKeys: [String]?
     var lastErrorMessage: String?
     
-    lazy var imageFetchingController = NetworkController()
+    lazy var fetchingController = NetworkController()
     weak var delegate: DetailsViewModelDelegate?
     
     func loadImage() {
@@ -49,17 +55,39 @@ class DetailsViewModel: DetailsViewModeling, MovieDetailsPresentable {
         isImageLoading = true
         delegate?.updateLoadingState()
         
-        let imagePath = imageFetchingController.baseImagePath + movie.poster
-        imageFetchingController.loadData(fullPath: imagePath) { [weak self] in
-            self?.isImageLoading = false
-            self?.delegate?.updateLoadingState()
+        let imagePath = fetchingController.baseImagePath + movie.poster
+        
+        fetchingController.loadData(fullPath: imagePath) { [weak self] in
+            guard let self else { return }
+            
+            self.isImageLoading = false
+            self.delegate?.updateLoadingState()
             
             do {
-                self?.imageData = try $0.get()
-                self?.delegate?.updateImage()
+                self.imageData = try $0.get()
+                self.delegate?.updateImage()
             } catch {
-                self?.lastErrorMessage = error.localizedDescription
-                self?.delegate?.updateError()
+                self.lastErrorMessage = error.localizedDescription
+                self.delegate?.updateError()
+            }
+        }
+    }
+    
+    func loadTrailers() {
+        lastErrorMessage = nil
+        
+        guard let movie else { return }
+        
+        fetchingController.loadMovieTrailers(movieId: movie.id) { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let movieTrailers = try $0.get()
+                
+                self.movieTrailersKeys = movieTrailers.sorted(by: { $0.name < $1.name }).map({ $0.key })
+            } catch {
+                self.lastErrorMessage = error.localizedDescription
+                self.delegate?.updateError()
             }
         }
     }
@@ -68,5 +96,10 @@ class DetailsViewModel: DetailsViewModeling, MovieDetailsPresentable {
         self.movie = movie
         self.imageData = nil
         self.loadImage()
+        self.loadTrailers()
+    }
+    
+    func configure(trailer: MovieTrailerPresentable, key: String) {
+        trailer.loadTrailer(key: key)
     }
 }

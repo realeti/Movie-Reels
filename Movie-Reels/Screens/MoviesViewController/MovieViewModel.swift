@@ -52,6 +52,7 @@ class MovieViewModel: MovieViewModeling {
         delegate?.updateLoadingState()
         
         let imagePath = imageFetchingController.baseImagePath + movie.poster
+        
         imageFetchingController.loadData(fullPath: imagePath) { [weak self] result in
             guard let self else { return }
             

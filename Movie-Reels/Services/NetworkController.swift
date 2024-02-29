@@ -107,7 +107,7 @@ class NetworkController: MoviesLoading {
     }
     
     func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void) {
-        let path = "3/genre/movie/list?api_key=\(apiKey)"
+        let path = "3/genre/movie/list?language=en-US&api_key=\(apiKey)"
         
         loadData(path: path) { response in
             do {
@@ -122,6 +122,29 @@ class NetworkController: MoviesLoading {
                 }
                 
                 completion(.success(genres))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func loadMovieTrailers(movieId: Int, completion: @escaping (Result<[MovieTrailer], Error>) -> Void) {
+        let path = "3/movie/\(movieId)/videos?api_key=\(apiKey)"
+        
+        loadData(path: path) { response in
+            do {
+                let data = try response.get()
+                let responseData = try self.decoder.decode(MovieTrailerListDTO.self, from: data)
+                let movieTrailersDto = responseData.results
+                
+                let movieTrailers = movieTrailersDto.filter({ $0.type == "Trailer" }).map { movieTrailer in
+                    MovieTrailer(name: movieTrailer.name,
+                                 key: movieTrailer.key,
+                                 type: movieTrailer.type
+                    )
+                }
+                
+                completion(.success(movieTrailers))
             } catch {
                 completion(.failure(error))
             }

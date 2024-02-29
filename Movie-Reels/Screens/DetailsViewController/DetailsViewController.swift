@@ -85,7 +85,18 @@ class DetailsViewController: UIViewController {
         button.addGradient(colorStyle: .darkOrange, direction: .left)
         
         let action = UIAction { _ in
-            print("Press Play button")
+            guard let randomTrailer = self.viewModel.movieTrailersKeys?.randomElement() else { return }
+            
+            let movieTrailerVC = MovieTrailerViewController()
+            self.viewModel.configure(trailer: movieTrailerVC, key: randomTrailer)
+            
+            movieTrailerVC.modalPresentationStyle = .pageSheet
+            
+            if let sheet = movieTrailerVC.sheetPresentationController {
+                sheet.detents = [.medium()]
+            }
+            
+            self.present(movieTrailerVC, animated: true)
         }
         
         button.addAction(action, for: .touchUpInside)
