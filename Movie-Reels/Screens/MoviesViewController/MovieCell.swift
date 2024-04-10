@@ -168,7 +168,7 @@ extension MovieCell: MovieViewModelDelegate {
     func updateImage() {
         guard let viewModel else { return }
         
-        if let data = viewModel.posterData, let image = UIImage(data: data) {
+        if let image = viewModel.moviePoster {
             DispatchQueue.main.async {
                 self.moviePoster.image = image
             }

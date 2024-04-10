@@ -5,7 +5,7 @@
 //  Created by Apple M1 on 31.01.2024.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 protocol MovieViewModelDelegate: AnyObject {
@@ -17,12 +17,12 @@ protocol MovieViewModelDelegate: AnyObject {
 protocol MovieViewModeling {
     var id: Int { get }
     var title: String { get }
-    var posterData: Data? { get }
+    var moviePoster: UIImage? { get }
     var isImageLoading: Bool { get }
     var releaseDate: String { get }
     
     func loadImage()
-    func storeMoviePoster<T: NSManagedObject & MovieEntity>(for entityType: T.Type, entityName: String)
+    func storeMoviePoster()
     func updateGenres(for genreIds: [Int], genres: [Genre])
     func configure(details: MovieDetailsPresentable)
 }
@@ -33,12 +33,12 @@ class MovieViewModel: MovieViewModeling {
     var title: String { movie.title }
     var releaseDate: String { movie.releaseDate }
     
-    var posterData: Data?
+    var moviePoster: UIImage?
     var genres: [String] = []
     var isImageLoading: Bool = false
     
     lazy var imageFetchingController = NetworkController()
-    lazy var localStorage = CoreDataController.shared
+    lazy var imageStorage = FileManagerController.shared
     weak var delegate: MovieViewModelDelegate?
     
     init(movie: Movie) {
@@ -46,7 +46,7 @@ class MovieViewModel: MovieViewModeling {
     }
     
     func loadImage() {
-        guard !movie.poster.isEmpty, isImageLoading == false, posterData == nil else { return }
+        guard !movie.poster.isEmpty, isImageLoading == false, moviePoster == nil else { return }
         
         isImageLoading = true
         delegate?.updateLoadingState()
@@ -56,25 +56,28 @@ class MovieViewModel: MovieViewModeling {
         imageFetchingController.loadData(fullPath: imagePath) { [weak self] result in
             guard let self else { return }
             
-            let posterData: Data?
-            
             do {
-                posterData = try result.get()
+                let imageData = try result.get()
+                moviePoster = UIImage(data: imageData)
+                storeMoviePoster()
             } catch {
-                posterData = self.movie.posterData
+                let imageName = "poster_\(title)"
+                moviePoster = imageStorage.loadImage(withName: imageName)
             }
             
-            self.posterData = posterData
             self.delegate?.updateImage()
             self.isImageLoading = false
             self.delegate?.updateLoadingState()
         }
     }
     
-    func storeMoviePoster<T: NSManagedObject & MovieEntity>(for entityType: T.Type, entityName: String) {
-        if let posterData {
-            self.localStorage.storeMoviePoster(movieID: self.id, posterData: posterData, entityType: entityType, entityName: entityName)
+    func storeMoviePoster() {
+        guard let image = moviePoster else {
+            return
         }
+        
+        let imageName = "poster_\(title)"
+        imageStorage.saveImage(image, withName: imageName)
     }
     
     func updateGenres(for genreIds: [Int], genres: [Genre]) {
@@ -88,6 +91,6 @@ class MovieViewModel: MovieViewModeling {
     
     func configure(favorites: FavoriteMoviesPresentable) {
         favorites.addFavoriteMovie(movie: movie)
-        storeMoviePoster(for: FavoritesMovieCD.self, entityName: Constants.favoritesMovieEntityName)
+        storeMoviePoster()
     }
 }

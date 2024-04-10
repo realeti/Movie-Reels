@@ -11,7 +11,6 @@ struct Movie {
     let id: Int
     let title: String
     let poster: String
-    let posterData: Data
     let releaseDate: String
     let overview: String
     let genreIds: [Int]

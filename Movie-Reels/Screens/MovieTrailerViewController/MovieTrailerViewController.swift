@@ -47,7 +47,7 @@ extension MovieTrailerViewController: MovieTrailerPresentable {
 }
 
 private struct Metrics {
-    static let topIndent: CGFloat = 8.0
+    static let topIndent: CGFloat = 10.0
     static let leadingIndent: CGFloat = 8.0
     static let traillingIndent: CGFloat = 8.0
     static let bottomIndent: CGFloat = 8.0

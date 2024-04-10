@@ -92,7 +92,6 @@ class NetworkController: MoviesLoading {
                     Movie(id: movie.id,
                           title: movie.title,
                           poster: movie.poster,
-                          posterData: Data(),
                           releaseDate: movie.releaseDate,
                           overview: movie.overview,
                           genreIds: movie.genresIds
