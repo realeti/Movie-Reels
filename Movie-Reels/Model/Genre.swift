@@ -11,3 +11,9 @@ struct Genre {
     let id: Int
     let name: String
 }
+
+extension Genre: Equatable {
+    static func == (lhs: Genre, rhs: Genre) -> Bool {
+        lhs.id == rhs.id
+    }
+}

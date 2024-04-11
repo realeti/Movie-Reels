@@ -15,3 +15,9 @@ struct Movie {
     let overview: String
     let genreIds: [Int]
 }
+
+extension Movie: Equatable {
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        lhs.id == rhs.id
+    }
+}
