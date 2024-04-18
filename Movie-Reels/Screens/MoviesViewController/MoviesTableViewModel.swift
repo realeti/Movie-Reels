@@ -19,7 +19,7 @@ protocol MoviesTableViewModeling {
     
     func loadMoviesData()
     func loadMovies(completion: @escaping () -> Void)
-    func loadMovieGenres()
+    func loadMovieGenres(completion: @escaping () -> Void)
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
     func configure(favorites: FavoriteMoviesPresentable, for index: IndexPath)
 }
@@ -43,9 +43,12 @@ class MoviesTableViewModel: MoviesTableViewModeling {
         guard !isLoading else { return }
         self.isLoading = true
         
-        loadMovies { [weak self] in
+        loadMovieGenres { [weak self] in
             guard let self else { return }
-            self.loadMovieGenres()
+            
+            self.loadMovies {
+                self.delegate?.updateMovies()
+            }
         }
     }
     
@@ -55,7 +58,11 @@ class MoviesTableViewModel: MoviesTableViewModeling {
             
             do {
                 let movies = try result.get()
-                let viewModels = movies.map { MovieViewModel(movie: $0) }
+                let viewModels = movies.map { movie in
+                    let genresForMovie = self.movieGenres.filter( {movie.genreIds.contains($0.id) }).map{ $0.name }.sorted(by: <)
+                    
+                    return MovieViewModel(movie: movie, genres: genresForMovie)
+                }
                 
                 self.moviesViewModels.append(contentsOf: viewModels)
                 completion()
@@ -66,7 +73,7 @@ class MoviesTableViewModel: MoviesTableViewModeling {
         }
     }
     
-    func loadMovieGenres() {
+    func loadMovieGenres(completion: @escaping () -> Void) {
         fallbackController.loadMovieGenres { [weak self] result in
             guard let self else { return }
             self.isLoading = false
@@ -74,12 +81,8 @@ class MoviesTableViewModel: MoviesTableViewModeling {
             do {
                 let genres = try result.get()
                 
-                self.moviesViewModels.forEach { movieViewModel in
-                    movieViewModel.updateGenres(for: movieViewModel.movie.genreIds, genres: genres)
-                }
-                
-                movieGenres = genres
-                self.delegate?.updateMovies()
+                self.movieGenres = genres
+                completion()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
                 self.delegate?.updateError()

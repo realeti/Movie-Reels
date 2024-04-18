@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FavoriteMoviesPresentable {
-    func addFavoriteMovie(movie: Movie)
+    func addFavoriteMovie(movie: Movie, genres: [String])
 }
 
 protocol FavoriteMovieTableViewModelDelegate: AnyObject {
@@ -23,7 +23,7 @@ protocol FavoriteMovieTableViewModeling {
     
     func loadMoviesData()
     func loadMovies(completion: @escaping () -> Void)
-    func loadMovieGenres()
+    func loadMovieGenres(completion: @escaping () -> Void)
     func removeFavoriteMovie(for index: IndexPath)
     func configure(details: MovieDetailsPresentable, for index: IndexPath)
 }
@@ -38,9 +38,12 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
     lazy var localStorage = CoreDataController.shared
     
     func loadMoviesData() {
-        loadMovies { [weak self] in
+        loadMovieGenres { [weak self] in
             guard let self else { return }
-            self.loadMovieGenres()
+            
+            self.loadMovies {
+                self.delegate?.updateMovies()
+            }
         }
     }
     
@@ -50,9 +53,13 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
             
             do {
                 let movies = try result.get()
-                let viewModels = movies.map { MovieViewModel(movie: $0) }
+                let viewModels = movies.map { movie in
+                    let genresForMovie = self.movieGenres.filter( {movie.genreIds.contains($0.id) }).map{ $0.name }.sorted(by: <)
+                    
+                    return MovieViewModel(movie: movie, genres: genresForMovie)
+                }
                 
-                self.moviesViewModels = []
+                self.moviesViewModels.removeAll()
                 self.moviesViewModels.append(contentsOf: viewModels)
                 completion()
             } catch {
@@ -62,19 +69,15 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
         }
     }
     
-    func loadMovieGenres() {
+    func loadMovieGenres(completion: @escaping () -> Void) {
         localStorage.loadMovieGenres { [weak self] result in
             guard let self else { return }
             
             do {
                 let genres = try result.get()
+                self.movieGenres = genres
                 
-                self.moviesViewModels.forEach { movieViewModel in
-                    movieViewModel.updateGenres(for: movieViewModel.movie.genreIds, genres: genres)
-                }
-                
-                movieGenres = genres
-                self.delegate?.updateMovies()
+                completion()
             } catch {
                 self.lastErrorMessage = error.localizedDescription
                 self.delegate?.updateError()
@@ -82,20 +85,18 @@ class FavoriteMovieTableViewModel: FavoriteMovieTableViewModeling, FavoriteMovie
         }
     }
     
-    func addFavoriteMovie(movie: Movie) {
-        let newFavoriteMovie = MovieViewModel(movie: movie)
-        let existingMovie = moviesViewModels.firstIndex(where: { $0.title == newFavoriteMovie.title })
+    func addFavoriteMovie(movie: Movie, genres: [String]) {
+        let newFavoriteMovie = MovieViewModel(movie: movie, genres: genres)
         
-        if let existingMovie {
-            self.moviesViewModels.remove(at: existingMovie)
+        if let existingMovieIndex = moviesViewModels.firstIndex(where: { $0.id == newFavoriteMovie.id }) {
+            moviesViewModels[existingMovieIndex] = newFavoriteMovie
+        } else {
+            moviesViewModels.append(newFavoriteMovie)
         }
         
-        newFavoriteMovie.updateGenres(for: movie.genreIds, genres: movieGenres)
-        
-        self.moviesViewModels.append(newFavoriteMovie)
         self.delegate?.updateMovies()
         
-        localStorage.addFavoriteMovie(movie: newFavoriteMovie.movie) { error in
+        localStorage.storeFavoriteMovie(movie: newFavoriteMovie.movie) { error in
             if let error = error {
                 print(error)
             }

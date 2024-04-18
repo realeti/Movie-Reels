@@ -14,7 +14,7 @@ protocol MoviesStoring {
 }
 
 protocol FavoriteMoviesStoring {
-    func addFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void)
+    func storeFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void)
     func removeFavoriteMovie(movieID id: Int, completion: @escaping (Error?) -> Void)
 }
 
@@ -198,7 +198,7 @@ final class CoreDataController: MovieStoring, MoviesLoadingStorage {
         }
     }
     
-    func addFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void) {
+    func storeFavoriteMovie(movie: Movie, completion: @escaping (Error?) -> Void) {
         let context = persistentContainer.viewContext
         let request = NSFetchRequest<FavoritesMovieCD>(entityName: Constants.favoritesMovieEntityName)
         request.predicate = NSPredicate(format: "id == %@", NSNumber(value: movie.id))

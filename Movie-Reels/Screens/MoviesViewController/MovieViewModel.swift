@@ -18,12 +18,12 @@ protocol MovieViewModeling {
     var id: Int { get }
     var title: String { get }
     var moviePoster: UIImage? { get }
+    var movieGenres: [String] { get }
     var isImageLoading: Bool { get }
     var releaseDate: String { get }
     
     func loadImage()
     func storeMoviePoster()
-    func updateGenres(for genreIds: [Int], genres: [Genre])
     func configure(details: MovieDetailsPresentable)
 }
 
@@ -34,15 +34,16 @@ class MovieViewModel: MovieViewModeling {
     var releaseDate: String { movie.releaseDate }
     
     var moviePoster: UIImage?
-    var genres: [String] = []
+    var movieGenres: [String] = []
     var isImageLoading: Bool = false
     
     lazy var imageFetchingController = NetworkController()
     lazy var imageStorage = FileManagerController.shared
     weak var delegate: MovieViewModelDelegate?
     
-    init(movie: Movie) {
+    init(movie: Movie, genres: [String]) {
         self.movie = movie
+        self.movieGenres = genres
     }
     
     func loadImage() {
@@ -80,17 +81,12 @@ class MovieViewModel: MovieViewModeling {
         imageStorage.saveImage(image, withName: imageName)
     }
     
-    func updateGenres(for genreIds: [Int], genres: [Genre]) {
-        let nameGenres = genres.filter({ self.movie.genreIds.contains($0.id) }).map{ $0.name }
-        self.genres = nameGenres.sorted(by: <)
-    }
-    
     func configure(details: MovieDetailsPresentable) {
         details.update(movie: movie)
     }
     
     func configure(favorites: FavoriteMoviesPresentable) {
-        favorites.addFavoriteMovie(movie: movie)
+        favorites.addFavoriteMovie(movie: movie, genres: movieGenres)
         storeMoviePoster()
     }
 }

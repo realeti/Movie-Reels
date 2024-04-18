@@ -9,24 +9,24 @@ import XCTest
 
 @testable import Movie_Reels
 
-final class MoviesLoadingFailureMockTests: XCTestCase {
+final class MoviesLoadingMockTests: XCTestCase {
     
-    func testLoadMoviesFailure() {
+    func testLoadMovies() {
         // Arrange
-        let mock = MoviesLoadingFailureMock()
-        var receivedError: Error?
+        let mock = MoviesLoadingMock()
+        
+        var receivedMovies: [Movie]?
         
         // Act
         mock.loadMovies { result in
-            if case let .failure(error) = result {
-                receivedError = error
+            if case let .success(movies) = result {
+                receivedMovies = movies
             }
         }
         
         // Assert
-        XCTAssertNotNil(receivedError)
-        XCTAssertTrue(receivedError is MoviesLoadingFailureMock.MockError)
-        XCTAssertEqual(receivedError as? MoviesLoadingFailureMock.MockError, .mockMovies)
+        XCTAssertNotNil(receivedMovies)
+        XCTAssertFalse(receivedMovies?.isEmpty ?? true)
     }
     
     func testLoadGenresFailure() {

@@ -148,7 +148,7 @@ class MovieCell: UITableViewCell {
 extension MovieCell: MovieViewModelDelegate {
     func updateGenres() {
         guard let viewModel else { return }
-        movieGenresLabel.text = viewModel.genres.joined(separator: " • ")
+        movieGenresLabel.text = viewModel.movieGenres.joined(separator: " • ")
     }
     
     func updateMovieDate() {
