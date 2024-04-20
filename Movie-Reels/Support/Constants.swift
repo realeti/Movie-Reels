@@ -11,6 +11,7 @@ struct Constants {
     
     // MARK: - Table view
     static let movieCellIdentifier = "movieCell"
+    static let movieCollectionCellIdentifier = "movieCollectionCell"
     
     // MARK: - Alert messages
     static let alertActionOk = "OK"

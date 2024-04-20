@@ -9,16 +9,16 @@ import UIKit
 
 class MoviesViewController: UIViewController {
     
-    lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 200
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor(resource: .night)
-        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
-        return tableView
+    let itemsPerRow: CGFloat = 3
+    
+    lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createFlowLayout())
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = UIColor(resource: .night)
+        
+        collectionView.register(MovieCollectionCell.self, forCellWithReuseIdentifier: MovieCollectionCell.reuseIdentifier)
+        return collectionView
     }()
     
     let viewModel = MoviesTableViewModel()
@@ -33,7 +33,29 @@ class MoviesViewController: UIViewController {
         setupUI()
     }
     
-    func configureNavController() {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        updateLayout()
+    }
+    
+    private func updateLayout() {
+        collectionView.frame = view.bounds
+        
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        
+        let sectionInsets = flowLayout.sectionInset.left + flowLayout.sectionInset.right
+        let minimumInteritemSpacing = flowLayout.minimumInteritemSpacing * (itemsPerRow - 1)
+        let totalWidth = collectionView.bounds.width
+        let availableWidth = totalWidth - sectionInsets - minimumInteritemSpacing
+        let widthPerItem = availableWidth / itemsPerRow
+        
+        flowLayout.itemSize = CGSize(width: widthPerItem, height: widthPerItem * 1.75)
+        flowLayout.invalidateLayout()
+    }
+    
+    private func configureNavController() {
         title = Constants.moviesTabBarName
         
         let titleColor = UIColor(resource: .babyPowder)
@@ -42,52 +64,68 @@ class MoviesViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = UIColor(resource: .night)
     }
     
-    func setupUI() {
-        view.addSubview(tableView)
+    private func setupUI() {
+        view.addSubview(collectionView)
         
-        tableView.frame = view.bounds
-        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
+        collectionView.frame = view.bounds
         setupTapGesture()
     }
     
-    func setupTapGesture() {
+    private func createFlowLayout() -> UICollectionViewFlowLayout {
+        let flowLayout = UICollectionViewFlowLayout()
+        
+        flowLayout.scrollDirection = .vertical
+        flowLayout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        flowLayout.minimumLineSpacing = 15
+        flowLayout.minimumInteritemSpacing = 15
+        
+        return flowLayout
+    }
+    
+    private func setupTapGesture() {
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(sender:)))
-        tableView.addGestureRecognizer(longPress)
+        collectionView.addGestureRecognizer(longPress)
     }
     
     @objc private func handleLongPress(sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            let touchPoint = sender.location(in: tableView)
-            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
-                let currentMovie = viewModel.moviesViewModels[indexPath.row]
-                
-                let alert = UIAlertController(title: currentMovie.title, message: Constants.addMovieToFavorites, preferredStyle: .alert)
-                
-                let actionDone = UIAlertAction(title: Constants.alertActionYes, style: .default) { _ in
-                    guard let tabBarController = self.tabBarController else {
-                        return
-                    }
-                    
-                    guard let favoriteNavVC = tabBarController.viewControllers?[1] as? UINavigationController else {
-                        return
-                    }
-                    
-                    guard let favoriteVC = favoriteNavVC.viewControllers.first as? FavoritesViewController else {
-                        return
-                    }
-                    
-                    self.viewModel.configure(favorites: favoriteVC.viewModel, for: indexPath)
-                }
-                
-                let actionCancel = UIAlertAction(title: Constants.alertActionCancel, style: .cancel)
-                
-                alert.addAction(actionDone)
-                alert.addAction(actionCancel)
-                
-                self.present(alert, animated: true)
-            }
+        guard sender.state == .began else { return }
+        let touchPoint = sender.location(in: collectionView)
+        
+        guard let indexPath = collectionView.indexPathForItem(at: touchPoint) else { return }
+        let currentMovie = viewModel.moviesViewModels[indexPath.row]
+        
+        presentMovieAlert(for: currentMovie, at: indexPath)
+    }
+    
+    private func presentMovieAlert(for movie: MovieViewModel, at indextPath: IndexPath) {
+        let alert = CreateAlertController(for: movie)
+        let actionDone = UIAlertAction(title: Constants.alertActionYes, style: .default) { [weak self] _ in
+            self?.addMovieToFavorites(from: indextPath)
         }
+        let actionCancel = UIAlertAction(title: Constants.alertActionCancel, style: .cancel)
+        
+        alert.addAction(actionDone)
+        alert.addAction(actionCancel)
+        
+        present(alert, animated: true)
+    }
+    
+    private func CreateAlertController(for movie: MovieViewModel) -> UIAlertController {
+        return UIAlertController(title: movie.title, message: Constants.addMovieToFavorites, preferredStyle: .alert)
+    }
+    
+    private func addMovieToFavorites(from indextPath: IndexPath) {
+        guard let favoriteVC = getFavoritesViewController() else { return }
+        viewModel.configure(favorites: favoriteVC.viewModel, for: indextPath)
+    }
+    
+    private func getFavoritesViewController() -> FavoritesViewController? {
+        guard let tabBarController = tabBarController,
+              let favoriteNavVC = tabBarController.viewControllers?[1] as? UINavigationController,
+              let favoriteVC = favoriteNavVC.viewControllers.first as? FavoritesViewController else {
+            return nil
+        }
+        return favoriteVC
     }
 }
 
@@ -96,7 +134,7 @@ class MoviesViewController: UIViewController {
 extension MoviesViewController: MoviesTableViewModelDelegate {
     func updateMovies() {
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            self.collectionView.reloadData()
         }
     }
     
@@ -112,20 +150,16 @@ extension MoviesViewController: MoviesTableViewModelDelegate {
     }
 }
 
-// MARK: - TableView data source
+// MARK: - CollectionView data source
 
-extension MoviesViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension MoviesViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.moviesViewModels.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.movieCellIdentifier) as? MovieCell else {
-            return UITableViewCell()
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionCell.reuseIdentifier, for: indexPath) as? MovieCollectionCell else {
+            return UICollectionViewCell()
         }
         
         let cellViewModel = viewModel.moviesViewModels[indexPath.row]
@@ -135,12 +169,11 @@ extension MoviesViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - TableView delegate
+// MARK: - CollectionView delegate
 
-extension MoviesViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+extension MoviesViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
         
         let detailVC = DetailsViewController()
         detailVC.hidesBottomBarWhenPushed = true
@@ -148,9 +181,9 @@ extension MoviesViewController: UITableViewDelegate {
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard indexPath.row < viewModel.moviesViewModels.count,
-              let cell = cell as? MovieCell else 
+              let cell = cell as? MovieCollectionCell else
         { return }
         
         let cellViewModel = viewModel.moviesViewModels[indexPath.row]
@@ -159,7 +192,7 @@ extension MoviesViewController: UITableViewDelegate {
         cellViewModel.loadImage()
     }
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard indexPath.row < viewModel.moviesViewModels.count else { return }
         
         let cellViewModel = viewModel.moviesViewModels[indexPath.row]

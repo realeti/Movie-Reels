@@ -70,6 +70,7 @@ class MovieCell: UITableViewCell {
     var viewModel: MovieViewModel? {
         didSet {
             guard let viewModel else { return }
+            
             movieNameLabel.text = viewModel.title
             updateGenres()
             updateMovieDate()
@@ -102,8 +103,8 @@ class MovieCell: UITableViewCell {
         movieCellView.addSubview(movieInfoStackView)
         movieInfoStackView.addArrangedSubview(movieNameLabel)
         movieInfoStackView.addArrangedSubview(movieGenresLabel)
-        movieCellView.addSubview(moviePosterView)
         
+        movieCellView.addSubview(moviePosterView)
         moviePosterView.addSubview(moviePoster)
         moviePosterView.addSubview(activityIndicator)
         

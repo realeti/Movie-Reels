@@ -11,13 +11,13 @@ class FavoritesViewController: UIViewController {
 
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.dataSource = self
         tableView.delegate = self
+        tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
         tableView.separatorStyle = .none
         tableView.backgroundColor = UIColor(resource: .night)
-        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.movieCellIdentifier)
+        tableView.register(MovieCell.self, forCellReuseIdentifier: MovieCell.reuseIdentifier)
         return tableView
     }()
     
@@ -35,6 +35,7 @@ class FavoritesViewController: UIViewController {
     
     private func configureNavController() {
         title = Constants.favoritesTabBarName
+        
         let titleColor = UIColor(resource: .babyPowder)
         let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
         navigationController?.navigationBar.titleTextAttributes = attributedText
@@ -82,7 +83,7 @@ extension FavoritesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.movieCellIdentifier) as? MovieCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.reuseIdentifier) as? MovieCell else {
             return UITableViewCell()
         }
         
