@@ -20,7 +20,7 @@ class GradientButton: UIButton {
         gradientLayer = CAGradientLayer()
         
         gradientLayer?.type = .axial
-        gradientLayer?.colors = colorStyle.color.map { $0.cgColor }
+        gradientLayer?.colors = colorStyle.colors.map { $0 }
         gradientLayer?.locations = colorStyle.locations
         gradientLayer?.startPoint = direction.directionType.startPoint
         gradientLayer?.endPoint = direction.directionType.endPoint

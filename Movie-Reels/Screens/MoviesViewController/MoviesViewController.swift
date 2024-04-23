@@ -15,7 +15,7 @@ class MoviesViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createFlowLayout())
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = UIColor(resource: .night)
+        collectionView.backgroundColor = UIColor(red: 19.0, green: 20.0, blue: 25.0)
         
         collectionView.register(MovieCollectionCell.self, forCellWithReuseIdentifier: MovieCollectionCell.reuseIdentifier)
         return collectionView
@@ -60,8 +60,16 @@ class MoviesViewController: UIViewController {
         
         let titleColor = UIColor(resource: .babyPowder)
         let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
-        navigationController?.navigationBar.titleTextAttributes = attributedText
-        navigationController?.navigationBar.barTintColor = UIColor(resource: .night)
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.titleTextAttributes = attributedText
+        appearance.backgroundColor = UIColor(red: 19.0, green: 20.0, blue: 25.0)
+        appearance.backgroundEffect = .none
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        appearance.shadowColor = .clear
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
     
     private func setupUI() {

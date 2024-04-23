@@ -66,16 +66,27 @@ class MovieCollectionCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateFontSize()
+    }
+    
+    private func updateFontSize() {
+        if traitCollection.userInterfaceIdiom == .pad {
+            let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeLarge) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
+            movieNameLabel.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
+        } else if traitCollection.userInterfaceIdiom == .phone {
+            let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
+            movieNameLabel.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
+        }
+    }
+    
+    private func setupUI() {
+        contentView.backgroundColor = UIColor(resource: .lightNight)
         
         contentView.layer.cornerRadius = self.frame.width / 8
         contentView.clipsToBounds = true
         
         moviePosterView.layer.cornerRadius = self.frame.width / 8
         moviePosterView.clipsToBounds = true
-    }
-    
-    private func setupUI() {
-        contentView.backgroundColor = UIColor(resource: .lightNight)
         
         contentView.addSubview(movieNameLabel)
         contentView.addSubview(moviePosterView)
@@ -104,7 +115,6 @@ class MovieCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             moviePosterView.topAnchor.constraint(equalTo: contentView.topAnchor),
             moviePosterView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            //moviePosterView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
             moviePosterView.bottomAnchor.constraint(equalTo: movieNameLabel.topAnchor, constant: -Metrics.bottomIndent)
         ])
     }
@@ -158,13 +168,13 @@ extension MovieCollectionCell: MovieViewModelDelegate {
 }
 
 private struct Metrics {
-    static let movieNameSizeBase: CGFloat = 15.0
-    static let movieNameSizeLarge: CGFloat = 32.0
+    static let movieNameSizeBase: CGFloat = 14.0
+    static let movieNameSizeLarge: CGFloat = 24.0
     
-    static let topIndent: CGFloat = 8.0
+    static let topIndent: CGFloat = 5.0
     static let leadingIndent: CGFloat = 8.0
     static let traillingIndent: CGFloat = 8.0
-    static let bottomIndent: CGFloat = 8.0
+    static let bottomIndent: CGFloat = 5.0
     
     init() {}
 }

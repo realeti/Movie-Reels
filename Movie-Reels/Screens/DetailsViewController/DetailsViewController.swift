@@ -110,7 +110,7 @@ class DetailsViewController: UIViewController {
         button.layer.cornerRadius = 12
         button.layer.masksToBounds = true
         
-        let image = UIImage(resource: .bookmark50Px).withTintColor(UIColor(resource: .cadetGray))
+        let image = UIImage(resource: .bookmark6X50).withTintColor(UIColor(resource: .cadetGray))
         button.setImage(image, for: .normal)
         
         let action = UIAction { _ in
