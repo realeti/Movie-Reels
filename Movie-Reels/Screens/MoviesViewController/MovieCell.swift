@@ -15,7 +15,6 @@ class MovieCell: UITableViewCell {
         let view = UIView()
         view.frame.size = CGSize(width: .zero, height: 180)
         view.backgroundColor = UIColor(resource: .lightNight)
-        view.layer.cornerRadius = 14
         return view
     }()
     
@@ -51,7 +50,6 @@ class MovieCell: UITableViewCell {
     
     lazy var moviePosterView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 6
         view.clipsToBounds = true
         return view
     }()
@@ -96,50 +94,80 @@ class MovieCell: UITableViewCell {
     }
     
     private func setupUI() {
-        contentView.backgroundColor = UIColor(resource: .night)
-        
         contentView.addSubview(movieCellView)
         movieCellView.addSubview(movieReleaseDateLabel)
         movieCellView.addSubview(movieInfoStackView)
         movieInfoStackView.addArrangedSubview(movieNameLabel)
         movieInfoStackView.addArrangedSubview(movieGenresLabel)
-        
         movieCellView.addSubview(moviePosterView)
         moviePosterView.addSubview(moviePoster)
         moviePosterView.addSubview(activityIndicator)
         
+        contentView.backgroundColor = UIColor(resource: .night)
+        
+        setupMovieCellConstraints()
+        setupMovieReleaseDateConstraints()
+        setupMoviePosterConstraints()
+        setupMovieInfoConstraints()
+        setupActivityIndicatorConstraints()
+        
+        movieCellView.layer.cornerRadius = self.frame.width / 22
+        moviePosterView.layer.cornerRadius = self.frame.width / 44
+    }
+    
+    private func setupMovieCellConstraints() {
         movieCellView.translatesAutoresizingMaskIntoConstraints = false
-        movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieInfoStackView.translatesAutoresizingMaskIntoConstraints = false
-        moviePosterView.translatesAutoresizingMaskIntoConstraints = false
-        moviePoster.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             movieCellView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
             movieCellView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent * 2),
             movieCellView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent * 2),
-            movieCellView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
-            
+            movieCellView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6)
+        ])
+    }
+    
+    private func setupMovieReleaseDateConstraints() {
+        movieReleaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             movieReleaseDateLabel.topAnchor.constraint(equalTo: movieCellView.topAnchor, constant: Metrics.topIndent / 2),
             movieReleaseDateLabel.leadingAnchor.constraint(equalTo: movieCellView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieReleaseDateLabel.trailingAnchor.constraint(equalTo: movieCellView.trailingAnchor, constant: -Metrics.traillingIndent),
-            
+            movieReleaseDateLabel.trailingAnchor.constraint(equalTo: movieCellView.trailingAnchor, constant: -Metrics.traillingIndent)
+        ])
+    }
+    
+    private func setupMoviePosterConstraints() {
+        moviePosterView.translatesAutoresizingMaskIntoConstraints = false
+        moviePoster.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             moviePosterView.topAnchor.constraint(equalTo: movieReleaseDateLabel.bottomAnchor, constant: Metrics.topIndent),
             moviePosterView.leadingAnchor.constraint(equalTo: movieCellView.leadingAnchor, constant: Metrics.leadingIndent),
             moviePosterView.heightAnchor.constraint(equalToConstant: Metrics.moviePosterHeight),
             moviePosterView.widthAnchor.constraint(equalToConstant: Metrics.moviePosterWidth),
             moviePosterView.bottomAnchor.constraint(equalTo: movieCellView.bottomAnchor, constant: -Metrics.bottomIndent).withPriority(.defaultLow),
             
-            movieInfoStackView.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor, constant: -Metrics.topIndent),
-            movieInfoStackView.leadingAnchor.constraint(equalTo: moviePoster.trailingAnchor, constant: Metrics.leadingIndent),
-            movieInfoStackView.trailingAnchor.constraint(equalTo: movieCellView.trailingAnchor, constant: -Metrics.traillingIndent),
-            
             moviePoster.topAnchor.constraint(equalTo: moviePosterView.topAnchor),
             moviePoster.leadingAnchor.constraint(equalTo: moviePosterView.leadingAnchor),
             moviePoster.trailingAnchor.constraint(equalTo: moviePosterView.trailingAnchor),
-            moviePoster.bottomAnchor.constraint(equalTo: moviePosterView.bottomAnchor),
-            
+            moviePoster.bottomAnchor.constraint(equalTo: moviePosterView.bottomAnchor)
+        ])
+    }
+    
+    private func setupMovieInfoConstraints() {
+        movieInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            movieInfoStackView.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor, constant: -Metrics.topIndent),
+            movieInfoStackView.leadingAnchor.constraint(equalTo: moviePoster.trailingAnchor, constant: Metrics.leadingIndent),
+            movieInfoStackView.trailingAnchor.constraint(equalTo: movieCellView.trailingAnchor, constant: -Metrics.traillingIndent)
+        ])
+    }
+    
+    private func setupActivityIndicatorConstraints() {
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: moviePosterView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: moviePosterView.centerYAnchor)
         ])

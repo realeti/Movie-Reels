@@ -183,9 +183,6 @@ class DetailsViewController: UIViewController {
     }
     
     func setupUI() {
-        movieNameLabel.text = viewModel.title
-        movieDescriptionTextView.text = viewModel.overview
-        
         updateLoadingState()
         updateImage()
         updateMovieDate()
@@ -218,6 +215,9 @@ class DetailsViewController: UIViewController {
         setupMovieNameConstraints()
         setupMovieReleaseDateConstraints()
         setupMovieDescriptionTextConstraints()
+        
+        movieNameLabel.text = viewModel.title
+        movieDescriptionTextView.text = viewModel.overview
     }
     
     // MARK: - Setup Constraints

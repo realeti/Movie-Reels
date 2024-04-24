@@ -128,8 +128,8 @@ class MoviesViewController: UIViewController {
     }
     
     private func getFavoritesViewController() -> FavoritesViewController? {
-        guard let tabBarController = tabBarController,
-              let favoriteNavVC = tabBarController.viewControllers?[1] as? UINavigationController,
+        guard let tabBarController = self.tabBarController,
+              let favoriteNavVC = tabBarController.viewControllers?[2] as? UINavigationController,
               let favoriteVC = favoriteNavVC.viewControllers.first as? FavoritesViewController else {
             return nil
         }

@@ -80,23 +80,23 @@ class MovieCollectionCell: UICollectionViewCell {
     }
     
     private func setupUI() {
+        contentView.addSubview(movieNameLabel)
+        contentView.addSubview(moviePosterView)
+        moviePosterView.addSubview(moviePoster)
+        moviePosterView.addSubview(activityIndicator)
+        
         contentView.backgroundColor = UIColor(resource: .lightNight)
+        
+        setupMovieNameConstraints()
+        setupMoviePosterViewConstraints()
+        setupMoviePosterConstraints()
+        setupActivityIndicatorConstraints()
         
         contentView.layer.cornerRadius = self.frame.width / 8
         contentView.clipsToBounds = true
         
         moviePosterView.layer.cornerRadius = self.frame.width / 8
         moviePosterView.clipsToBounds = true
-        
-        contentView.addSubview(movieNameLabel)
-        contentView.addSubview(moviePosterView)
-        moviePosterView.addSubview(moviePoster)
-        moviePosterView.addSubview(activityIndicator)
-        
-        setupMovieNameConstraints()
-        setupMoviePosterViewConstraints()
-        setupMoviePosterConstraints()
-        setupActivityIndicatorConstraints()
     }
     
     private func setupMovieNameConstraints() {

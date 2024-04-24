@@ -42,49 +42,21 @@ class TabController: UITabBarController {
         let item = UINavigationController(rootViewController: vc)
         
         item.tabBarItem.title = title
-        setGradientSelectedTitle(for: item.tabBarItem, with: title)
+        setGradientSelectedTitle(for: item.tabBarItem, with: title, colorStyle: .redOrange, direction: .left)
         
         item.tabBarItem.image = image
-        item.tabBarItem.selectedImage = generateGradientIcon(for: image)
-        
+        item.tabBarItem.selectedImage = UIImage.generateGradientIcon(for: image, colorStyle: .redOrange, direction: .left)
         item.viewControllers.first?.navigationItem.title = title
         
         return item
     }
     
-    private func generateGradientIcon(for iconImage: UIImage) -> UIImage? {
+    private func setGradientSelectedTitle(for tabBarItem: UITabBarItem, with text: String, colorStyle: GradientColorStyle, direction: GradientDirection) {
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: 0, y: 0, width: iconImage.size.width, height: iconImage.size.height)
-        gradientLayer.colors = GradientColorStyle.redOrange.colors
-        gradientLayer.locations = GradientColorStyle.redOrange.locations
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-
-        let maskLayer = CALayer()
-        maskLayer.contents = iconImage.cgImage
-        maskLayer.frame = gradientLayer.bounds
-
-        gradientLayer.mask = maskLayer
-
-        UIGraphicsBeginImageContext(gradientLayer.bounds.size)
-        
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-        
-        gradientLayer.render(in: context)
-        let gradientImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return gradientImage?.withRenderingMode(.alwaysOriginal)
-    }
-    
-    private func setGradientSelectedTitle(for tabBarItem: UITabBarItem, with text: String) {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = GradientColorStyle.redOrange.colors
-        gradientLayer.locations = GradientColorStyle.redOrange.locations
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        gradientLayer.colors = colorStyle.colors.map { $0 }
+        gradientLayer.locations = colorStyle.locations
+        gradientLayer.startPoint = direction.directionType.startPoint
+        gradientLayer.endPoint = direction.directionType.endPoint
         
         let defaultAttributes = tabBarItem.titleTextAttributes(for: .selected)
         let defaultFont = defaultAttributes?[NSAttributedString.Key.font] as? UIFont ?? UIFont.systemFont(ofSize: 12)
