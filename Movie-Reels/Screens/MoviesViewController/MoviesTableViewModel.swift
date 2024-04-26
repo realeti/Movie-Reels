@@ -60,7 +60,6 @@ class MoviesTableViewModel: MoviesTableViewModeling {
                 let movies = try result.get()
                 let viewModels = movies.map { movie in
                     let genresForMovie = self.movieGenres.filter( {movie.genreIds.contains($0.id) }).map{ $0.name }.sorted(by: <)
-                    
                     return MovieViewModel(movie: movie, genres: genresForMovie)
                 }
                 

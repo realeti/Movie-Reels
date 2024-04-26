@@ -12,6 +12,7 @@ struct Movie {
     let title: String
     let poster: String
     let releaseDate: String
+    let voteAverage: Float
     let overview: String
     let genreIds: [Int]
 }

@@ -7,6 +7,8 @@
 		<string>NunitoSans-SemiBold.ttf</string>
 		<string>Rubik-Medium.ttf</string>
 		<string>Hauora-Medium.ttf</string>
+		<string>Montserrat-Medium.ttf</string>
+		<string>Montserrat-SemiBold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

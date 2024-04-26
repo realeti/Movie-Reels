@@ -89,10 +89,11 @@ class NetworkController: MoviesLoading {
                 let moviesDto = responseData.results
                 
                 let movies = moviesDto.map { movie in
-                    Movie(id: movie.id,
+                    return Movie(id: movie.id,
                           title: movie.title,
                           poster: movie.poster,
                           releaseDate: movie.releaseDate,
+                          voteAverage: movie.voteAverage,
                           overview: movie.overview,
                           genreIds: movie.genresIds
                     )

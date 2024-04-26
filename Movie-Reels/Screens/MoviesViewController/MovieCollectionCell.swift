@@ -6,36 +6,74 @@
 //
 
 import UIKit
+import VisualEffectView
 
 class MovieCollectionCell: UICollectionViewCell {
     static let reuseIdentifier = Constants.movieCollectionCellIdentifier
     
-    lazy var movieNameLabel: UILabel = {
-        let label = UILabel()
-        let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
-        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
-        label.adjustsFontForContentSizeCategory = true
-        label.textColor = UIColor(resource: .babyPowder)
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        return label
-    }()
-    
     lazy var moviePosterView: UIView = {
         let view = UIView()
+        view.backgroundColor = .clear
         return view
     }()
     
     lazy var moviePoster: UIImageView = {
-        let image = UIImageView()
-        image.contentMode = .scaleAspectFill
-        return image
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        return imageView
     }()
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.tintColor = UIColor(resource: .darkOrange)
         return indicator
+    }()
+    
+    lazy var movieRatingStackView: UIStackView = {
+        let view = UIStackView()
+        view.backgroundColor = .clear
+        view.axis = .horizontal
+        view.distribution = .fill
+        view.spacing = 4
+        view.layoutMargins = UIEdgeInsets(top: 5, left: 5, bottom: 7, right: 5)
+        view.isLayoutMarginsRelativeArrangement = true
+        //view.alignment = .center
+        return view
+    }()
+    
+    lazy var movieRatingImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    lazy var movieRatingLabel: UILabel = {
+       let label = UILabel()
+        let bodyFont = UIFont(name: Constants.movieTitleFont, size: 9.0) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = UIColor(resource: .babyPowder)
+        label.numberOfLines = 1
+        return label
+    }()
+    
+    lazy var movieNameView: VisualEffectView = {
+        let visualEffectView = VisualEffectView()
+        visualEffectView.colorTint = UIColor(resource: .shadow)
+        visualEffectView.colorTintAlpha = 0.5
+        visualEffectView.blurRadius = 4.8
+        return visualEffectView
+    }()
+    
+    lazy var movieNameLabel: UILabel = {
+        let label = UILabel()
+        let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = .white
+        //label.textAlignment = .center
+        label.numberOfLines = 2
+        return label
     }()
     
     var viewModel: MovieViewModel? {
@@ -80,42 +118,41 @@ class MovieCollectionCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        contentView.addSubview(movieNameLabel)
         contentView.addSubview(moviePosterView)
         moviePosterView.addSubview(moviePoster)
         moviePosterView.addSubview(activityIndicator)
+        moviePosterView.addSubview(movieRatingStackView)
+        movieRatingStackView.addArrangedSubview(movieRatingImage)
+        movieRatingStackView.addArrangedSubview(movieRatingLabel)
+        moviePosterView.addSubview(movieNameView)
+        movieNameView.contentView.addSubview(movieNameLabel)
         
         contentView.backgroundColor = UIColor(resource: .lightNight)
         
-        setupMovieNameConstraints()
         setupMoviePosterViewConstraints()
         setupMoviePosterConstraints()
         setupActivityIndicatorConstraints()
+        setupMovieRatingStackConstraints()
+        //setupMovieRatingImageConstraints()
+        setupMovieNameViewConstraints()
+        setupMovieNameConstraints()
         
         contentView.layer.cornerRadius = self.frame.width / 8
         contentView.clipsToBounds = true
         
         moviePosterView.layer.cornerRadius = self.frame.width / 8
         moviePosterView.clipsToBounds = true
-    }
-    
-    private func setupMovieNameConstraints() {
-        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([
-            movieNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.leadingIndent),
-            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.traillingIndent),
-            movieNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Metrics.bottomIndent)
-        ])
+        movieRatingStackView.layer.cornerRadius = self.frame.width / 20
+        movieRatingStackView.clipsToBounds = true
     }
     
     private func setupMoviePosterViewConstraints() {
         moviePosterView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            moviePosterView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            moviePosterView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            moviePosterView.bottomAnchor.constraint(equalTo: movieNameLabel.topAnchor, constant: -Metrics.bottomIndent)
+            moviePosterView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
+            moviePosterView.widthAnchor.constraint(equalTo: contentView.widthAnchor)
         ])
     }
     
@@ -123,7 +160,6 @@ class MovieCollectionCell: UICollectionViewCell {
         moviePoster.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            moviePoster.topAnchor.constraint(equalTo: moviePosterView.topAnchor),
             moviePoster.widthAnchor.constraint(equalTo: moviePosterView.widthAnchor),
             moviePoster.heightAnchor.constraint(equalTo: moviePosterView.heightAnchor)
         ])
@@ -137,13 +173,47 @@ class MovieCollectionCell: UICollectionViewCell {
             activityIndicator.centerYAnchor.constraint(equalTo: moviePoster.centerYAnchor)
         ])
     }
+    
+    private func setupMovieRatingStackConstraints() {
+        movieRatingStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            movieRatingStackView.topAnchor.constraint(equalTo: moviePosterView.topAnchor, constant: 8.0),
+            movieRatingStackView.rightAnchor.constraint(equalTo: moviePosterView.rightAnchor, constant: -6.0),
+            movieRatingStackView.heightAnchor.constraint(equalTo: moviePosterView.heightAnchor, multiplier: 0.12),
+            movieRatingStackView.widthAnchor.constraint(equalTo: movieRatingStackView.heightAnchor, multiplier: 2.0)
+        ])
+    }
+    
+    private func setupMovieRatingImageConstraints() {
+        movieRatingImage.translatesAutoresizingMaskIntoConstraints = false
+        movieRatingImage.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    }
+    
+    private func setupMovieNameViewConstraints() {
+        movieNameView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            movieNameView.leadingAnchor.constraint(equalTo: moviePosterView.leadingAnchor),
+            movieNameView.trailingAnchor.constraint(equalTo: moviePosterView.trailingAnchor),
+            movieNameView.bottomAnchor.constraint(equalTo: moviePosterView.bottomAnchor),
+            movieNameView.heightAnchor.constraint(equalTo: moviePosterView.heightAnchor, multiplier: 0.27)
+        ])
+    }
+    
+    private func setupMovieNameConstraints() {
+        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            movieNameLabel.topAnchor.constraint(equalTo: movieNameView.topAnchor),
+            movieNameLabel.leadingAnchor.constraint(equalTo: movieNameView.leadingAnchor, constant: 16.0),
+            movieNameLabel.trailingAnchor.constraint(equalTo: movieNameView.trailingAnchor, constant: -16.0),
+            movieNameLabel.bottomAnchor.constraint(equalTo: movieNameView.bottomAnchor, constant: -8.0)
+        ])
+    }
 }
 
 extension MovieCollectionCell: MovieViewModelDelegate {
-    func updateMovieDate() {
-        //
-    }
-    
     func updateImage() {
         guard let viewModel else { return }
         
@@ -162,13 +232,22 @@ extension MovieCollectionCell: MovieViewModelDelegate {
                 self.activityIndicator.startAnimating()
             } else {
                 self.activityIndicator.stopAnimating()
+                self.updateMovieRating()
             }
         }
+    }
+    
+    func updateMovieRating() {
+        guard let viewModel else { return }
+        
+        self.movieRatingStackView.backgroundColor = UIColor(resource: .shadow).withAlphaComponent(0.65)
+        self.movieRatingImage.image = UIImage(resource: .starFilled).withTintColor(UIColor(red: 249, green: 231, blue: 80))
+        self.movieRatingLabel.text = String(format: "%.1f", viewModel.voteAverage)
     }
 }
 
 private struct Metrics {
-    static let movieNameSizeBase: CGFloat = 14.0
+    static let movieNameSizeBase: CGFloat = 12.0
     static let movieNameSizeLarge: CGFloat = 24.0
     
     static let topIndent: CGFloat = 5.0

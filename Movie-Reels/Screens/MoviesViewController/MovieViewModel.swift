@@ -9,7 +9,6 @@ import UIKit
 import CoreData
 
 protocol MovieViewModelDelegate: AnyObject {
-    func updateMovieDate()
     func updateImage()
     func updateLoadingState()
 }
@@ -21,6 +20,7 @@ protocol MovieViewModeling {
     var movieGenres: [String] { get }
     var isImageLoading: Bool { get }
     var releaseDate: String { get }
+    var voteAverage: Float { get }
     
     func loadImage()
     func storeMoviePoster()
@@ -32,6 +32,7 @@ class MovieViewModel: MovieViewModeling {
     var id: Int { movie.id }
     var title: String { movie.title }
     var releaseDate: String { movie.releaseDate }
+    var voteAverage: Float { movie.voteAverage }
     
     var moviePoster: UIImage?
     var movieGenres: [String] = []

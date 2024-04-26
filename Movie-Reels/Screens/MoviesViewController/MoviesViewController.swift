@@ -15,7 +15,7 @@ class MoviesViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createFlowLayout())
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = UIColor(red: 19.0, green: 20.0, blue: 25.0)
+        collectionView.backgroundColor = UIColor(resource: .shadow)
         
         collectionView.register(MovieCollectionCell.self, forCellWithReuseIdentifier: MovieCollectionCell.reuseIdentifier)
         return collectionView
@@ -51,7 +51,7 @@ class MoviesViewController: UIViewController {
         let availableWidth = totalWidth - sectionInsets - minimumInteritemSpacing
         let widthPerItem = availableWidth / itemsPerRow
         
-        flowLayout.itemSize = CGSize(width: widthPerItem, height: widthPerItem * 1.75)
+        flowLayout.itemSize = CGSize(width: widthPerItem, height: widthPerItem * 1.5)
         flowLayout.invalidateLayout()
     }
     
@@ -64,7 +64,7 @@ class MoviesViewController: UIViewController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
         appearance.titleTextAttributes = attributedText
-        appearance.backgroundColor = UIColor(red: 19.0, green: 20.0, blue: 25.0)
+        appearance.backgroundColor = UIColor(resource: .shadow)
         appearance.backgroundEffect = .none
         
         navigationController?.navigationBar.standardAppearance = appearance

@@ -24,6 +24,9 @@
 		C61EDFAA2BC452C50029E5DE /* FileManagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61EDFA92BC452C50029E5DE /* FileManagerController.swift */; };
 		C646D1B82B6A5E4700361762 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C646D1B72B6A5E4700361762 /* MovieViewModel.swift */; };
 		C646D1BA2B6A627100361762 /* MoviesTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C646D1B92B6A627100361762 /* MoviesTableViewModel.swift */; };
+		C6578CD72BDBFB350011A905 /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6578CD62BDBFB350011A905 /* Montserrat-Medium.ttf */; };
+		C6578CDB2BDBFECD0011A905 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6578CDA2BDBFECD0011A905 /* Montserrat-SemiBold.ttf */; };
+		C6578CDE2BDC2B500011A905 /* VisualEffectView in Frameworks */ = {isa = PBXBuildFile; productRef = C6578CDD2BDC2B500011A905 /* VisualEffectView */; };
 		C657EEAA2B8FCC770045EBCA /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = C657EEA92B8FCC770045EBCA /* YouTubeiOSPlayerHelper */; };
 		C657EEAD2B8FD22E0045EBCA /* MovieTrailerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C657EEAC2B8FD22E0045EBCA /* MovieTrailerViewController.swift */; };
 		C67F83832BD278D100FC8774 /* MovieCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67F83822BD278D100FC8774 /* MovieCollectionCell.swift */; };
@@ -79,6 +82,8 @@
 		C61EDFA92BC452C50029E5DE /* FileManagerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerController.swift; sourceTree = "<group>"; };
 		C646D1B72B6A5E4700361762 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		C646D1B92B6A627100361762 /* MoviesTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesTableViewModel.swift; sourceTree = "<group>"; };
+		C6578CD62BDBFB350011A905 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Medium.ttf"; sourceTree = "<group>"; };
+		C6578CDA2BDBFECD0011A905 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		C657EEAC2B8FD22E0045EBCA /* MovieTrailerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTrailerViewController.swift; sourceTree = "<group>"; };
 		C67F83822BD278D100FC8774 /* MovieCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionCell.swift; sourceTree = "<group>"; };
 		C6B0174D2BC6F6100090D04D /* MoviesDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MoviesDataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -120,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6578CDE2BDC2B500011A905 /* VisualEffectView in Frameworks */,
 				C657EEAA2B8FCC770045EBCA /* YouTubeiOSPlayerHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +136,8 @@
 		C60878B12B80ADEC00FFF568 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				C6578CDA2BDBFECD0011A905 /* Montserrat-SemiBold.ttf */,
+				C6578CD62BDBFB350011A905 /* Montserrat-Medium.ttf */,
 				C60878B42B80AE8C00FFF568 /* NunitoSans-SemiBold.ttf */,
 				C60878B32B80AE5700FFF568 /* Rubik-Medium.ttf */,
 				C6FAC75E2B867AE60029FA22 /* Hauora-Medium.ttf */,
@@ -365,6 +373,7 @@
 			name = "Movie-Reels";
 			packageProductDependencies = (
 				C657EEA92B8FCC770045EBCA /* YouTubeiOSPlayerHelper */,
+				C6578CDD2BDC2B500011A905 /* VisualEffectView */,
 			);
 			productName = "Nitrix-Movie-Reels";
 			productReference = C6E882662B69585B00CF0E9F /* Movie-Reels.app */;
@@ -400,6 +409,7 @@
 			mainGroup = C6E8825D2B69585B00CF0E9F;
 			packageReferences = (
 				C657EEA82B8FCC770045EBCA /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
+				C6578CDC2BDC2B500011A905 /* XCRemoteSwiftPackageReference "VisualEffectView" */,
 			);
 			productRefGroup = C6E882672B69585B00CF0E9F /* Products */;
 			projectDirPath = "";
@@ -427,6 +437,8 @@
 				C6E882762B69585B00CF0E9F /* LaunchScreen.storyboard in Resources */,
 				C6E882732B69585B00CF0E9F /* Assets.xcassets in Resources */,
 				C60878B62B80AEC800FFF568 /* Rubik-Medium.ttf in Resources */,
+				C6578CD72BDBFB350011A905 /* Montserrat-Medium.ttf in Resources */,
+				C6578CDB2BDBFECD0011A905 /* Montserrat-SemiBold.ttf in Resources */,
 				C6FAC7612B867B070029FA22 /* Hauora-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -756,6 +768,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C6578CDC2BDC2B500011A905 /* XCRemoteSwiftPackageReference "VisualEffectView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/efremidze/VisualEffectView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.5;
+			};
+		};
 		C657EEA82B8FCC770045EBCA /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/youtube/youtube-ios-player-helper.git";
@@ -767,6 +787,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C6578CDD2BDC2B500011A905 /* VisualEffectView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C6578CDC2BDC2B500011A905 /* XCRemoteSwiftPackageReference "VisualEffectView" */;
+			productName = VisualEffectView;
+		};
 		C657EEA92B8FCC770045EBCA /* YouTubeiOSPlayerHelper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C657EEA82B8FCC770045EBCA /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */;

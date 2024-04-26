@@ -30,6 +30,7 @@ protocol MovieEntity {
     var releaseDate: String? { get set }
     var title: String? { get set }
     var genreIds: Data? { get set }
+    var voteAverage: Float { get set }
 }
 
 typealias MovieStoring = MoviesStoring & FavoriteMoviesStoring
@@ -159,6 +160,7 @@ final class CoreDataController: MovieStoring, MoviesLoadingStorage {
                         title: movie.title ?? "",
                         poster: movie.poster ?? "",
                         releaseDate: movie.releaseDate ?? "",
+                        voteAverage: movie.voteAverage,
                         overview: movie.overview ?? "",
                         genreIds: movieGenreIds ?? []
                     )
@@ -215,6 +217,7 @@ final class CoreDataController: MovieStoring, MoviesLoadingStorage {
             newFavoriteMovie?.id = Int64(movie.id)
             newFavoriteMovie?.title = movie.title
             newFavoriteMovie?.releaseDate = movie.releaseDate
+            newFavoriteMovie?.voteAverage = movie.voteAverage
             newFavoriteMovie?.poster = movie.poster
             newFavoriteMovie?.overview = movie.overview
             newFavoriteMovie?.genreIds = try? JSONEncoder().encode(movie.genreIds)

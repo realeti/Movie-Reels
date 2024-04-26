@@ -39,7 +39,7 @@ struct Constants {
     static let playButtonImage = "play.fill"
     
     // MARK: Fonts names
-    static let movieTitleFont = "Rubik-Medium"
+    static let movieTitleFont = "Montserrat-SemiBold" //"Rubik-Medium"
     static let movieMainTextFont = "NunitoSans-SemiBold"
     static let playButtonFont = "Hauora-Medium"
     

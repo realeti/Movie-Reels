@@ -15,6 +15,7 @@ final class MoviesLoadingMock: MoviesLoading, MoviesStoring {
             title: "MockMovie1",
             poster: "",
             releaseDate: "01.01.2000",
+            voteAverage: 100.0,
             overview: "MockOverview1",
             genreIds: [0, 1]
         ),
@@ -23,6 +24,7 @@ final class MoviesLoadingMock: MoviesLoading, MoviesStoring {
             title: "MockMovie2",
             poster: "",
             releaseDate: "01.01.2000",
+            voteAverage: 100.0,
             overview: "MockOverview2",
             genreIds: [0, 1]
         )
