@@ -33,11 +33,10 @@ class TabController: UITabBarController {
 
         let movies = self.createNavTabBarItem(with: Constants.moviesTabBarName, and: UIImage(resource: .home), vc: moviesVC)
         let catalogs = self.createNavTabBarItem(with: Constants.catalogTabBarName, and: UIImage(resource: .catalog), vc: catalogVC)
-        let favorites = self.createNavTabBarItem(with: Constants.favoritesTabBarName, and: UIImage(resource: .bookmark6X50), vc: favoritesVC)
-        
+        let favorites = self.createNavTabBarItem(with: Constants.favoritesTabBarName, and: UIImage(resource: .bookmark), vc: favoritesVC)
         self.setViewControllers([movies, catalogs, favorites], animated: true)
     }
-    
+    // 1, 7
     private func createNavTabBarItem(with title: String, and image: UIImage, vc: UIViewController) -> UINavigationController {
         let item = UINavigationController(rootViewController: vc)
         

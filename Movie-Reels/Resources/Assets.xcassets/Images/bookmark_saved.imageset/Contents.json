@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "bookmark_saved.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bookmark50px.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -17,5 +17,8 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
   }
 }
