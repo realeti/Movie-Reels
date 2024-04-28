@@ -31,25 +31,25 @@ class MovieCollectionCell: UICollectionViewCell {
     
     lazy var movieRatingStackView: UIStackView = {
         let view = UIStackView()
-        view.backgroundColor = .clear
+        view.backgroundColor = UIColor(resource: .jetLight).withAlphaComponent(0.95)
         view.axis = .horizontal
-        view.distribution = .fill
-        view.spacing = 4
-        view.layoutMargins = UIEdgeInsets(top: 5, left: 5, bottom: 7, right: 5)
+        view.distribution = .equalSpacing
+        view.spacing = 3
+        view.layoutMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         view.isLayoutMarginsRelativeArrangement = true
-        //view.alignment = .center
         return view
     }()
     
     lazy var movieRatingImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(resource: .starFilled).withTintColor(UIColor(resource: .sunny))
         return imageView
     }()
     
     lazy var movieRatingLabel: UILabel = {
        let label = UILabel()
-        let bodyFont = UIFont(name: Constants.movieTitleFont, size: 9.0) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        let bodyFont = UIFont(name: Constants.movieRatingFont, size: 9.0) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
         label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
         label.adjustsFontForContentSizeCategory = true
         label.textColor = UIColor(resource: .babyPowder)
@@ -71,7 +71,7 @@ class MovieCollectionCell: UICollectionViewCell {
         label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
         label.adjustsFontForContentSizeCategory = true
         label.textColor = .white
-        //label.textAlignment = .center
+        label.textAlignment = .center
         label.numberOfLines = 2
         return label
     }()
@@ -82,6 +82,7 @@ class MovieCollectionCell: UICollectionViewCell {
             
             movieNameLabel.text = viewModel.title
             updateImage()
+            updateMovieRating()
         }
     }
     
@@ -108,12 +109,24 @@ class MovieCollectionCell: UICollectionViewCell {
     }
     
     private func updateFontSize() {
-        if traitCollection.userInterfaceIdiom == .pad {
-            let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeLarge) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
-            movieNameLabel.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
-        } else if traitCollection.userInterfaceIdiom == .phone {
-            let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
-            movieNameLabel.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
+        let defaultFontSize = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        
+        if traitCollection.userInterfaceIdiom == .phone {
+            let movieBaseTitle = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? defaultFontSize
+            let movieBaseRating = UIFont(name: Constants.movieRatingFont, size: Metrics.movieRatingSizeBase) ?? defaultFontSize
+
+            movieNameLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: movieBaseTitle)
+            movieRatingLabel.font = UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: movieBaseRating)
+            
+            movieRatingStackView.layoutMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
+        } else if traitCollection.userInterfaceIdiom == .pad {
+            let movieLargeTitle = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeLarge) ?? defaultFontSize
+            let movieLargeRating = UIFont(name: Constants.movieRatingFont, size: Metrics.movieRatingSizeLarge) ?? defaultFontSize
+            
+            movieNameLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: movieLargeTitle)
+            movieRatingLabel.font = UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: movieLargeRating)
+            
+            movieRatingStackView.layoutMargins = UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
         }
     }
     
@@ -133,7 +146,7 @@ class MovieCollectionCell: UICollectionViewCell {
         setupMoviePosterConstraints()
         setupActivityIndicatorConstraints()
         setupMovieRatingStackConstraints()
-        //setupMovieRatingImageConstraints()
+        setupMovieRatingImageConstraints()
         setupMovieNameViewConstraints()
         setupMovieNameConstraints()
         
@@ -178,16 +191,18 @@ class MovieCollectionCell: UICollectionViewCell {
         movieRatingStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieRatingStackView.topAnchor.constraint(equalTo: moviePosterView.topAnchor, constant: 8.0),
-            movieRatingStackView.rightAnchor.constraint(equalTo: moviePosterView.rightAnchor, constant: -6.0),
-            movieRatingStackView.heightAnchor.constraint(equalTo: moviePosterView.heightAnchor, multiplier: 0.12),
-            movieRatingStackView.widthAnchor.constraint(equalTo: movieRatingStackView.heightAnchor, multiplier: 2.0)
+            movieRatingStackView.topAnchor.constraint(equalTo: moviePosterView.topAnchor, constant: 10.0),
+            movieRatingStackView.rightAnchor.constraint(equalTo: moviePosterView.rightAnchor, constant: -6.0)
         ])
     }
     
     private func setupMovieRatingImageConstraints() {
         movieRatingImage.translatesAutoresizingMaskIntoConstraints = false
-        movieRatingImage.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
+        NSLayoutConstraint.activate([
+            movieRatingImage.heightAnchor.constraint(equalToConstant: 10),
+            movieRatingImage.widthAnchor.constraint(equalTo: movieRatingImage.heightAnchor)
+        ])
     }
     
     private func setupMovieNameViewConstraints() {
@@ -206,8 +221,8 @@ class MovieCollectionCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             movieNameLabel.topAnchor.constraint(equalTo: movieNameView.topAnchor),
-            movieNameLabel.leadingAnchor.constraint(equalTo: movieNameView.leadingAnchor, constant: 16.0),
-            movieNameLabel.trailingAnchor.constraint(equalTo: movieNameView.trailingAnchor, constant: -16.0),
+            movieNameLabel.leadingAnchor.constraint(equalTo: movieNameView.leadingAnchor, constant: 13.0),
+            movieNameLabel.trailingAnchor.constraint(equalTo: movieNameView.trailingAnchor, constant: -13.0),
             movieNameLabel.bottomAnchor.constraint(equalTo: movieNameView.bottomAnchor, constant: -8.0)
         ])
     }
@@ -232,7 +247,6 @@ extension MovieCollectionCell: MovieViewModelDelegate {
                 self.activityIndicator.startAnimating()
             } else {
                 self.activityIndicator.stopAnimating()
-                self.updateMovieRating()
             }
         }
     }
@@ -240,8 +254,6 @@ extension MovieCollectionCell: MovieViewModelDelegate {
     func updateMovieRating() {
         guard let viewModel else { return }
         
-        self.movieRatingStackView.backgroundColor = UIColor(resource: .shadow).withAlphaComponent(0.65)
-        self.movieRatingImage.image = UIImage(resource: .starFilled).withTintColor(UIColor(red: 249, green: 231, blue: 80))
         self.movieRatingLabel.text = String(format: "%.1f", viewModel.voteAverage)
     }
 }
@@ -249,6 +261,8 @@ extension MovieCollectionCell: MovieViewModelDelegate {
 private struct Metrics {
     static let movieNameSizeBase: CGFloat = 12.0
     static let movieNameSizeLarge: CGFloat = 24.0
+    static let movieRatingSizeBase: CGFloat = 9.0
+    static let movieRatingSizeLarge: CGFloat = 14.0
     
     static let topIndent: CGFloat = 5.0
     static let leadingIndent: CGFloat = 8.0
