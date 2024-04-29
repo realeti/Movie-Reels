@@ -8,6 +8,11 @@
 import UIKit
 import VisualEffectView
 
+enum DeviceType {
+    case phone
+    case pad
+}
+
 class MovieCollectionCell: UICollectionViewCell {
     static let reuseIdentifier = Constants.movieCollectionCellIdentifier
     
@@ -35,7 +40,6 @@ class MovieCollectionCell: UICollectionViewCell {
         view.axis = .horizontal
         view.distribution = .equalSpacing
         view.spacing = 3
-        view.layoutMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         view.isLayoutMarginsRelativeArrangement = true
         return view
     }()
@@ -49,8 +53,6 @@ class MovieCollectionCell: UICollectionViewCell {
     
     lazy var movieRatingLabel: UILabel = {
        let label = UILabel()
-        let bodyFont = UIFont(name: Constants.movieRatingFont, size: 9.0) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
-        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
         label.adjustsFontForContentSizeCategory = true
         label.textColor = UIColor(resource: .babyPowder)
         label.numberOfLines = 1
@@ -61,14 +63,11 @@ class MovieCollectionCell: UICollectionViewCell {
         let visualEffectView = VisualEffectView()
         visualEffectView.colorTint = UIColor(resource: .shadow)
         visualEffectView.colorTintAlpha = 0.5
-        visualEffectView.blurRadius = 4.8
         return visualEffectView
     }()
     
     lazy var movieNameLabel: UILabel = {
         let label = UILabel()
-        let bodyFont = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
-        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: bodyFont)
         label.adjustsFontForContentSizeCategory = true
         label.textColor = .white
         label.textAlignment = .center
@@ -85,6 +84,8 @@ class MovieCollectionCell: UICollectionViewCell {
             updateMovieRating()
         }
     }
+    
+    var userDevice: UIUserInterfaceIdiom?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -105,29 +106,62 @@ class MovieCollectionCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        updateFontSize()
+        updateViewsCornerRadius()
+        updateSizes()
     }
     
-    private func updateFontSize() {
-        let defaultFontSize = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+    private func updateViewsCornerRadius() {
+        let device: DeviceType = userDevice == .phone ? .phone : .pad
         
-        if traitCollection.userInterfaceIdiom == .phone {
-            let movieBaseTitle = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeBase) ?? defaultFontSize
-            let movieBaseRating = UIFont(name: Constants.movieRatingFont, size: Metrics.movieRatingSizeBase) ?? defaultFontSize
-
-            movieNameLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: movieBaseTitle)
-            movieRatingLabel.font = UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: movieBaseRating)
-            
-            movieRatingStackView.layoutMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
-        } else if traitCollection.userInterfaceIdiom == .pad {
-            let movieLargeTitle = UIFont(name: Constants.movieTitleFont, size: Metrics.movieNameSizeLarge) ?? defaultFontSize
-            let movieLargeRating = UIFont(name: Constants.movieRatingFont, size: Metrics.movieRatingSizeLarge) ?? defaultFontSize
-            
-            movieNameLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: movieLargeTitle)
-            movieRatingLabel.font = UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: movieLargeRating)
-            
-            movieRatingStackView.layoutMargins = UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
+        let moviePosterCornerRadius: CGFloat
+        let movieRatingCornerRadius: CGFloat
+        
+        switch device {
+        case .phone:
+            moviePosterCornerRadius = self.frame.width / 8
+            movieRatingCornerRadius = self.frame.width / 20
+        case .pad:
+            moviePosterCornerRadius = self.frame.width / 10
+            movieRatingCornerRadius = self.frame.width / 30
         }
+        
+        moviePosterView.layer.cornerRadius = moviePosterCornerRadius
+        movieRatingStackView.layer.cornerRadius = movieRatingCornerRadius
+        
+        moviePosterView.clipsToBounds = true
+        movieRatingStackView.clipsToBounds = true
+    }
+    
+    private func updateSizes() {
+        let defaultFontSize = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        let device: DeviceType = userDevice == .phone ? .phone : .pad
+        
+        let movieNameSize: CGFloat
+        let movieRatingSize: CGFloat
+        let movieRatingStackSpacing: CGFloat
+        let movieRatingStackInsets: UIEdgeInsets
+        let movieBlurRadius: CGFloat
+        
+        switch device {
+        case .phone:
+            movieNameSize = Metrics.movieNameSizeBase
+            movieRatingSize = Metrics.movieRatingSizeBase
+            movieRatingStackSpacing = 4
+            movieRatingStackInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
+            movieBlurRadius = 4.8
+        case .pad:
+            movieNameSize = Metrics.movieNameSizeLarge
+            movieRatingSize = Metrics.movieRatingSizeLarge
+            movieRatingStackSpacing = 5
+            movieRatingStackInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+            movieBlurRadius = 7.5
+        }
+        
+        movieNameLabel.font = UIFont(name: Constants.movieTitleFont, size: movieNameSize) ?? defaultFontSize
+        movieRatingLabel.font = UIFont(name: Constants.movieRatingFont, size: movieRatingSize) ?? defaultFontSize
+        movieRatingStackView.spacing = movieRatingStackSpacing
+        movieRatingStackView.layoutMargins = movieRatingStackInsets
+        movieNameView.blurRadius = movieBlurRadius
     }
     
     private func setupUI() {
@@ -140,7 +174,8 @@ class MovieCollectionCell: UICollectionViewCell {
         moviePosterView.addSubview(movieNameView)
         movieNameView.contentView.addSubview(movieNameLabel)
         
-        contentView.backgroundColor = UIColor(resource: .lightNight)
+        contentView.backgroundColor = .clear
+        userDevice = traitCollection.userInterfaceIdiom
         
         setupMoviePosterViewConstraints()
         setupMoviePosterConstraints()
@@ -149,15 +184,6 @@ class MovieCollectionCell: UICollectionViewCell {
         setupMovieRatingImageConstraints()
         setupMovieNameViewConstraints()
         setupMovieNameConstraints()
-        
-        contentView.layer.cornerRadius = self.frame.width / 8
-        contentView.clipsToBounds = true
-        
-        moviePosterView.layer.cornerRadius = self.frame.width / 8
-        moviePosterView.clipsToBounds = true
-        
-        movieRatingStackView.layer.cornerRadius = self.frame.width / 20
-        movieRatingStackView.clipsToBounds = true
     }
     
     private func setupMoviePosterViewConstraints() {
@@ -190,18 +216,41 @@ class MovieCollectionCell: UICollectionViewCell {
     private func setupMovieRatingStackConstraints() {
         movieRatingStackView.translatesAutoresizingMaskIntoConstraints = false
         
+        let device: DeviceType = userDevice == .phone ? .phone : .pad
+        let topIndent: CGFloat
+        let rightIndent: CGFloat
+        
+        switch device {
+        case .phone:
+            topIndent = 10.0
+            rightIndent = -6.0
+        case .pad:
+            topIndent = 16.0
+            rightIndent = -10.0
+        }
+        
         NSLayoutConstraint.activate([
-            movieRatingStackView.topAnchor.constraint(equalTo: moviePosterView.topAnchor, constant: 10.0),
-            movieRatingStackView.rightAnchor.constraint(equalTo: moviePosterView.rightAnchor, constant: -6.0)
+            movieRatingStackView.topAnchor.constraint(equalTo: moviePosterView.topAnchor, constant: topIndent),
+            movieRatingStackView.rightAnchor.constraint(equalTo: moviePosterView.rightAnchor, constant: rightIndent)
         ])
     }
     
     private func setupMovieRatingImageConstraints() {
         movieRatingImage.translatesAutoresizingMaskIntoConstraints = false
         
+        let device: DeviceType = userDevice == .phone ? .phone : .pad
+        let imageSize: CGFloat
+        
+        switch device {
+        case .phone:
+            imageSize = Metrics.movieRatingImageSizeBase
+        case .pad:
+            imageSize = Metrics.movieRatingImageSizeLarge
+        }
+        
         NSLayoutConstraint.activate([
-            movieRatingImage.heightAnchor.constraint(equalToConstant: 10),
-            movieRatingImage.widthAnchor.constraint(equalTo: movieRatingImage.heightAnchor)
+            movieRatingImage.heightAnchor.constraint(equalToConstant: imageSize),
+            movieRatingImage.widthAnchor.constraint(equalToConstant: imageSize)
         ])
     }
     
@@ -262,12 +311,10 @@ private struct Metrics {
     static let movieNameSizeBase: CGFloat = 12.0
     static let movieNameSizeLarge: CGFloat = 24.0
     static let movieRatingSizeBase: CGFloat = 9.0
-    static let movieRatingSizeLarge: CGFloat = 14.0
+    static let movieRatingSizeLarge: CGFloat = 15.0
     
-    static let topIndent: CGFloat = 5.0
-    static let leadingIndent: CGFloat = 8.0
-    static let traillingIndent: CGFloat = 8.0
-    static let bottomIndent: CGFloat = 5.0
+    static let movieRatingImageSizeBase: CGFloat = 9.0
+    static let movieRatingImageSizeLarge: CGFloat = 15.0
     
     init() {}
 }

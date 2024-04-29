@@ -46,7 +46,7 @@ class MoviesViewController: UIViewController {
         }
         
         let sectionInsets = flowLayout.sectionInset.left + flowLayout.sectionInset.right
-        let minimumInteritemSpacing = flowLayout.minimumInteritemSpacing * (itemsPerRow - 1)
+        let minimumInteritemSpacing = flowLayout.minimumInteritemSpacing * (itemsPerRow)
         let totalWidth = collectionView.bounds.width
         let availableWidth = totalWidth - sectionInsets - minimumInteritemSpacing
         let widthPerItem = availableWidth / itemsPerRow
@@ -74,6 +74,7 @@ class MoviesViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(collectionView)
+        view.backgroundColor = UIColor(resource: .shadow)
         
         collectionView.frame = view.bounds
         setupTapGesture()
@@ -85,7 +86,7 @@ class MoviesViewController: UIViewController {
         flowLayout.scrollDirection = .vertical
         flowLayout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         flowLayout.minimumLineSpacing = 15
-        flowLayout.minimumInteritemSpacing = 15
+        flowLayout.minimumInteritemSpacing = 6
         
         return flowLayout
     }
