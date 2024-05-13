@@ -163,7 +163,7 @@ class DetailsViewController: UIViewController {
         setupUI()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    /*override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
     }
@@ -171,10 +171,9 @@ class DetailsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.isHidden = false
-    }
+    }*/
     
     private func configureNavController() {
-        navigationItem.hidesBackButton = true
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         
         if let interactivePopGestureRecognizer = navigationController?.interactivePopGestureRecognizer {

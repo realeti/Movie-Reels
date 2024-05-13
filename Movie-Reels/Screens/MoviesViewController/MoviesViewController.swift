@@ -8,20 +8,58 @@
 import UIKit
 
 class MoviesViewController: UIViewController {
-    
-    let itemsPerRow: CGFloat = 3
-    
     lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createFlowLayout())
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCompositionalLayout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = UIColor(resource: .shadow)
         
+        collectionView.register(HeaderSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderSupplementaryView.reuseIdentifier)
         collectionView.register(MovieCollectionCell.self, forCellWithReuseIdentifier: MovieCollectionCell.reuseIdentifier)
+        collectionView.register(CarouselCell.self, forCellWithReuseIdentifier: CarouselCell.reuseIdentifier)
         return collectionView
     }()
+
+    private lazy var createCompositionalLayout: UICollectionViewLayout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, layoutEnvironment in
+        let sectionIdentifier = self?.sectionTypes[sectionIndex]
+        
+        if sectionIdentifier == .playingNow {
+            return self?.carouselSection.layoutSection()
+        } else {
+            return self?.createMoviesListSection()
+        }
+    }
     
-    let viewModel = MoviesTableViewModel()
+    private lazy var carouselSection: CarouselSection = {
+        CarouselSection(collectionView: collectionView)
+    }()
+    
+    func createMoviesListSection() -> NSCollectionLayoutSection {
+        let fractionWidth: CGFloat = 1.0 / 2.4
+        let fractionHeight: CGFloat = fractionWidth * 1.45
+        let itemInset: CGFloat = 4.0
+        let sectionInset: CGFloat = 16.0
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: itemInset, bottom: itemInset, trailing: itemInset)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.8), heightDimension: .fractionalWidth(fractionHeight))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: sectionInset, leading: sectionInset, bottom: sectionInset, trailing: sectionInset)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        let headerItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.05))
+        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerItemSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        section.boundarySupplementaryItems = [headerItem]
+        
+        return section
+    }
+    
+    let viewModel = MoviesCollectionViewModel()
+    let sectionTypes: [SectionIdentifier] = [.playingNow, .trending, .popular]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,43 +71,8 @@ class MoviesViewController: UIViewController {
         setupUI()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        updateLayout()
-    }
-    
-    private func updateLayout() {
-        collectionView.frame = view.bounds
-        
-        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-            return
-        }
-        
-        let sectionInsets = flowLayout.sectionInset.left + flowLayout.sectionInset.right
-        let minimumInteritemSpacing = flowLayout.minimumInteritemSpacing * (itemsPerRow)
-        let totalWidth = collectionView.bounds.width
-        let availableWidth = totalWidth - sectionInsets - minimumInteritemSpacing
-        let widthPerItem = availableWidth / itemsPerRow
-        
-        flowLayout.itemSize = CGSize(width: widthPerItem, height: widthPerItem * 1.5)
-        flowLayout.invalidateLayout()
-    }
-    
     private func configureNavController() {
-        title = Constants.moviesTabBarName
-        
-        let titleColor = UIColor(resource: .babyPowder)
-        let attributedText = [NSAttributedString.Key.foregroundColor : titleColor]
-        
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.titleTextAttributes = attributedText
-        appearance.backgroundColor = UIColor(resource: .shadow)
-        appearance.backgroundEffect = .none
-        
-        navigationController?.navigationBar.standardAppearance = appearance
-        appearance.shadowColor = .clear
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.isHidden = true
     }
     
     private func setupUI() {
@@ -78,17 +81,6 @@ class MoviesViewController: UIViewController {
         
         collectionView.frame = view.bounds
         setupTapGesture()
-    }
-    
-    private func createFlowLayout() -> UICollectionViewFlowLayout {
-        let flowLayout = UICollectionViewFlowLayout()
-        
-        flowLayout.scrollDirection = .vertical
-        flowLayout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        flowLayout.minimumLineSpacing = 15
-        flowLayout.minimumInteritemSpacing = 6
-        
-        return flowLayout
     }
     
     private func setupTapGesture() {
@@ -101,7 +93,15 @@ class MoviesViewController: UIViewController {
         let touchPoint = sender.location(in: collectionView)
         
         guard let indexPath = collectionView.indexPathForItem(at: touchPoint) else { return }
-        let currentMovie = viewModel.moviesViewModels[indexPath.row]
+        
+        let section = indexPath.section
+        let sectionIdentifier = sectionTypes[section]
+        
+        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+            return
+        }
+        
+        let currentMovie = sectionForMovies[indexPath.row]
         
         presentMovieAlert(for: currentMovie, at: indexPath)
     }
@@ -125,7 +125,11 @@ class MoviesViewController: UIViewController {
     
     private func addMovieToFavorites(from indextPath: IndexPath) {
         guard let favoriteVC = getFavoritesViewController() else { return }
-        viewModel.configure(favorites: favoriteVC.viewModel, for: indextPath)
+        
+        let section = indextPath.section
+        let sectionIdentifier = sectionTypes[section]
+        
+        viewModel.configure(favorites: favoriteVC.viewModel, section: sectionIdentifier, for: indextPath)
     }
     
     private func getFavoritesViewController() -> FavoritesViewController? {
@@ -140,8 +144,20 @@ class MoviesViewController: UIViewController {
 
 // MARK: - ViewModel delegate
 
-extension MoviesViewController: MoviesTableViewModelDelegate {
+extension MoviesViewController: MoviesCollectionViewModelDelegate {
+    func updateNewMovies() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+    
     func updateMovies() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+    
+    func updatePopularMovies() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
@@ -162,19 +178,66 @@ extension MoviesViewController: MoviesTableViewModelDelegate {
 // MARK: - CollectionView data source
 
 extension MoviesViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return sectionTypes.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.moviesViewModels.count
+        let sectionIdentifier = sectionTypes[section]
+        
+        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+            return 0
+        }
+        
+        return sectionForMovies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionCell.reuseIdentifier, for: indexPath) as? MovieCollectionCell else {
-            return UICollectionViewCell()
+        if indexPath.section == 0 {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarouselCell.reuseIdentifier, for: indexPath) as? CarouselCell else {
+                return UICollectionViewCell()
+            }
+            
+            let section = indexPath.section
+            let sectionIdentifier = sectionTypes[section]
+            
+            guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+                return UICollectionViewCell()
+            }
+            
+            let cellViewModel = sectionForMovies[indexPath.row]
+            cell.viewModel = cellViewModel
+            
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionCell.reuseIdentifier, for: indexPath) as? MovieCollectionCell else {
+                return UICollectionViewCell()
+            }
+            
+            let section = indexPath.section
+            let sectionIdentifier = sectionTypes[section]
+            
+            guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+                return UICollectionViewCell()
+            }
+            
+            let cellViewModel = sectionForMovies[indexPath.row]
+            cell.viewModel = cellViewModel
+            
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderSupplementaryView.reuseIdentifier, for: indexPath) as? HeaderSupplementaryView else {
+            return HeaderSupplementaryView()
         }
         
-        let cellViewModel = viewModel.moviesViewModels[indexPath.row]
-        cell.viewModel = cellViewModel
+        let section = indexPath.section
+        let sectionIdentifier = sectionTypes[section]
         
-        return cell
+        headerView.titleLabel.text = sectionIdentifier.sectionTitle
+        return headerView
     }
 }
 
@@ -184,27 +247,59 @@ extension MoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
+        let section = indexPath.section
+        let sectionIdentifier = sectionTypes[section]
+        
         let detailVC = DetailsViewController()
         detailVC.hidesBottomBarWhenPushed = true
-        viewModel.configure(details: detailVC.viewModel, for: indexPath)
+        viewModel.configure(details: detailVC.viewModel, section: sectionIdentifier, for: indexPath)
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard indexPath.row < viewModel.moviesViewModels.count,
-              let cell = cell as? MovieCollectionCell else
-        { return }
         
-        let cellViewModel = viewModel.moviesViewModels[indexPath.row]
+        let section = indexPath.section
+        let sectionIdentifier = sectionTypes[section]
         
-        cellViewModel.delegate = cell
-        cellViewModel.loadImage()
+        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+            return
+        }
+        
+        if section == 0 {
+            guard indexPath.row < sectionForMovies.count,
+                  let cell = cell as? CarouselCell else
+            { return }
+
+            let cellViewModel = sectionForMovies[indexPath.row]
+            
+            cellViewModel.delegate = cell
+            cellViewModel.loadImage()
+        } else {
+            guard indexPath.row < sectionForMovies.count,
+                  let cell = cell as? MovieCollectionCell else
+            { return }
+
+            let cellViewModel = sectionForMovies[indexPath.row]
+            
+            cellViewModel.delegate = cell
+            cellViewModel.loadImage()
+        }
+        
+        carouselSection.applyTransform(to: cell, at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard indexPath.row < viewModel.moviesViewModels.count else { return }
         
-        let cellViewModel = viewModel.moviesViewModels[indexPath.row]
+        let section = indexPath.section
+        let sectionIdentifier = sectionTypes[section]
+        
+        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+            return
+        }
+        
+        let cellViewModel = sectionForMovies[indexPath.row]
+        
         cellViewModel.delegate = nil
     }
 }

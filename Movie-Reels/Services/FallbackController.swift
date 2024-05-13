@@ -17,6 +17,24 @@ final class FallbackController: MoviesLoading {
         self.reserveSource = reserveSource
     }
     
+    func loadNewMovies(pageNum: Int = 1, completion: @escaping (Result<[Movie], any Error>) -> Void) {
+        mainSource.loadNewMovies(pageNum: pageNum) { result in
+            do {
+                let movies = try result.get()
+                
+                if movies.isEmpty {
+                    completion(.failure(NetErrors.invalidData))
+                    return
+                }
+                
+                self.reserveSource.storeMovies(movies: movies)
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         mainSource.loadMovies { result in
             do {
@@ -38,6 +56,23 @@ final class FallbackController: MoviesLoading {
                         completion(.failure(error))
                     }
                 }
+            }
+        }
+    }
+    
+    func loadPopularMovies(pageNum: Int = 1, completion: @escaping (Result<[Movie], Error>) -> Void) {
+        mainSource.loadPopularMovies(pageNum: pageNum) { result in
+            do {
+                let movies = try result.get()
+                
+                if movies.isEmpty {
+                    completion(.failure(NetErrors.invalidData))
+                    return
+                }
+                
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
             }
         }
     }

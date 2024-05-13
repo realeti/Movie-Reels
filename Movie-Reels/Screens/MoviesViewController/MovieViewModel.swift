@@ -49,15 +49,12 @@ class MovieViewModel: MovieViewModeling {
     
     func loadImage() {
         guard !movie.poster.isEmpty, isImageLoading == false, moviePoster == nil else { return }
-        
         isImageLoading = true
         delegate?.updateLoadingState()
         
         let imagePath = imageFetchingController.baseImagePath + movie.poster
         
-        imageFetchingController.loadData(fullPath: imagePath) { [weak self] result in
-            guard let self else { return }
-            
+        imageFetchingController.loadData(fullPath: imagePath) { [unowned self] result in
             do {
                 let imageData = try result.get()
                 moviePoster = UIImage(data: imageData)

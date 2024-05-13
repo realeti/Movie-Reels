@@ -8,7 +8,6 @@
 import Foundation
 
 final class MoviesLoadingMock: MoviesLoading, MoviesStoring {
-    
     let mockedMoviesResults = [
         Movie(
             id: 1,
@@ -44,7 +43,15 @@ final class MoviesLoadingMock: MoviesLoading, MoviesStoring {
     var lastStoredMovies: [Movie] = []
     var lastStoredGenres: [Genre] = []
     
+    func loadNewMovies(pageNum: Int, completion: @escaping (Result<[Movie], any Error>) -> Void) {
+        completion(.success(mockedMoviesResults))
+    }
+    
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
+        completion(.success(mockedMoviesResults))
+    }
+    
+    func loadPopularMovies(pageNum: Int, completion: @escaping (Result<[Movie], any Error>) -> Void) {
         completion(.success(mockedMoviesResults))
     }
     

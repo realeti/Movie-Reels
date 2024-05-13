@@ -17,7 +17,9 @@ enum NetErrors: Error {
 }
 
 protocol MoviesLoading {
+    func loadNewMovies(pageNum: Int, completion: @escaping (Result<[Movie], Error>) -> Void)
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void)
+    func loadPopularMovies(pageNum: Int, completion: @escaping (Result<[Movie], Error>) -> Void)
     func loadMovieGenres(completion: @escaping (Result<[Genre], Error>) -> Void)
 }
 
@@ -79,6 +81,33 @@ class NetworkController: MoviesLoading {
         dataTask.resume()
     }
     
+    func loadNewMovies(pageNum: Int = 1, completion: @escaping (Result<[Movie], Error>) -> Void) {
+        let path = "3/movie/now_playing?language=en-US&page=\(pageNum)&api_key=\(apiKey)"
+        
+        loadData(path: path) { response in
+            do {
+                let data = try response.get()
+                let responseData = try self.decoder.decode(MovieListDTO.self, from: data)
+                let moviesDto = responseData.results
+                
+                let movies = moviesDto.map { movie in
+                    return Movie(id: movie.id,
+                          title: movie.title,
+                          poster: movie.poster,
+                          releaseDate: movie.releaseDate,
+                          voteAverage: movie.voteAverage,
+                          overview: movie.overview,
+                          genreIds: movie.genresIds
+                    )
+                }
+                
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func loadMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         let path = "3/trending/movie/week?language=en-US&api_key=\(apiKey)"
         
@@ -96,6 +125,33 @@ class NetworkController: MoviesLoading {
                           voteAverage: movie.voteAverage,
                           overview: movie.overview,
                           genreIds: movie.genresIds
+                    )
+                }
+                
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func loadPopularMovies(pageNum: Int = 1, completion: @escaping (Result<[Movie], Error>) -> Void) {
+        let path = "3/movie/popular?language=en-US&page=\(pageNum)&api_key=\(apiKey)"
+        
+        loadData(path: path) { response in
+            do {
+                let data = try response.get()
+                let responseData = try self.decoder.decode(MovieListDTO.self, from: data)
+                let moviesDto = responseData.results
+                
+                let movies = moviesDto.map { movie in
+                    return Movie(id: movie.id, 
+                                 title: movie.title,
+                                 poster: movie.poster,
+                                 releaseDate: movie.releaseDate,
+                                 voteAverage: movie.voteAverage,
+                                 overview: movie.overview,
+                                 genreIds: movie.genresIds
                     )
                 }
                 

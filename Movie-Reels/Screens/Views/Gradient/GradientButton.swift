@@ -9,6 +9,7 @@ import UIKit
 
 class GradientButton: UIButton {
     private var gradientLayer: CAGradientLayer?
+    private var originalTextColor: UIColor?
     
     override func layoutSubviews() {
         super.layoutSubviews()

@@ -119,13 +119,13 @@ class MovieCollectionCell: UICollectionViewCell {
         switch device {
         case .phone:
             moviePosterCornerRadius = self.frame.width / 8
-            movieRatingCornerRadius = self.frame.width / 20
+            movieRatingCornerRadius = self.frame.width / 25
         case .pad:
             moviePosterCornerRadius = self.frame.width / 10
             movieRatingCornerRadius = self.frame.width / 30
         }
         
-        moviePosterView.layer.cornerRadius = moviePosterCornerRadius
+        moviePosterView.layer.cornerRadius =  moviePosterCornerRadius
         movieRatingStackView.layer.cornerRadius = movieRatingCornerRadius
         
         moviePosterView.clipsToBounds = true
@@ -144,17 +144,19 @@ class MovieCollectionCell: UICollectionViewCell {
         
         switch device {
         case .phone:
+            let insets = Metrics.ratingStackSpacingPhone
             movieNameSize = Metrics.movieNameSizeBase
             movieRatingSize = Metrics.movieRatingSizeBase
-            movieRatingStackSpacing = 4
-            movieRatingStackInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
-            movieBlurRadius = 4.8
+            movieRatingStackSpacing = Metrics.ratingStackSpacingPhone
+            movieRatingStackInsets = UIEdgeInsets(top: insets, left: insets, bottom: insets, right: insets)
+            movieBlurRadius = Metrics.movieBlurPhone
         case .pad:
+            let insets = Metrics.ratingStackSpacingPad
             movieNameSize = Metrics.movieNameSizeLarge
             movieRatingSize = Metrics.movieRatingSizeLarge
-            movieRatingStackSpacing = 5
-            movieRatingStackInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-            movieBlurRadius = 7.5
+            movieRatingStackSpacing = Metrics.ratingStackSpacingPad
+            movieRatingStackInsets = UIEdgeInsets(top: insets, left: insets, bottom: insets, right: insets)
+            movieBlurRadius = Metrics.movieBlurPad
         }
         
         movieNameLabel.font = UIFont(name: Constants.movieTitleFont, size: movieNameSize) ?? defaultFontSize
@@ -217,13 +219,14 @@ class MovieCollectionCell: UICollectionViewCell {
         movieRatingStackView.translatesAutoresizingMaskIntoConstraints = false
         
         let device: DeviceType = userDevice == .phone ? .phone : .pad
+        
         let topIndent: CGFloat
         let rightIndent: CGFloat
         
         switch device {
         case .phone:
-            topIndent = 10.0
-            rightIndent = -6.0
+            topIndent = 12.0
+            rightIndent = -8.0
         case .pad:
             topIndent = 16.0
             rightIndent = -10.0
@@ -310,11 +313,19 @@ extension MovieCollectionCell: MovieViewModelDelegate {
 private struct Metrics {
     static let movieNameSizeBase: CGFloat = 12.0
     static let movieNameSizeLarge: CGFloat = 24.0
-    static let movieRatingSizeBase: CGFloat = 9.0
+    static let movieRatingSizeBase: CGFloat = 11.0
     static let movieRatingSizeLarge: CGFloat = 15.0
     
-    static let movieRatingImageSizeBase: CGFloat = 9.0
+    static let movieRatingImageSizeBase: CGFloat = 12.0
     static let movieRatingImageSizeLarge: CGFloat = 15.0
+    
+    static let ratingStackSpacingPhone: CGFloat = 4.0
+    static let ratingStackInsetsPhone: CGFloat = 4.0
+    static let movieBlurPhone: CGFloat = 4.8
+    
+    static let ratingStackSpacingPad: CGFloat = 5.0
+    static let ratingStackInsetsPad: CGFloat = 6.0
+    static let movieBlurPad: CGFloat = 7.5
     
     init() {}
 }
