@@ -39,6 +39,7 @@ struct Constants {
     static let backButtonName = "left-chevron"
     static let playButtonTitle = "Play"
     static let playButtonImage = "play.fill"
+    static let seeAllButtonTitle = "See All"
     
     // MARK: Fonts names
     static let movieTitleFont = "Montserrat-SemiBold"

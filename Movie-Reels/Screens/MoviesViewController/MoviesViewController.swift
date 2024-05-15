@@ -201,7 +201,7 @@ extension MoviesViewController: UICollectionViewDataSource {
             reuseIdentifier = MovieCollectionCell.reuseIdentifier
         }
         
-        guard var cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? BaseCollectionCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? BaseCollectionCell else {
             return UICollectionViewCell()
         }
         
@@ -260,7 +260,7 @@ extension MoviesViewController: UICollectionViewDelegate {
         cellViewModel.delegate = baseCell
         cellViewModel.loadImage()
         
-        if let carouselCell = baseCell as? CarouselCell {
+        if let _ = baseCell as? CarouselCell {
             carouselSection.applyTransform(to: cell, at: indexPath)
         }
     }

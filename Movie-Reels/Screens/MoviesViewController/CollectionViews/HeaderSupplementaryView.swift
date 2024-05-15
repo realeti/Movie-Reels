@@ -23,9 +23,10 @@ class HeaderSupplementaryView: UICollectionReusableView {
         var container = AttributeContainer()
         
         container.font = UIFont(name: Constants.movieTitleFont, size: Metrics.seeAllButtonTitleSize)
-        configuration.attributedTitle = AttributedString("See All", attributes: container)
+        configuration.attributedTitle = AttributedString(Constants.seeAllButtonTitle, attributes: container)
         
         let button = UIButton(configuration: configuration)
+        setGradientSelectedTitle(for: button, colorStyle: .redOrange, direction: .left)
         
         return button
     }()
@@ -63,6 +64,42 @@ class HeaderSupplementaryView: UICollectionReusableView {
             seeAllButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             seeAllButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
         ])
+    }
+    
+    private func setGradientSelectedTitle(for button: UIButton, colorStyle: GradientColorStyle, direction: GradientDirection) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colorStyle.colors.map { $0 }
+        gradientLayer.locations = colorStyle.locations
+        gradientLayer.startPoint = direction.directionType.startPoint
+        gradientLayer.endPoint = direction.directionType.endPoint
+        
+        let defaultAttributes = button.configuration?.attributedTitle?.uiKit
+        let buttonTitle = button.configuration?.title ?? ""
+        let defaultFont = defaultAttributes?.font as? UIFont ?? UIFont.systemFont(ofSize: 12)
+        let textSize = buttonTitle.size(withAttributes: [NSAttributedString.Key.font: defaultFont])
+        gradientLayer.frame = CGRect(origin: .zero, size: textSize)
+        
+        UIGraphicsBeginImageContextWithOptions(textSize, false, 0.0)
+        
+        guard let context = UIGraphicsGetCurrentContext() else {
+            UIGraphicsEndImageContext()
+            return
+        }
+        
+        gradientLayer.render(in: context)
+        
+        guard let gradientImage = UIGraphicsGetImageFromCurrentImageContext() else {
+            UIGraphicsEndImageContext()
+            return
+        }
+        
+        UIGraphicsEndImageContext()
+        
+        let textAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor(patternImage: gradientImage)
+        ]
+        
+        button.configuration?.baseForegroundColor = UIColor(patternImage: gradientImage)
     }
 }
 
