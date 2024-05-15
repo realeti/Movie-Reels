@@ -8,7 +8,7 @@
 import UIKit
 import VisualEffectView
 
-class CarouselCell: UICollectionViewCell {
+class CarouselCell: UICollectionViewCell, BaseCollectionCell {
     static let reuseIdentifier = Constants.movieCarouselCellIdentifier
     
     lazy var moviePosterView: UIView = {

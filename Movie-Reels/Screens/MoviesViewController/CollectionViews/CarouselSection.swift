@@ -19,7 +19,7 @@ final class CarouselSection {
 
     func layoutSection() -> NSCollectionLayoutSection {
         let itemScale: CGFloat = 0.75
-        let sectionInset: CGFloat = 16.0
+        let sectionInset: CGFloat = 12.0
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -39,7 +39,7 @@ final class CarouselSection {
             let itemWidth = width * itemScale
             items.forEach { item in
                 let distanceFromCenter = abs((item.frame.midX - offset.x) - width / 2.0)
-                let minScale: CGFloat = 0.85
+                let minScale: CGFloat = 0.80
                 let scale: CGFloat = minScale + (1.0 - minScale) * exp(-distanceFromCenter / (itemWidth / 2))
                 self.scales[item.indexPath] = scale
                 guard let cell = self.collectionView?.cellForItem(at: item.indexPath) else { return }

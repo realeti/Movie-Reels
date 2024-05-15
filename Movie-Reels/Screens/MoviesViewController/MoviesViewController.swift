@@ -38,7 +38,7 @@ class MoviesViewController: UIViewController {
         let fractionWidth: CGFloat = 1.0 / 2.4
         let fractionHeight: CGFloat = fractionWidth * 1.45
         let itemInset: CGFloat = 4.0
-        let sectionInset: CGFloat = 16.0
+        let sectionInset: CGFloat = 12.0
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -193,39 +193,29 @@ extension MoviesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var reuseIdentifier = ""
+        
         if indexPath.section == 0 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarouselCell.reuseIdentifier, for: indexPath) as? CarouselCell else {
-                return UICollectionViewCell()
-            }
-            
-            let section = indexPath.section
-            let sectionIdentifier = sectionTypes[section]
-            
-            guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
-                return UICollectionViewCell()
-            }
-            
-            let cellViewModel = sectionForMovies[indexPath.row]
-            cell.viewModel = cellViewModel
-            
-            return cell
+            reuseIdentifier = CarouselCell.reuseIdentifier
         } else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionCell.reuseIdentifier, for: indexPath) as? MovieCollectionCell else {
-                return UICollectionViewCell()
-            }
-            
-            let section = indexPath.section
-            let sectionIdentifier = sectionTypes[section]
-            
-            guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
-                return UICollectionViewCell()
-            }
-            
-            let cellViewModel = sectionForMovies[indexPath.row]
-            cell.viewModel = cellViewModel
-            
-            return cell
+            reuseIdentifier = MovieCollectionCell.reuseIdentifier
         }
+        
+        guard var cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? BaseCollectionCell else {
+            return UICollectionViewCell()
+        }
+        
+        let section = indexPath.section
+        let sectionIdentifier = sectionTypes[section]
+        
+        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
+            return UICollectionViewCell()
+        }
+        
+        let cellViewModel = sectionForMovies[indexPath.row]
+        cell.viewModel = cellViewModel
+        
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -261,31 +251,18 @@ extension MoviesViewController: UICollectionViewDelegate {
         let section = indexPath.section
         let sectionIdentifier = sectionTypes[section]
         
-        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier] else {
-            return
-        }
+        guard let sectionForMovies = viewModel.moviesViewModels[sectionIdentifier],
+              indexPath.row < sectionForMovies.count,
+              let baseCell = cell as? BaseCollectionCell else
+        { return }
         
-        if section == 0 {
-            guard indexPath.row < sectionForMovies.count,
-                  let cell = cell as? CarouselCell else
-            { return }
-
-            let cellViewModel = sectionForMovies[indexPath.row]
-            
-            cellViewModel.delegate = cell
-            cellViewModel.loadImage()
-        } else {
-            guard indexPath.row < sectionForMovies.count,
-                  let cell = cell as? MovieCollectionCell else
-            { return }
-
-            let cellViewModel = sectionForMovies[indexPath.row]
-            
-            cellViewModel.delegate = cell
-            cellViewModel.loadImage()
-        }
+        let cellViewModel = sectionForMovies[indexPath.row]
+        cellViewModel.delegate = baseCell
+        cellViewModel.loadImage()
         
-        carouselSection.applyTransform(to: cell, at: indexPath)
+        if let carouselCell = baseCell as? CarouselCell {
+            carouselSection.applyTransform(to: cell, at: indexPath)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

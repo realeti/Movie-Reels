@@ -8,12 +8,7 @@
 import UIKit
 import VisualEffectView
 
-enum DeviceType {
-    case phone
-    case pad
-}
-
-class MovieCollectionCell: UICollectionViewCell {
+class MovieCollectionCell: UICollectionViewCell, BaseCollectionCell {
     static let reuseIdentifier = Constants.movieCollectionCellIdentifier
     
     lazy var moviePosterView: UIView = {
